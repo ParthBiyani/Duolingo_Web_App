@@ -64,6 +64,17 @@ export const strings = {
         future: "upcoming",
       },
     },
+    xp: {
+      trigger: (xp: number) => `Total XP: ${xp.toLocaleString("en-US")}`,
+      title: (xp: number) => `${xp.toLocaleString("en-US")} XP`,
+      total: "Total experience earned",
+      dailyGoal: "Daily goal",
+      progress: (today: number, goal: number) => `${today} / ${goal} XP`,
+      progressLabel: (today: number, goal: number) => `Daily goal: ${today} of ${goal} XP`,
+      remaining: (left: number) => `Earn ${left} more XP to reach today's goal.`,
+      reached: "You reached today's goal. Nice work!",
+      changeGoal: "Change daily goal",
+    },
     gems: {
       trigger: (gems: number) => `Gems: ${gems.toLocaleString("en-US")}`,
       title: "Gems",
