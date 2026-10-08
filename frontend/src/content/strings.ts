@@ -32,6 +32,7 @@ export const strings = {
   nav: {
     label: "Main",
     learn: "Learn",
+    practice: "Practice",
     leaderboards: "Leaderboards",
     quests: "Quests",
     shop: "Shop",

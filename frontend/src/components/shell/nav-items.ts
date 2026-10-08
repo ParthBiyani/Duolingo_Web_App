@@ -1,6 +1,14 @@
 import type { ComponentType } from "react";
 
-import { Chest, House, ProfileIcon, Shield, Store, type IconProps } from "@/components/icons";
+import {
+  Chest,
+  Dumbbell,
+  House,
+  ProfileIcon,
+  Shield,
+  Store,
+  type IconProps,
+} from "@/components/icons";
 import { cn } from "@/components/ui";
 import { strings } from "@/content/strings";
 
@@ -13,6 +21,7 @@ export interface NavItem {
 /** Primary destinations, shared by the sidebar and the mobile tab bar. */
 export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/learn", label: strings.nav.learn, Icon: House },
+  { href: "/practice-hub", label: strings.nav.practice, Icon: Dumbbell },
   { href: "/leaderboard", label: strings.nav.leaderboards, Icon: Shield },
   { href: "/quests", label: strings.nav.quests, Icon: Chest },
   { href: "/shop", label: strings.nav.shop, Icon: Store },
@@ -41,10 +50,10 @@ export function sidebarItemClassName(active: boolean): string {
   );
 }
 
-/** Mobile tab bar cell: icon only. */
+/** Mobile tab bar cell: icon only, a little smaller on the narrowest phones so all seven fit. */
 export function tabItemClassName(active: boolean): string {
   return cn(
-    "grid size-13 place-items-center rounded-xl border-2 outline-offset-0 transition-colors",
+    "grid size-12 place-items-center rounded-xl min-[400px]:size-13 border-2 outline-offset-0 transition-colors",
     active
       ? "border-selected-border bg-selected-bg"
       : "border-transparent hover:bg-surface-hover data-[state=open]:bg-surface-hover",
