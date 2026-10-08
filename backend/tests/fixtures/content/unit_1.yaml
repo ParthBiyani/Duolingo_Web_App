@@ -1,0 +1,101 @@
+# Test fixture: a small but valid unit (the real course lives in app/seed/content/).
+unit:
+  slug: unit-1
+  section: 1
+  position: 1
+  title: First steps
+  description: Say hello, name some animals and talk about food and home
+  color: green
+skills:
+  - slug: greetings
+    type: lesson
+    title: Greetings
+    icon: star
+    vocab:
+      - { es: "hola", en: "hello", emoji: "👋" }
+      - { es: "adiós", en: "goodbye" }
+      - { es: "gracias", en: "thank you", emoji: "🙏" }
+      - { es: "sí", en: "yes", emoji: "✅" }
+      - { es: "no", en: "no", emoji: "❌" }
+      - { es: "buenos días", en: "good morning", emoji: "🌅" }
+      - { es: "buenas noches", en: "good night", emoji: "🌙" }
+      - { es: "por favor", en: "please" }
+    sentences:
+      - es: "Hola, soy Ana."
+        en: "Hello, I am Ana."
+        alt_en: ["Hi, I am Ana.", "Hello, I'm Ana.", "Hi, I'm Ana."]
+        alt_es: ["Hola, yo soy Ana."]
+      - { es: "Buenos días, Pablo.", en: "Good morning, Pablo." }
+      - { es: "Gracias, adiós.", en: "Thank you, goodbye.", alt_en: ["Thanks, goodbye."] }
+      - { es: "Buenas noches, mamá.", en: "Good night, mom.", alt_en: ["Good night, mum."] }
+      - { es: "Sí, por favor.", en: "Yes, please." }
+      - { es: "No, gracias.", en: "No, thank you.", alt_en: ["No, thanks."] }
+  - slug: animals
+    type: lesson
+    title: Animals
+    icon: star
+    vocab:
+      - { es: "el perro", en: "the dog", emoji: "🐕" }
+      - { es: "el gato", en: "the cat", emoji: "🐈" }
+      - { es: "el pájaro", en: "the bird", emoji: "🐦" }
+      - { es: "el pez", en: "the fish", emoji: "🐟" }
+      - { es: "el caballo", en: "the horse", emoji: "🐎" }
+      - { es: "la vaca", en: "the cow", emoji: "🐄" }
+      - { es: "el ratón", en: "the mouse", emoji: "🐭" }
+      - { es: "la rana", en: "the frog", emoji: "🐸" }
+    sentences:
+      - { es: "El perro come.", en: "The dog eats.", alt_en: ["The dog is eating."] }
+      - { es: "El gato duerme.", en: "The cat sleeps.", alt_en: ["The cat is sleeping."] }
+      - { es: "Tengo un pájaro.", en: "I have a bird." }
+      - { es: "La vaca es grande.", en: "The cow is big." }
+      - { es: "El caballo corre.", en: "The horse runs.", alt_en: ["The horse is running."] }
+      - { es: "Veo una rana.", en: "I see a frog." }
+  - slug: unit-1-chest
+    type: chest
+    title: Treasure chest
+    icon: chest
+    chest_gems: 10
+  - slug: food
+    type: lesson
+    title: Food
+    icon: star
+    vocab:
+      - { es: "el pan", en: "the bread", emoji: "🍞" }
+      - { es: "el agua", en: "the water", emoji: "💧" }
+      - { es: "la leche", en: "the milk", emoji: "🥛" }
+      - { es: "la manzana", en: "the apple", emoji: "🍎" }
+      - { es: "el queso", en: "the cheese", emoji: "🧀" }
+      - { es: "el café", en: "the coffee", emoji: "☕" }
+      - { es: "el arroz", en: "the rice", emoji: "🍚" }
+      - { es: "la sopa", en: "the soup", emoji: "🍲" }
+    sentences:
+      - { es: "Como pan.", en: "I eat bread.", alt_en: ["I am eating bread.", "I'm eating bread."] }
+      - { es: "Bebo agua.", en: "I drink water.", alt_en: ["I am drinking water."] }
+      - { es: "La leche está fría.", en: "The milk is cold." }
+      - { es: "Quiero una manzana.", en: "I want an apple." }
+      - { es: "El café está caliente.", en: "The coffee is hot." }
+      - { es: "Ella come arroz.", en: "She eats rice.", alt_en: ["She is eating rice."] }
+  - slug: home
+    type: lesson
+    title: At home
+    icon: star
+    vocab:
+      - { es: "la casa", en: "the house", emoji: "🏠" }
+      - { es: "la puerta", en: "the door", emoji: "🚪" }
+      - { es: "la cama", en: "the bed", emoji: "🛏️" }
+      - { es: "la mesa", en: "the table" }
+      - { es: "la silla", en: "the chair", emoji: "🪑" }
+      - { es: "la ventana", en: "the window", emoji: "🪟" }
+      - { es: "el baño", en: "the bathroom", emoji: "🛁" }
+      - { es: "la cocina", en: "the kitchen" }
+    sentences:
+      - { es: "Mi casa es pequeña.", en: "My house is small." }
+      - { es: "La puerta está abierta.", en: "The door is open." }
+      - { es: "La cama es nueva.", en: "The bed is new." }
+      - { es: "Hay una mesa.", en: "There is a table." }
+      - { es: "La silla es azul.", en: "The chair is blue." }
+      - { es: "Cierro la ventana.", en: "I close the window.", alt_en: ["I am closing the window."] }
+  - slug: unit-1-review
+    type: unit_review
+    title: Unit review
+    icon: trophy
