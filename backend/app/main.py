@@ -12,6 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app import __version__
+from app.api.v1 import router as api_v1_router
 from app.core.config import Settings, get_settings
 from app.core.db import engine, get_db
 from app.core.errors import AppError, register_exception_handlers
@@ -85,6 +86,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     register_exception_handlers(app)
     app.middleware("http")(add_request_context)
     app.include_router(health_router)
+    app.include_router(api_v1_router)
     return app
 
 
