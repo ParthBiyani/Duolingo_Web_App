@@ -1,0 +1,209 @@
+unit:
+  slug: unit-2
+  section: 1
+  position: 2
+  title: Everyday life
+  description: Describe your day, get around town, chat about the weather and make plans
+  color: purple
+skills:
+  - slug: my-day
+    type: lesson
+    title: My day
+    icon: star
+    vocab:
+      - { es: "el reloj", en: "the clock", emoji: "⏰" }
+      - { es: "el desayuno", en: "breakfast", emoji: "🥣" }
+      - { es: "la cena", en: "dinner", emoji: "🍲" }
+      - { es: "la ducha", en: "the shower", emoji: "🚿" }
+      - { es: "el trabajo", en: "work", emoji: "💼" }
+      - { es: "la escuela", en: "the school", emoji: "🏫" }
+      - { es: "duermo", en: "I sleep", emoji: "😴" }
+      - { es: "me levanto", en: "I get up" }
+      - { es: "temprano", en: "early" }
+      - { es: "tarde", en: "late" }
+    sentences:
+      - es: "Me levanto temprano."
+        en: "I get up early."
+        alt_en: ["I wake up early.", "I am getting up early.", "I'm getting up early."]
+        alt_es: ["Yo me levanto temprano."]
+      - es: "Duermo en mi cama."
+        en: "I sleep in my bed."
+        alt_en: ["I am sleeping in my bed.", "I'm sleeping in my bed."]
+        alt_es: ["Yo duermo en mi cama."]
+      - es: "Tomo una ducha."
+        en: "I take a shower."
+        alt_en: ["I am taking a shower.", "I'm taking a shower.", "I have a shower."]
+        alt_es: ["Yo tomo una ducha.", "Me ducho."]
+      - es: "El desayuno está en la mesa."
+        en: "Breakfast is on the table."
+        alt_en: ["The breakfast is on the table.", "Breakfast's on the table."]
+        alt_es: []
+      - es: "Voy al trabajo."
+        en: "I go to work."
+        alt_en: ["I am going to work.", "I'm going to work."]
+        alt_es: ["Yo voy al trabajo."]
+      - es: "Mi hermana va a la escuela."
+        en: "My sister goes to school."
+        alt_en: ["My sister is going to school.", "My sister's going to school."]
+        alt_es: []
+      - es: "La cena es tarde."
+        en: "Dinner is late."
+        alt_en: ["The dinner is late.", "Dinner's late."]
+        alt_es: []
+      - es: "¿Dónde está el reloj?"
+        en: "Where is the clock?"
+        alt_en: ["Where's the clock?", "Where is the watch?", "Where's the watch?"]
+        alt_es: []
+  - slug: getting-around
+    type: lesson
+    title: Getting around
+    icon: star
+    vocab:
+      - { es: "el autobús", en: "the bus", emoji: "🚌" }
+      - { es: "el tren", en: "the train", emoji: "🚆" }
+      - { es: "el taxi", en: "the taxi", emoji: "🚕" }
+      - { es: "la bicicleta", en: "the bike", emoji: "🚲" }
+      - { es: "el coche", en: "the car", emoji: "🚗" }
+      - { es: "el avión", en: "the plane", emoji: "🛫" }
+      - { es: "la estación", en: "the station", emoji: "🚉" }
+      - { es: "el metro", en: "the subway", emoji: "🚇" }
+      - { es: "cerca", en: "near" }
+      - { es: "lejos", en: "far" }
+    sentences:
+      - es: "Voy en autobús."
+        en: "I go by bus."
+        alt_en: ["I am going by bus.", "I'm going by bus.", "I take the bus."]
+        alt_es: ["Yo voy en autobús."]
+      - es: "El tren llega tarde."
+        en: "The train arrives late."
+        alt_en: ["The train is late.", "The train is arriving late.", "The train's late."]
+        alt_es: []
+      - es: "La estación está lejos."
+        en: "The station is far."
+        alt_en: ["The station is far away.", "The station's far away.", "The station's far."]
+        alt_es: []
+      - es: "El metro está cerca."
+        en: "The subway is near."
+        alt_en: ["The metro is near.", "The subway is close.", "The subway is nearby."]
+        alt_es: []
+      - es: "Mi padre va en coche."
+        en: "My father goes by car."
+        alt_en: ["My dad goes by car.", "My father is going by car.", "My dad is going by car."]
+        alt_es: ["Mi padre va en carro."]
+      - es: "Tomamos un taxi."
+        en: "We take a taxi."
+        alt_en: ["We are taking a taxi.", "We're taking a taxi.", "We take a cab."]
+        alt_es: ["Nosotros tomamos un taxi."]
+      - es: "El avión sale tarde."
+        en: "The plane leaves late."
+        alt_en: ["The plane is leaving late.", "The airplane leaves late.", "The plane departs late."]
+        alt_es: []
+      - es: "Voy a la escuela en bicicleta."
+        en: "I go to school by bike."
+        alt_en: ["I go to school by bicycle.", "I am going to school by bike.", "I'm going to school by bike."]
+        alt_es: ["Yo voy a la escuela en bicicleta."]
+  - slug: unit-2-chest
+    type: chest
+    title: Treasure chest
+    icon: chest
+    chest_gems: 10
+  - slug: weather
+    type: lesson
+    title: Weather
+    icon: star
+    vocab:
+      - { es: "el sol", en: "the sun", emoji: "🌞" }
+      - { es: "la lluvia", en: "the rain", emoji: "☔" }
+      - { es: "la nieve", en: "the snow", emoji: "⛄" }
+      - { es: "el viento", en: "the wind", emoji: "💨" }
+      - { es: "el paraguas", en: "the umbrella", emoji: "🌂" }
+      - { es: "el arcoíris", en: "the rainbow", emoji: "🌈" }
+      - { es: "el calor", en: "the heat", emoji: "🥵" }
+      - { es: "el frío", en: "the cold", emoji: "🥶" }
+      - { es: "el tiempo", en: "the weather" }
+      - { es: "hoy", en: "today" }
+    sentences:
+      - es: "Hoy hace sol."
+        en: "It is sunny today."
+        alt_en: ["It's sunny today.", "Today it is sunny.", "Today it's sunny."]
+        alt_es: ["Hace sol hoy."]
+      - es: "Hace mucho frío."
+        en: "It is very cold."
+        alt_en: ["It's very cold.", "It is really cold.", "It's really cold."]
+        alt_es: []
+      - es: "No me gusta el calor."
+        en: "I do not like the heat."
+        alt_en: ["I don't like the heat.", "I do not like heat.", "I don't like heat."]
+        alt_es: ["A mí no me gusta el calor."]
+      - es: "Mi madre tiene un paraguas."
+        en: "My mother has an umbrella."
+        alt_en: ["My mom has an umbrella.", "My mum has an umbrella.", "My mother has got an umbrella."]
+        alt_es: []
+      - es: "Hoy hay lluvia y viento."
+        en: "Today there is rain and wind."
+        alt_en: ["There is rain and wind today.", "There's rain and wind today.", "Today there's rain and wind."]
+        alt_es: ["Hoy llueve y hace viento."]
+      - es: "¿Te gusta la nieve?"
+        en: "Do you like the snow?"
+        alt_en: ["Do you like snow?", "You like the snow?", "You like snow?"]
+        alt_es: ["¿A ti te gusta la nieve?"]
+      - es: "Mira, un arcoíris."
+        en: "Look, a rainbow."
+        alt_en: ["Look, there is a rainbow.", "Look, there's a rainbow."]
+        alt_es: []
+      - es: "¿Qué tiempo hace?"
+        en: "What is the weather like?"
+        alt_en: ["What's the weather like?", "How is the weather?", "How's the weather?"]
+        alt_es: []
+  - slug: plans
+    type: lesson
+    title: Plans
+    icon: star
+    vocab:
+      - { es: "mañana", en: "tomorrow" }
+      - { es: "el sábado", en: "Saturday" }
+      - { es: "el domingo", en: "Sunday" }
+      - { es: "el cine", en: "the cinema", emoji: "🎬" }
+      - { es: "la fiesta", en: "the party", emoji: "🎉" }
+      - { es: "el parque", en: "the park", emoji: "🌳" }
+      - { es: "el mar", en: "the sea", emoji: "🌊" }
+      - { es: "el fútbol", en: "soccer", emoji: "⚽" }
+      - { es: "el cumpleaños", en: "the birthday", emoji: "🎂" }
+      - { es: "el regalo", en: "the gift", emoji: "🎁" }
+    sentences:
+      - es: "Mañana voy al cine."
+        en: "I am going to the cinema tomorrow."
+        alt_en: ["I'm going to the cinema tomorrow.", "I am going to the movies tomorrow.", "I'm going to the movies tomorrow.", "Tomorrow I am going to the cinema."]
+        alt_es: ["Voy al cine mañana.", "Mañana yo voy al cine."]
+      - es: "Hay una fiesta el sábado."
+        en: "There is a party on Saturday."
+        alt_en: ["There's a party on Saturday.", "There is a party Saturday.", "There's a party Saturday."]
+        alt_es: []
+      - es: "¿Vamos al parque?"
+        en: "Shall we go to the park?"
+        alt_en: ["Should we go to the park?", "Are we going to the park?", "Do we go to the park?"]
+        alt_es: []
+      - es: "El domingo vamos al mar."
+        en: "On Sunday we are going to the sea."
+        alt_en: ["On Sunday we're going to the sea.", "We are going to the sea on Sunday.", "We're going to the sea on Sunday.", "On Sunday we go to the sea."]
+        alt_es: ["Vamos al mar el domingo."]
+      - es: "Mañana es mi cumpleaños."
+        en: "Tomorrow is my birthday."
+        alt_en: ["Tomorrow's my birthday.", "It is my birthday tomorrow.", "It's my birthday tomorrow."]
+        alt_es: ["Mi cumpleaños es mañana."]
+      - es: "Tengo un regalo para ti."
+        en: "I have a gift for you."
+        alt_en: ["I have a present for you.", "I've got a gift for you.", "I've got a present for you."]
+        alt_es: ["Yo tengo un regalo para ti."]
+      - es: "Mis hermanos juegan al fútbol."
+        en: "My brothers play soccer."
+        alt_en: ["My brothers play football.", "My brothers are playing soccer.", "My siblings play soccer."]
+        alt_es: ["Mis hermanos juegan fútbol."]
+      - es: "¿Quieres ir a la fiesta?"
+        en: "Do you want to go to the party?"
+        alt_en: ["Would you like to go to the party?", "You want to go to the party?"]
+        alt_es: ["¿Tú quieres ir a la fiesta?"]
+  - slug: unit-2-review
+    type: unit_review
+    title: Unit review
+    icon: trophy
