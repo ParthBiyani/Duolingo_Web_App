@@ -1,0 +1,19 @@
+name: Feature / milestone
+description: A planned piece of work
+labels: [enhancement]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Screens, endpoints and tables involved
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
