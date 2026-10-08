@@ -1,0 +1,17 @@
+/* A node that just changed state (the learner is back from a lesson) pops once to draw the eye.
+   Reduced motion and the Animations setting are handled globally in globals.css. */
+.celebrate {
+  animation: celebrate 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes celebrate {
+  0% {
+    transform: scale(0.7);
+  }
+  55% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
