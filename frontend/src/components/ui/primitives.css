@@ -1,0 +1,552 @@
+/*
+ * Skins for the primitives in src/components/ui.
+ *
+ * They live in the `components` cascade layer, which Tailwind orders before
+ * `utilities`. A utility passed through `className` therefore always overrides
+ * a default declared here (for example `className="text-muted"` on an outline
+ * button) without needing a class-merging library.
+ *
+ * Colours come from the role variables in src/app/globals.css, so every skin
+ * follows the light and dark themes automatically.
+ */
+
+@layer components {
+  /* Button ------------------------------------------------------------------
+   * Filled variants sit on a 4px coloured edge; outlined ones on a 2px edge in
+   * the border colour. Pressing moves the face down by the edge depth and
+   * removes the edge, which is the measured 3D press. */
+  .ui-btn {
+    --btn-face: transparent;
+    --btn-text: var(--blue);
+    --btn-border: transparent;
+    --btn-edge: transparent;
+    --btn-depth: 4px;
+
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 2px solid var(--btn-border);
+    border-radius: var(--radius-button);
+    background: var(--btn-face);
+    color: var(--btn-text);
+    box-shadow: 0 var(--btn-depth) 0 var(--btn-edge);
+    font-size: var(--text-button);
+    font-weight: 700;
+    line-height: var(--text-button--line-height);
+    letter-spacing: var(--text-button--letter-spacing);
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+    transition-property: transform, box-shadow, filter, background-color;
+    transition-duration: 100ms;
+    transition-timing-function: ease-out;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .ui-btn:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+
+  .ui-btn:not(:disabled, [aria-busy="true"]):active {
+    transform: translateY(var(--btn-depth));
+    box-shadow: none;
+  }
+
+  .ui-btn-primary {
+    --btn-face: var(--green);
+    --btn-edge: var(--green-shade);
+    --btn-text: var(--on-green);
+  }
+
+  .ui-btn-secondary {
+    --btn-face: var(--blue);
+    --btn-edge: var(--blue-shade);
+    --btn-text: var(--on-blue);
+  }
+
+  .ui-btn-danger {
+    --btn-face: var(--red);
+    --btn-edge: var(--red-shade);
+    --btn-text: var(--on-red);
+  }
+
+  .ui-btn-super {
+    --btn-face: linear-gradient(90deg, var(--purple), var(--blue));
+    --btn-edge: var(--purple-shade);
+    --btn-text: var(--on-blue);
+  }
+
+  .ui-btn-outline {
+    --btn-face: var(--surface);
+    --btn-border: var(--border);
+    --btn-edge: var(--border);
+    --btn-depth: 2px;
+  }
+
+  .ui-btn-ghost {
+    --btn-depth: 0px;
+  }
+
+  /* Disabled buttons and the locked variant are flat grey. */
+  .ui-btn:disabled,
+  .ui-btn-locked {
+    --btn-face: var(--locked-face);
+    --btn-border: transparent;
+    --btn-edge: transparent;
+    --btn-text: var(--locked-icon);
+    cursor: default;
+  }
+
+  .ui-btn-ghost:disabled {
+    --btn-face: transparent;
+    --btn-text: var(--disabled);
+  }
+
+  @media (hover: hover) {
+    .ui-btn:not(:disabled, .ui-btn-locked):hover {
+      filter: brightness(1.1);
+    }
+
+    .ui-btn-outline:not(:disabled):hover,
+    .ui-btn-ghost:not(:disabled):hover {
+      filter: none;
+      background-color: var(--surface-hover);
+    }
+  }
+
+  .ui-btn-sm {
+    height: 2.5rem;
+    padding-inline: 1rem;
+  }
+
+  .ui-btn-md {
+    height: 2.875rem;
+    padding-inline: 1.25rem;
+  }
+
+  .ui-btn-lg {
+    height: 3.125rem;
+    padding-inline: 1.5rem;
+  }
+
+  .ui-btn-full {
+    width: 100%;
+  }
+
+  .ui-btn[aria-busy="true"] {
+    cursor: progress;
+  }
+
+  .ui-btn-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: inherit;
+    visibility: hidden;
+  }
+
+  .ui-btn-spinner {
+    position: absolute;
+    inset: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: auto;
+    border: 3px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 9999px;
+    animation: btn-spin 700ms linear infinite;
+  }
+
+  /* Card --------------------------------------------------------------------- */
+  .ui-card {
+    border: 2px solid var(--border);
+    border-radius: var(--radius-card);
+    background-color: var(--surface);
+  }
+
+  .ui-card-interactive {
+    box-shadow: 0 2px 0 var(--border);
+    cursor: pointer;
+    transition-property: transform, box-shadow, background-color;
+    transition-duration: 100ms;
+  }
+
+  .ui-card-interactive:active {
+    transform: translateY(2px);
+    box-shadow: none;
+  }
+
+  @media (hover: hover) {
+    .ui-card-interactive:hover {
+      background-color: var(--surface-hover);
+    }
+  }
+
+  /* Floating panels: popovers and dropdown menus ----------------------------- */
+  .ui-panel {
+    z-index: 50;
+    max-width: calc(100vw - 2rem);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-panel);
+    background-color: var(--surface);
+    padding: 1rem;
+    color: var(--body);
+    transform-origin: var(--radix-popper-transform-origin);
+  }
+
+  .ui-panel[data-state="open"] {
+    animation: pop 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .ui-panel:focus-visible {
+    outline: none;
+  }
+
+  /* The arrow overlaps the panel border by 2px so the edge looks continuous. */
+  .ui-arrow {
+    overflow: visible;
+    fill: var(--surface);
+    stroke: var(--border);
+    stroke-width: 2px;
+  }
+
+  .ui-menu {
+    min-width: 12rem;
+    padding: 0.5rem;
+  }
+
+  .ui-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-radius: var(--radius-card);
+    padding: 0.75rem 1rem;
+    color: var(--muted);
+    font-size: var(--text-button);
+    font-weight: 700;
+    line-height: var(--text-button--line-height);
+    letter-spacing: var(--text-button--letter-spacing);
+    text-transform: uppercase;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+  }
+
+  .ui-menu-item[data-highlighted] {
+    background-color: var(--surface-hover);
+    color: var(--body);
+  }
+
+  .ui-menu-item[data-disabled] {
+    color: var(--disabled);
+    pointer-events: none;
+  }
+
+  .ui-menu-separator {
+    height: 2px;
+    margin-block: 0.25rem;
+    background-color: var(--border);
+  }
+
+  /* Modal -------------------------------------------------------------------- */
+  .ui-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background-color: var(--backdrop);
+  }
+
+  .ui-overlay[data-state="open"] {
+    animation: fade-in 200ms ease-out;
+  }
+
+  .ui-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 50;
+    width: min(24rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    translate: -50% -50%;
+    border: 2px solid transparent;
+    border-radius: var(--radius-modal);
+    background-color: var(--surface);
+    padding: 1.5rem;
+    color: var(--body);
+  }
+
+  .ui-modal:focus-visible {
+    outline: none;
+  }
+
+  .ui-modal[data-state="open"] {
+    animation: pop 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  [data-theme="dark"] .ui-modal {
+    border-color: var(--border);
+  }
+
+  .ui-modal-title {
+    color: var(--title);
+    font-size: var(--text-heading);
+    font-weight: var(--text-heading--font-weight);
+    line-height: var(--text-heading--line-height);
+    text-align: center;
+  }
+
+  .ui-modal-description {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* Toggle (switch) ---------------------------------------------------------- */
+  .ui-switch {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    width: 3.25rem;
+    height: 2rem;
+    padding: 0.25rem;
+    border-radius: 9999px;
+    background-color: var(--locked-face);
+    cursor: pointer;
+    transition: background-color 150ms ease-out;
+  }
+
+  .ui-switch[data-state="checked"] {
+    background-color: var(--blue);
+  }
+
+  .ui-switch:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+
+  .ui-switch:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+
+  .ui-switch-thumb {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 9999px;
+    background-color: var(--knob);
+    box-shadow: 0 2px 0 var(--knob-edge);
+    transition: translate 150ms ease-out;
+  }
+
+  .ui-switch-thumb[data-state="checked"] {
+    translate: 1.25rem 0;
+  }
+
+  /* Select ------------------------------------------------------------------- */
+  .ui-select-wrap {
+    position: relative;
+    display: block;
+  }
+
+  .ui-select {
+    width: 100%;
+    height: 3rem;
+    appearance: none;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-card);
+    background-color: var(--raised);
+    padding: 0 2.75rem 0 1rem;
+    color: var(--body);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .ui-select:disabled {
+    color: var(--disabled);
+    cursor: default;
+  }
+
+  .ui-select:focus-visible {
+    border-color: var(--selected-border);
+    outline: none;
+  }
+
+  .ui-select-chevron {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    translate: 0 -50%;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  /* Progress bar ------------------------------------------------------------- */
+  .ui-progress {
+    --progress-fill: var(--green);
+
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 1rem;
+    overflow: hidden;
+    border-radius: 9999px;
+    background-color: var(--locked-face);
+  }
+
+  .ui-progress-fill {
+    position: relative;
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--progress-fill);
+    transition: width 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* The lighter stripe across the upper half of the fill. */
+  .ui-progress-fill::after {
+    content: "";
+    position: absolute;
+    top: 20%;
+    right: 0.5rem;
+    left: 0.5rem;
+    height: 30%;
+    border-radius: 9999px;
+    background-color: var(--stripe);
+  }
+
+  .ui-progress-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: var(--text-caps);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .ui-progress-green {
+    --progress-fill: var(--green);
+  }
+
+  .ui-progress-blue {
+    --progress-fill: var(--blue);
+  }
+
+  .ui-progress-gold {
+    --progress-fill: var(--gold);
+  }
+
+  .ui-progress-orange {
+    --progress-fill: var(--orange);
+  }
+
+  .ui-progress-red {
+    --progress-fill: var(--red);
+  }
+
+  .ui-progress-purple {
+    --progress-fill: var(--purple);
+  }
+
+  /* Skeleton ----------------------------------------------------------------- */
+  .ui-skeleton {
+    display: block;
+    border-radius: 0.5rem;
+    background-color: var(--border);
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+
+  /* Toasts ------------------------------------------------------------------- */
+  .ui-toaster {
+    position: fixed;
+    right: 0;
+    bottom: calc(5.5rem + env(safe-area-inset-bottom));
+    left: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline: 1rem;
+    pointer-events: none;
+  }
+
+  @media (width >= 43.75rem) {
+    .ui-toaster {
+      bottom: 1.5rem;
+    }
+  }
+
+  .ui-toast {
+    --toast-accent: var(--blue);
+
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: min(28rem, 100%);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-panel);
+    background-color: var(--surface);
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    color: var(--title);
+    box-shadow: 0 2px 0 var(--border);
+    font-weight: 700;
+    pointer-events: auto;
+    animation: toast-in 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .ui-toast[data-leaving] {
+    animation: toast-out 150ms ease-in forwards;
+  }
+
+  .ui-toast-success {
+    --toast-accent: var(--green);
+  }
+
+  .ui-toast-error {
+    --toast-accent: var(--red);
+  }
+
+  .ui-toast-dot {
+    width: 0.625rem;
+    height: 0.625rem;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    background-color: var(--toast-accent);
+  }
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes skeleton-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
