@@ -1,0 +1,98 @@
+# Test fixture: a small but valid unit (the real course lives in app/seed/content/).
+unit:
+  slug: unit-2
+  section: 1
+  position: 2
+  title: Around us
+  description: Describe colours, count things, talk about the weather and clothes
+  color: purple
+skills:
+  - slug: colours
+    type: lesson
+    title: Colours
+    icon: star
+    vocab:
+      - { es: "rojo", en: "red", emoji: "🔴" }
+      - { es: "azul", en: "blue", emoji: "🔵" }
+      - { es: "verde", en: "green", emoji: "🟢" }
+      - { es: "amarillo", en: "yellow", emoji: "🟡" }
+      - { es: "negro", en: "black", emoji: "⚫" }
+      - { es: "blanco", en: "white", emoji: "⚪" }
+      - { es: "naranja", en: "orange", emoji: "🟠" }
+      - { es: "morado", en: "purple", emoji: "🟣" }
+    sentences:
+      - { es: "El coche es rojo.", en: "The car is red." }
+      - { es: "Mi camisa es azul.", en: "My shirt is blue." }
+      - { es: "La hoja es verde.", en: "The leaf is green." }
+      - { es: "El sol es amarillo.", en: "The sun is yellow." }
+      - { es: "El gato es negro.", en: "The cat is black." }
+      - { es: "La nube es blanca.", en: "The cloud is white." }
+  - slug: numbers
+    type: lesson
+    title: Numbers
+    icon: star
+    vocab:
+      - { es: "uno", en: "one", emoji: "1️⃣" }
+      - { es: "dos", en: "two", emoji: "2️⃣" }
+      - { es: "tres", en: "three", emoji: "3️⃣" }
+      - { es: "cuatro", en: "four", emoji: "4️⃣" }
+      - { es: "cinco", en: "five", emoji: "5️⃣" }
+      - { es: "seis", en: "six", emoji: "6️⃣" }
+      - { es: "siete", en: "seven", emoji: "7️⃣" }
+      - { es: "ocho", en: "eight", emoji: "8️⃣" }
+    sentences:
+      - { es: "Tengo dos gatos.", en: "I have two cats." }
+      - { es: "Hay tres sillas.", en: "There are three chairs." }
+      - { es: "Ella tiene cinco libros.", en: "She has five books." }
+      - { es: "Quiero cuatro manzanas.", en: "I want four apples." }
+      - { es: "Somos seis amigos.", en: "We are six friends." }
+      - { es: "Él tiene ocho años.", en: "He is eight years old.", alt_en: ["He is eight."] }
+  - slug: unit-2-chest
+    type: chest
+    title: Treasure chest
+    icon: chest
+    chest_gems: 10
+  - slug: weather
+    type: lesson
+    title: Weather
+    icon: star
+    vocab:
+      - { es: "el sol", en: "the sun", emoji: "☀️" }
+      - { es: "la lluvia", en: "the rain", emoji: "🌧️" }
+      - { es: "la nieve", en: "the snow", emoji: "❄️" }
+      - { es: "el viento", en: "the wind", emoji: "🌬️" }
+      - { es: "la nube", en: "the cloud", emoji: "☁️" }
+      - { es: "el calor", en: "the heat", emoji: "🔥" }
+      - { es: "el frío", en: "the cold", emoji: "🥶" }
+      - { es: "la tormenta", en: "the storm", emoji: "⛈️" }
+    sentences:
+      - { es: "Hace sol.", en: "It is sunny.", alt_en: ["It's sunny."] }
+      - { es: "Hace frío hoy.", en: "It is cold today.", alt_en: ["It's cold today."] }
+      - { es: "Llueve mucho.", en: "It rains a lot.", alt_en: ["It is raining a lot."] }
+      - { es: "Hay nieve.", en: "There is snow." }
+      - { es: "Hace mucho viento.", en: "It is very windy.", alt_en: ["It's very windy."] }
+      - { es: "Hace calor en verano.", en: "It is hot in summer.", alt_en: ["It's hot in summer."] }
+  - slug: clothes
+    type: lesson
+    title: Clothes
+    icon: star
+    vocab:
+      - { es: "la camisa", en: "the shirt", emoji: "👕" }
+      - { es: "los pantalones", en: "the trousers", emoji: "👖" }
+      - { es: "el vestido", en: "the dress", emoji: "👗" }
+      - { es: "los zapatos", en: "the shoes", emoji: "👞" }
+      - { es: "el sombrero", en: "the hat", emoji: "👒" }
+      - { es: "la chaqueta", en: "the jacket", emoji: "🧥" }
+      - { es: "los calcetines", en: "the socks", emoji: "🧦" }
+      - { es: "la bufanda", en: "the scarf", emoji: "🧣" }
+    sentences:
+      - { es: "Llevo una camisa.", en: "I am wearing a shirt.", alt_en: ["I'm wearing a shirt."] }
+      - { es: "Los zapatos son negros.", en: "The shoes are black." }
+      - { es: "Ella lleva un vestido.", en: "She is wearing a dress.", alt_en: ["She wears a dress."] }
+      - { es: "Necesito una chaqueta.", en: "I need a jacket." }
+      - { es: "El sombrero es grande.", en: "The hat is big." }
+      - { es: "Me gusta la bufanda.", en: "I like the scarf." }
+  - slug: unit-2-review
+    type: unit_review
+    title: Unit review
+    icon: trophy
