@@ -1,0 +1,209 @@
+unit:
+  slug: unit-1
+  section: 1
+  position: 1
+  title: Say hello
+  description: Greet people, meet the family and talk about food and home
+  color: green
+skills:
+  - slug: greetings
+    type: lesson
+    title: Greetings
+    icon: star
+    vocab:
+      - { es: "hola", en: "hello", emoji: "👋" }
+      - { es: "adiós", en: "goodbye" }
+      - { es: "buenos días", en: "good morning", emoji: "🌅" }
+      - { es: "buenas noches", en: "good night", emoji: "🌙" }
+      - { es: "gracias", en: "thank you" }
+      - { es: "mucho gusto", en: "nice to meet you", emoji: "🤝" }
+      - { es: "el hombre", en: "the man", emoji: "👨" }
+      - { es: "la mujer", en: "the woman", emoji: "👩" }
+      - { es: "el chico", en: "the boy", emoji: "👦" }
+      - { es: "la chica", en: "the girl", emoji: "👧" }
+    sentences:
+      - es: "Hola, soy Pablo."
+        en: "Hello, I am Pablo."
+        alt_en: ["Hi, I am Pablo.", "Hello, I'm Pablo.", "Hi, I'm Pablo."]
+        alt_es: ["Hola, yo soy Pablo."]
+      - es: "Buenos días, Marta."
+        en: "Good morning, Marta."
+        alt_en: ["Morning, Marta.", "Good day, Marta."]
+        alt_es: []
+      - es: "Buenas noches, Diego."
+        en: "Good night, Diego."
+        alt_en: ["Goodnight, Diego.", "Good evening, Diego."]
+        alt_es: []
+      - es: "Mucho gusto, Elena."
+        en: "Nice to meet you, Elena."
+        alt_en: ["Pleased to meet you, Elena.", "Nice meeting you, Elena."]
+        alt_es: []
+      - es: "Adiós y gracias."
+        en: "Goodbye and thank you."
+        alt_en: ["Goodbye and thanks.", "Bye and thank you.", "Bye and thanks."]
+        alt_es: []
+      - es: "Hola, soy una chica."
+        en: "Hello, I am a girl."
+        alt_en: ["Hi, I am a girl.", "Hello, I'm a girl.", "Hi, I'm a girl."]
+        alt_es: ["Hola, yo soy una chica."]
+      - es: "Sí, soy un chico."
+        en: "Yes, I am a boy."
+        alt_en: ["Yes, I'm a boy.", "Yeah, I am a boy.", "Yeah, I'm a boy."]
+        alt_es: ["Sí, yo soy un chico."]
+      - es: "Gracias, mucho gusto."
+        en: "Thank you, nice to meet you."
+        alt_en: ["Thanks, nice to meet you.", "Thank you, pleased to meet you.", "Thanks, pleased to meet you."]
+        alt_es: []
+  - slug: family
+    type: lesson
+    title: Family
+    icon: star
+    vocab:
+      - { es: "la familia", en: "the family", emoji: "👪" }
+      - { es: "la madre", en: "the mother" }
+      - { es: "el padre", en: "the father" }
+      - { es: "el hermano", en: "the brother" }
+      - { es: "la hermana", en: "the sister" }
+      - { es: "el abuelo", en: "the grandfather", emoji: "👴" }
+      - { es: "la abuela", en: "the grandmother", emoji: "👵" }
+      - { es: "el bebé", en: "the baby", emoji: "👶" }
+      - { es: "el perro", en: "the dog", emoji: "🐶" }
+      - { es: "el gato", en: "the cat", emoji: "🐱" }
+    sentences:
+      - es: "La mujer es mi madre."
+        en: "The woman is my mother."
+        alt_en: ["The woman's my mother.", "The woman is my mom.", "The woman is my mum."]
+        alt_es: []
+      - es: "El hombre es mi padre."
+        en: "The man is my father."
+        alt_en: ["The man's my father.", "The man is my dad.", "The man's my dad."]
+        alt_es: []
+      - es: "Tengo un hermano."
+        en: "I have a brother."
+        alt_en: ["I have one brother.", "I've got a brother.", "I have got a brother."]
+        alt_es: ["Yo tengo un hermano."]
+      - es: "Hola, ella es mi hermana."
+        en: "Hello, she is my sister."
+        alt_en: ["Hi, she is my sister.", "Hello, she's my sister.", "Hi, she's my sister."]
+        alt_es: ["Hola, es mi hermana."]
+      - es: "Mi abuelo se llama Bruno."
+        en: "My grandfather's name is Bruno."
+        alt_en: ["My grandfather is called Bruno.", "My grandpa is called Bruno.", "My grandpa's name is Bruno."]
+        alt_es: []
+      - es: "Mi abuela tiene un perro."
+        en: "My grandmother has a dog."
+        alt_en: ["My grandma has a dog.", "My grandmother has got a dog.", "My grandma's got a dog."]
+        alt_es: []
+      - es: "Es el bebé de Ana."
+        en: "It is Ana's baby."
+        alt_en: ["It's Ana's baby.", "That is Ana's baby.", "That's Ana's baby."]
+        alt_es: []
+      - es: "Mi familia tiene un gato."
+        en: "My family has a cat."
+        alt_en: ["My family has got a cat.", "My family's got a cat."]
+        alt_es: []
+  - slug: unit-1-chest
+    type: chest
+    title: Treasure chest
+    icon: chest
+    chest_gems: 10
+  - slug: food-and-drink
+    type: lesson
+    title: Food and drink
+    icon: star
+    vocab:
+      - { es: "el agua", en: "the water", emoji: "💧" }
+      - { es: "la leche", en: "the milk", emoji: "🥛" }
+      - { es: "el café", en: "the coffee", emoji: "☕" }
+      - { es: "el pan", en: "the bread", emoji: "🍞" }
+      - { es: "la manzana", en: "the apple", emoji: "🍎" }
+      - { es: "el queso", en: "the cheese", emoji: "🧀" }
+      - { es: "el huevo", en: "the egg", emoji: "🥚" }
+      - { es: "la naranja", en: "the orange", emoji: "🍊" }
+      - { es: "como", en: "I eat" }
+      - { es: "bebo", en: "I drink" }
+    sentences:
+      - es: "Bebo agua."
+        en: "I drink water."
+        alt_en: ["I am drinking water.", "I'm drinking water."]
+        alt_es: ["Yo bebo agua."]
+      - es: "Como pan con queso."
+        en: "I eat bread with cheese."
+        alt_en: ["I am eating bread with cheese.", "I'm eating bread with cheese."]
+        alt_es: ["Yo como pan con queso."]
+      - es: "¿Quieres queso?"
+        en: "Do you want cheese?"
+        alt_en: ["Would you like cheese?", "Do you want some cheese?", "Would you like some cheese?"]
+        alt_es: ["¿Tú quieres queso?"]
+      - es: "Mi hermana come una manzana."
+        en: "My sister eats an apple."
+        alt_en: ["My sister is eating an apple.", "My sister's eating an apple."]
+        alt_es: []
+      - es: "El gato bebe leche."
+        en: "The cat drinks milk."
+        alt_en: ["The cat is drinking milk.", "The cat's drinking milk."]
+        alt_es: []
+      - es: "Mi abuelo come un huevo."
+        en: "My grandfather eats an egg."
+        alt_en: ["My grandfather is eating an egg.", "My grandpa eats an egg.", "My grandpa is eating an egg."]
+        alt_es: []
+      - es: "No bebo café."
+        en: "I do not drink coffee."
+        alt_en: ["I don't drink coffee.", "I am not drinking coffee.", "I'm not drinking coffee."]
+        alt_es: ["Yo no bebo café."]
+      - es: "Como una naranja al día."
+        en: "I eat an orange a day."
+        alt_en: ["I eat one orange a day.", "I eat an orange every day.", "I eat one orange per day."]
+        alt_es: ["Yo como una naranja al día."]
+  - slug: at-home
+    type: lesson
+    title: At home
+    icon: star
+    vocab:
+      - { es: "la casa", en: "the house", emoji: "🏠" }
+      - { es: "la puerta", en: "the door", emoji: "🚪" }
+      - { es: "la ventana", en: "the window", emoji: "🪟" }
+      - { es: "la silla", en: "the chair", emoji: "🪑" }
+      - { es: "la llave", en: "the key", emoji: "🔑" }
+      - { es: "el libro", en: "the book", emoji: "📖" }
+      - { es: "el baño", en: "the bathroom", emoji: "🛁" }
+      - { es: "la mesa", en: "the table" }
+      - { es: "la cama", en: "the bed" }
+      - { es: "la cocina", en: "the kitchen" }
+    sentences:
+      - es: "Mi casa es pequeña."
+        en: "My house is small."
+        alt_en: ["My home is small.", "My house is little.", "My house's small."]
+        alt_es: []
+      - es: "La llave está en la puerta."
+        en: "The key is in the door."
+        alt_en: ["The key's in the door.", "The key is on the door."]
+        alt_es: []
+      - es: "El gato está en la cama."
+        en: "The cat is on the bed."
+        alt_en: ["The cat's on the bed.", "The cat is in the bed.", "The cat's in the bed."]
+        alt_es: []
+      - es: "Leo un libro en casa."
+        en: "I read a book at home."
+        alt_en: ["I am reading a book at home.", "I'm reading a book at home."]
+        alt_es: ["Yo leo un libro en casa."]
+      - es: "Mi padre está en la cocina."
+        en: "My father is in the kitchen."
+        alt_en: ["My dad is in the kitchen.", "My father's in the kitchen.", "My dad's in the kitchen."]
+        alt_es: []
+      - es: "El baño está arriba."
+        en: "The bathroom is upstairs."
+        alt_en: ["The bathroom's upstairs.", "The toilet is upstairs."]
+        alt_es: []
+      - es: "Hay una mesa y una silla."
+        en: "There is a table and a chair."
+        alt_en: ["There's a table and a chair.", "There is a table and chair."]
+        alt_es: []
+      - es: "Mi abuela abre la ventana."
+        en: "My grandmother opens the window."
+        alt_en: ["My grandmother is opening the window.", "My grandma opens the window.", "My grandma is opening the window."]
+        alt_es: []
+  - slug: unit-1-review
+    type: unit_review
+    title: Unit review
+    icon: trophy

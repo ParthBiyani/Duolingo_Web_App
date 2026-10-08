@@ -1,0 +1,209 @@
+unit:
+  slug: unit-3
+  section: 1
+  position: 3
+  title: Out and about
+  description: Shop for clothes and food, count your money and name the colours
+  color: blue
+skills:
+  - slug: clothes
+    type: lesson
+    title: Clothes
+    icon: star
+    vocab:
+      - { es: "la camiseta", en: "the T-shirt", emoji: "👕" }
+      - { es: "los pantalones", en: "the pants", emoji: "👖" }
+      - { es: "el vestido", en: "the dress", emoji: "👗" }
+      - { es: "los zapatos", en: "the shoes", emoji: "👞" }
+      - { es: "el sombrero", en: "the hat", emoji: "👒" }
+      - { es: "la chaqueta", en: "the jacket", emoji: "🧥" }
+      - { es: "los calcetines", en: "the socks", emoji: "🧦" }
+      - { es: "la bufanda", en: "the scarf", emoji: "🧣" }
+      - { es: "la ropa", en: "the clothes" }
+      - { es: "llevo", en: "I wear" }
+    sentences:
+      - es: "Llevo una camiseta."
+        en: "I am wearing a T-shirt."
+        alt_en: ["I'm wearing a T-shirt.", "I wear a T-shirt."]
+        alt_es: ["Yo llevo una camiseta."]
+      - es: "Ella lleva un vestido."
+        en: "She is wearing a dress."
+        alt_en: ["She's wearing a dress.", "She wears a dress."]
+        alt_es: ["Lleva un vestido."]
+      - es: "Mi abuelo lleva sombrero y bufanda."
+        en: "My grandfather wears a hat and a scarf."
+        alt_en: ["My grandfather is wearing a hat and a scarf.", "My grandpa wears a hat and a scarf.", "My grandpa is wearing a hat and a scarf."]
+        alt_es: ["Mi abuelo lleva un sombrero y una bufanda."]
+      - es: "Hoy llevo una chaqueta."
+        en: "Today I am wearing a jacket."
+        alt_en: ["Today I'm wearing a jacket.", "I am wearing a jacket today.", "I'm wearing a jacket today."]
+        alt_es: ["Llevo una chaqueta hoy."]
+      - es: "No encuentro mis calcetines."
+        en: "I cannot find my socks."
+        alt_en: ["I can't find my socks.", "I can not find my socks."]
+        alt_es: ["Yo no encuentro mis calcetines."]
+      - es: "Los pantalones son grandes."
+        en: "The pants are big."
+        alt_en: ["The trousers are big.", "The pants are large.", "The trousers are large."]
+        alt_es: []
+      - es: "Tengo mucha ropa."
+        en: "I have a lot of clothes."
+        alt_en: ["I have lots of clothes.", "I've got a lot of clothes.", "I have many clothes."]
+        alt_es: ["Yo tengo mucha ropa."]
+      - es: "Necesito zapatos."
+        en: "I need shoes."
+        alt_en: ["I need some shoes.", "I need a pair of shoes."]
+        alt_es: ["Yo necesito zapatos."]
+  - slug: at-the-market
+    type: lesson
+    title: At the market
+    icon: star
+    vocab:
+      - { es: "el mercado", en: "the market" }
+      - { es: "la fruta", en: "the fruit" }
+      - { es: "el plátano", en: "the banana", emoji: "🍌" }
+      - { es: "el tomate", en: "the tomato", emoji: "🍅" }
+      - { es: "la zanahoria", en: "the carrot", emoji: "🥕" }
+      - { es: "la fresa", en: "the strawberry", emoji: "🍓" }
+      - { es: "el pescado", en: "the fish", emoji: "🐟" }
+      - { es: "la carne", en: "the meat", emoji: "🥩" }
+      - { es: "el pollo", en: "the chicken", emoji: "🍗" }
+      - { es: "compro", en: "I buy" }
+    sentences:
+      - es: "Compro fruta en el mercado."
+        en: "I buy fruit at the market."
+        alt_en: ["I am buying fruit at the market.", "I'm buying fruit at the market.", "I buy fruit in the market."]
+        alt_es: ["Yo compro fruta en el mercado."]
+      - es: "Las fresas son dulces."
+        en: "The strawberries are sweet."
+        alt_en: ["Strawberries are sweet.", "The strawberries taste sweet."]
+        alt_es: []
+      - es: "¿Tienes tomates?"
+        en: "Do you have tomatoes?"
+        alt_en: ["Have you got tomatoes?", "Do you have any tomatoes?", "Have you got any tomatoes?"]
+        alt_es: ["¿Tú tienes tomates?"]
+      - es: "No como carne."
+        en: "I do not eat meat."
+        alt_en: ["I don't eat meat.", "I am not eating meat.", "I'm not eating meat."]
+        alt_es: ["Yo no como carne."]
+      - es: "Quiero pescado y pollo."
+        en: "I want fish and chicken."
+        alt_en: ["I would like fish and chicken.", "I'd like fish and chicken."]
+        alt_es: ["Yo quiero pescado y pollo."]
+      - es: "Mi perro come zanahorias."
+        en: "My dog eats carrots."
+        alt_en: ["My dog is eating carrots.", "My dog's eating carrots."]
+        alt_es: []
+      - es: "Hay plátanos en la mesa."
+        en: "There are bananas on the table."
+        alt_en: ["There are some bananas on the table.", "Some bananas are on the table."]
+        alt_es: []
+      - es: "El mercado está cerca."
+        en: "The market is near."
+        alt_en: ["The market is close.", "The market is nearby.", "The market's near."]
+        alt_es: []
+  - slug: unit-3-chest
+    type: chest
+    title: Treasure chest
+    icon: chest
+    chest_gems: 10
+  - slug: numbers-and-prices
+    type: lesson
+    title: Numbers and prices
+    icon: star
+    vocab:
+      - { es: "uno", en: "one" }
+      - { es: "dos", en: "two" }
+      - { es: "tres", en: "three" }
+      - { es: "cinco", en: "five" }
+      - { es: "diez", en: "ten", emoji: "🔟" }
+      - { es: "cien", en: "one hundred", emoji: "💯" }
+      - { es: "el dinero", en: "the money", emoji: "💰" }
+      - { es: "la moneda", en: "the coin", emoji: "🪙" }
+      - { es: "el billete", en: "the bill", emoji: "💵" }
+      - { es: "la tarjeta", en: "the card", emoji: "💳" }
+    sentences:
+      - es: "La camiseta cuesta diez euros."
+        en: "The T-shirt costs ten euros."
+        alt_en: ["The T-shirt costs 10 euros.", "The T-shirt is ten euros.", "The T-shirt is 10 euros."]
+        alt_es: ["La camiseta cuesta 10 euros."]
+      - es: "Tengo dos hermanos."
+        en: "I have two brothers."
+        alt_en: ["I have 2 brothers.", "I have two siblings.", "I've got two brothers."]
+        alt_es: ["Yo tengo dos hermanos.", "Tengo 2 hermanos."]
+      - es: "Son cinco euros."
+        en: "It is five euros."
+        alt_en: ["It's five euros.", "It's 5 euros.", "That's five euros.", "That is five euros."]
+        alt_es: ["Son 5 euros."]
+      - es: "No tengo dinero."
+        en: "I do not have money."
+        alt_en: ["I don't have money.", "I don't have any money.", "I have no money."]
+        alt_es: ["Yo no tengo dinero."]
+      - es: "¿Aceptan tarjeta?"
+        en: "Do you accept cards?"
+        alt_en: ["Do you take cards?", "Do you accept card?", "Do you take card?"]
+        alt_es: ["¿Aceptan tarjetas?"]
+      - es: "Solo tengo una moneda."
+        en: "I only have one coin."
+        alt_en: ["I only have a coin.", "I have only one coin.", "I've only got one coin."]
+        alt_es: ["Yo solo tengo una moneda."]
+      - es: "Cien euros es mucho."
+        en: "One hundred euros is a lot."
+        alt_en: ["A hundred euros is a lot.", "100 euros is a lot."]
+        alt_es: ["100 euros es mucho."]
+      - es: "Tres manzanas, por favor."
+        en: "Three apples, please."
+        alt_en: ["3 apples, please.", "Please, three apples."]
+        alt_es: ["3 manzanas, por favor."]
+  - slug: colours
+    type: lesson
+    title: Colours
+    icon: star
+    vocab:
+      - { es: "rojo", en: "red", emoji: "🔴" }
+      - { es: "azul", en: "blue", emoji: "🔵" }
+      - { es: "verde", en: "green", emoji: "🟢" }
+      - { es: "amarillo", en: "yellow", emoji: "🟡" }
+      - { es: "negro", en: "black", emoji: "⚫" }
+      - { es: "blanco", en: "white", emoji: "⚪" }
+      - { es: "morado", en: "purple", emoji: "🟣" }
+      - { es: "marrón", en: "brown", emoji: "🟤" }
+      - { es: "gris", en: "grey" }
+      - { es: "el color", en: "the colour" }
+    sentences:
+      - es: "Llevo un vestido rojo."
+        en: "I am wearing a red dress."
+        alt_en: ["I'm wearing a red dress.", "I wear a red dress."]
+        alt_es: ["Yo llevo un vestido rojo."]
+      - es: "Mi color favorito es el azul."
+        en: "My favourite colour is blue."
+        alt_en: ["My favorite color is blue.", "My favourite color is blue.", "My favorite colour is blue."]
+        alt_es: ["Mi color favorito es azul."]
+      - es: "Quiero la camiseta verde."
+        en: "I want the green T-shirt."
+        alt_en: ["I would like the green T-shirt.", "I'd like the green T-shirt."]
+        alt_es: ["Yo quiero la camiseta verde."]
+      - es: "Tengo un gato negro y blanco."
+        en: "I have a black and white cat."
+        alt_en: ["I've got a black and white cat.", "I have got a black and white cat.", "I have a black-and-white cat."]
+        alt_es: ["Yo tengo un gato negro y blanco."]
+      - es: "El taxi es amarillo."
+        en: "The taxi is yellow."
+        alt_en: ["The taxi's yellow.", "The cab is yellow.", "The cab's yellow."]
+        alt_es: []
+      - es: "Busco un sombrero marrón."
+        en: "I am looking for a brown hat."
+        alt_en: ["I'm looking for a brown hat.", "I am searching for a brown hat.", "I'm searching for a brown hat."]
+        alt_es: ["Yo busco un sombrero marrón."]
+      - es: "El cielo está gris."
+        en: "The sky is grey."
+        alt_en: ["The sky is gray.", "The sky's grey.", "The sky's gray."]
+        alt_es: []
+      - es: "¿De qué color es?"
+        en: "What colour is it?"
+        alt_en: ["What color is it?", "What colour is that?", "What color is that?"]
+        alt_es: []
+  - slug: unit-3-review
+    type: unit_review
+    title: Unit review
+    icon: trophy
