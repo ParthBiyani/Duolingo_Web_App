@@ -1,1 +1,384 @@
+/*
+ * Design system entry point: tokens, Tailwind theme, base styles and motion.
+ *
+ * Colour, radius and type values were measured on the live web app in both
+ * themes. Role variables (--surface, --green, ...) are defined once per theme
+ * below, and `@theme inline` exposes each one as a Tailwind colour of the same
+ * name. Components never use raw hex values. Utilities you can use:
+ *
+ *   surfaces   bg-surface  bg-surface-hover  bg-raised  border-border  bg-backdrop
+ *   text       text-title  text-body  text-muted  text-disabled
+ *   brand      green  green-shade  on-green  blue  blue-shade  on-blue  red  red-shade  on-red
+ *              gold  gold-shade  orange  orange-shade  purple  purple-shade
+ *   selection  bg-selected-bg  border-selected-border  text-selected-text
+ *   feedback   bg-feedback-correct-bg  text-feedback-correct-text
+ *              bg-feedback-wrong-bg  text-feedback-wrong-text
+ *   locked     bg-locked-face  (edge) locked-edge  (icon) locked-icon
+ *   units      unit-{green,purple,blue,orange,red} and unit-{...}-shade
+ *   radius     rounded-tile  rounded-card  rounded-button  rounded-modal
+ *              rounded-panel  rounded-rail  rounded-banner  rounded-bubble
+ *   depth      shadow-edge-{green,blue,red,gold,orange,purple,locked}  (0 4px 0)
+ *              shadow-edge-border  shadow-edge-selected  (0 2px 0)
+ *   type       text-display  text-heading  text-lead  text-base  text-button  text-caps
+ *   motion     animate-bob  animate-shake  animate-pop  animate-slide-up
+ *              animate-fade-in  animate-heart-pulse
+ *
+ * Breakpoints follow the app shell: md = 700px (sidebar replaces the bottom
+ * bar), lg = 1024px (full sidebar), xl = 1160px (right rail).
+ * `dark:` targets [data-theme="dark"], which the no-flash script in the root
+ * layout sets before the first paint.
+ */
+
 @import "tailwindcss";
+@import "../components/ui/primitives.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Light theme (default) --------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --surface: #ffffff;
+  --surface-hover: #f7f7f7;
+  --raised: #f7f7f7;
+  --border: #e5e5e5;
+  --backdrop: rgb(0 0 0 / 0.4);
+
+  --title: #3c3c3c;
+  --body: #4b4b4b;
+  --muted: #777777;
+  --disabled: #afafaf;
+
+  --green: #58cc02;
+  --green-shade: #58a700;
+  --on-green: #ffffff;
+  --blue: #1cb0f6;
+  --blue-shade: #1899d6;
+  --on-blue: #ffffff;
+  --red: #ff4b4b;
+  --red-shade: #ea2b2b;
+  --on-red: #ffffff;
+  --gold: #ffc800;
+  --gold-shade: #e5b400;
+  --orange: #ff9600;
+  --orange-shade: #cd7900;
+  --purple: #ce82ff;
+  --purple-shade: #a568cc;
+
+  --selected-bg: #ddf4ff;
+  --selected-border: #84d8ff;
+  --selected-text: #1899d6;
+
+  --feedback-correct-bg: #d7ffb8;
+  --feedback-correct-text: #58a700;
+  --feedback-wrong-bg: #ffdfe0;
+  --feedback-wrong-text: #ea2b2b;
+
+  --locked-face: #e5e5e5;
+  --locked-edge: #b7b7b7;
+  --locked-icon: #afafaf;
+
+  --unit-green: #58cc02;
+  --unit-green-shade: #58a700;
+  --unit-purple: #ce82ff;
+  --unit-purple-shade: #a568cc;
+  --unit-blue: #1cb0f6;
+  --unit-blue-shade: #1899d6;
+  --unit-orange: #ff9600;
+  --unit-orange-shade: #cd7900;
+  --unit-red: #ff4b4b;
+  --unit-red-shade: #ea2b2b;
+
+  /* Small effect colours used by primitives. */
+  --stripe: rgb(255 255 255 / 0.2);
+  --knob: #ffffff;
+  --knob-edge: rgb(0 0 0 / 0.12);
+}
+
+/* Dark theme -------------------------------------------------------------- */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface: #131f24;
+  --surface-hover: #202f36;
+  --raised: #202f36;
+  --border: #37464f;
+  --backdrop: rgb(0 0 0 / 0.6);
+
+  --title: #f1f7fb;
+  --body: #dce6ec;
+  --muted: #52656d;
+  --disabled: #52656d;
+
+  --green: #93d333;
+  --green-shade: #79b933;
+  --on-green: #131f24;
+  --blue: #49c0f8;
+  --blue-shade: #1899d6;
+  --on-blue: #131f24;
+  --red: #ee5555;
+  --red-shade: #d84848;
+  --on-red: #131f24;
+  --gold: #ffc700;
+  --gold-shade: #e0ae00;
+  --orange: #ffab33;
+  --orange-shade: #d98a1f;
+  --purple: #ce82ff;
+  --purple-shade: #a568cc;
+
+  --selected-bg: #202f36;
+  --selected-border: #3f85a7;
+  --selected-text: #1899d6;
+
+  --feedback-correct-bg: #202f36;
+  --feedback-correct-text: #79b933;
+  --feedback-wrong-bg: #202f36;
+  --feedback-wrong-text: #d84848;
+
+  --locked-face: #37464f;
+  --locked-edge: #2a3a41;
+  --locked-icon: #52656d;
+
+  --knob-edge: rgb(0 0 0 / 0.3);
+}
+
+/* Theme-switched roles exposed as Tailwind colours, shadows and the font. */
+@theme inline {
+  --font-sans: var(--font-nunito), ui-rounded, "Segoe UI", system-ui, sans-serif;
+
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-raised: var(--raised);
+  --color-border: var(--border);
+  --color-backdrop: var(--backdrop);
+
+  --color-title: var(--title);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-disabled: var(--disabled);
+
+  --color-green: var(--green);
+  --color-green-shade: var(--green-shade);
+  --color-on-green: var(--on-green);
+  --color-blue: var(--blue);
+  --color-blue-shade: var(--blue-shade);
+  --color-on-blue: var(--on-blue);
+  --color-red: var(--red);
+  --color-red-shade: var(--red-shade);
+  --color-on-red: var(--on-red);
+  --color-gold: var(--gold);
+  --color-gold-shade: var(--gold-shade);
+  --color-orange: var(--orange);
+  --color-orange-shade: var(--orange-shade);
+  --color-purple: var(--purple);
+  --color-purple-shade: var(--purple-shade);
+
+  --color-selected-bg: var(--selected-bg);
+  --color-selected-border: var(--selected-border);
+  --color-selected-text: var(--selected-text);
+
+  --color-feedback-correct-bg: var(--feedback-correct-bg);
+  --color-feedback-correct-text: var(--feedback-correct-text);
+  --color-feedback-wrong-bg: var(--feedback-wrong-bg);
+  --color-feedback-wrong-text: var(--feedback-wrong-text);
+
+  --color-locked-face: var(--locked-face);
+  --color-locked-edge: var(--locked-edge);
+  --color-locked-icon: var(--locked-icon);
+
+  --color-unit-green: var(--unit-green);
+  --color-unit-green-shade: var(--unit-green-shade);
+  --color-unit-purple: var(--unit-purple);
+  --color-unit-purple-shade: var(--unit-purple-shade);
+  --color-unit-blue: var(--unit-blue);
+  --color-unit-blue-shade: var(--unit-blue-shade);
+  --color-unit-orange: var(--unit-orange);
+  --color-unit-orange-shade: var(--unit-orange-shade);
+  --color-unit-red: var(--unit-red);
+  --color-unit-red-shade: var(--unit-red-shade);
+
+  /* 3D edges: filled faces sit on 4px of their shade, outlined ones on 2px. */
+  --shadow-edge-green: 0 4px 0 var(--green-shade);
+  --shadow-edge-blue: 0 4px 0 var(--blue-shade);
+  --shadow-edge-red: 0 4px 0 var(--red-shade);
+  --shadow-edge-gold: 0 4px 0 var(--gold-shade);
+  --shadow-edge-orange: 0 4px 0 var(--orange-shade);
+  --shadow-edge-purple: 0 4px 0 var(--purple-shade);
+  --shadow-edge-locked: 0 4px 0 var(--locked-edge);
+  --shadow-edge-border: 0 2px 0 var(--border);
+  --shadow-edge-selected: 0 2px 0 var(--selected-border);
+}
+
+/* Static tokens: breakpoints, radii, type scale and motion. */
+@theme {
+  --breakpoint-md: 43.75rem;
+  --breakpoint-xl: 72.5rem;
+
+  --radius-tile: 12px;
+  --radius-card: 12px;
+  --radius-button: 16px;
+  --radius-modal: 16px;
+  --radius-panel: 16px;
+  --radius-rail: 16px;
+  --radius-banner: 14px;
+  --radius-bubble: 10px;
+
+  --text-display: 2rem;
+  --text-display--line-height: 2.5rem;
+  --text-display--font-weight: 800;
+  --text-heading: 1.5rem;
+  --text-heading--line-height: 1.875rem;
+  --text-heading--font-weight: 700;
+  --text-lead: 1.1875rem;
+  --text-lead--line-height: 1.5rem;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.25rem;
+  --text-button: 0.9375rem;
+  --text-button--line-height: 1.25rem;
+  --text-button--letter-spacing: 0.8px;
+  --text-button--font-weight: 700;
+  --text-caps: 0.8125rem;
+  --text-caps--line-height: 1rem;
+  --text-caps--letter-spacing: 0.8px;
+  --text-caps--font-weight: 700;
+
+  --ease-snappy: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --animate-bob: bob 1.6s ease-in-out infinite;
+  --animate-shake: shake 400ms ease-in-out;
+  --animate-pop: pop 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-slide-up: slide-up 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-fade-in: fade-in 200ms ease-out;
+  --animate-heart-pulse: heart-pulse 500ms ease-in-out;
+}
+
+/* Keyframes are declared outside @theme so primitives can use them directly. */
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-6px);
+  }
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes heart-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.3);
+  }
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after,
+  ::backdrop {
+    border-color: var(--border);
+  }
+
+  body {
+    min-height: 100dvh;
+    /* `clip` (unlike `hidden`) creates no scroll container, so sticky elements keep working. */
+    overflow-x: clip;
+    background-color: var(--surface);
+    color: var(--body);
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: var(--text-base--line-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--selected-bg);
+  }
+}
+
+/*
+ * Motion is switched off when the learner turns off the Animations setting
+ * (data-animations="off" on <html>) or the OS asks for reduced motion.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root[data-animations="off"] *,
+:root[data-animations="off"] ::before,
+:root[data-animations="off"] ::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
