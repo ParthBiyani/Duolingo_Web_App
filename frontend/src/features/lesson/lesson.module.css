@@ -1,0 +1,16 @@
+/* Lesson keyframes that are not part of the shared motion tokens. */
+
+/* A matched tile flashes green, then settles into its greyed-out "done" look. */
+.matched {
+  animation: matched 700ms ease-out;
+}
+
+@keyframes matched {
+  0%,
+  55% {
+    border-color: var(--green);
+    background-color: var(--feedback-correct-bg);
+    color: var(--feedback-correct-text);
+    box-shadow: 0 2px 0 var(--green);
+  }
+}
