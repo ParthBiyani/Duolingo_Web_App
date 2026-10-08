@@ -30,6 +30,10 @@ target-version = "py313"
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "SIM", "N", "RUF"]
 
+[tool.ruff.lint.per-file-ignores]
+# Generated migrations keep each constraint on one line, even when it is long.
+"migrations/versions/*.py" = ["E501"]
+
 [tool.ruff.format]
 line-ending = "lf"
 
@@ -44,6 +48,7 @@ disallow_untyped_defs = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "-q"
 
 [tool.coverage.run]
