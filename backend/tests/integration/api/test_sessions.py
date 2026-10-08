@@ -66,6 +66,16 @@ def test_a_full_lesson_awards_xp_streak_and_progress(client: TestClient, db: Ses
     assert me["streak"]["extended_today"] is True
 
 
+def test_the_first_lesson_does_not_reaward_the_seeded_streak_level(
+    client: TestClient, db: Session
+) -> None:
+    session = start(client, "lesson", lesson_id=active_node(client)["next_lesson_id"])
+    solve_all(client, db, session)
+    result = complete(client, session["id"])
+    assert result["streak"]["current"] == 13
+    assert "wildfire" not in {a["key"] for a in result["achievements"]}
+
+
 def test_completion_is_idempotent(client: TestClient, db: Session) -> None:
     session = start(client, "lesson", lesson_id=active_node(client)["next_lesson_id"])
     solve_all(client, db, session)

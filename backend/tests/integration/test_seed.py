@@ -203,7 +203,7 @@ def test_achievement_levels_and_their_gems(db: Session) -> None:
     rows = db.scalars(select(UserAchievement).where(UserAchievement.user_id == user.id))
     levels = {row.achievement.key: (row.level, row.progress) for row in rows}
     assert levels == {
-        "wildfire": (2, 12),  # 12 of 14 days towards level 3
+        "wildfire": (3, 21),  # the old 21-day streak, 21 of 30 days towards level 4
         "sage": (4, 1240),
         "sharpshooter": (2, 13),
         "champion": (2, 2),  # Silver
