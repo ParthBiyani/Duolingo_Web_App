@@ -18,7 +18,7 @@ longest streak of first-try correct answers in the session.
 
 ## Hearts
 
-- A learner has at most **5** hearts.
+- A learner has at most **10** hearts and starts with all of them.
 - Each incorrect CHECK in a lesson or review costs one heart, including each wrong match in "Select the
   matching pairs".
 - These never cost a heart:

@@ -44,7 +44,7 @@ erDiagram
 | | `exercise_answers` | Accepted typed answers; the canonical answer is flagged. |
 | Learners | `users` | The default learner plus seeded league rivals (`is_bot`, `bot_pace_xp`). Stores the time zone. |
 | | `user_settings` | Sound, animations, motivational messages, listening exercises, theme, daily goal (`CHECK IN (1,10,20,30,50)`). |
-| | `user_stats` | Current state: hearts (0–5) with the regeneration anchor, streak, freezes (0–2), league tier, and cached `xp_total` and `gems`. |
+| | `user_stats` | Current state: hearts (0–10) with the regeneration anchor, streak, freezes (0–2), league tier, and cached `xp_total` and `gems`. |
 | | `skill_progress` | Per learner and skill: lessons completed and crown level (0–2), with completed and legendary timestamps. |
 | Sessions | `sessions` | One per lesson attempt. Client UUID key, kind, status, frozen exercise plan (JSON), stored completion result (JSON). |
 | | `session_answers` | Every graded answer. `UNIQUE(session_id, answer_id)` makes submissions replay-safe. |
