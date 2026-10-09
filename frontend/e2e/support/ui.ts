@@ -16,3 +16,25 @@ export async function expectComingSoon(page: Page): Promise<void> {
 export function toastWith(page: Page, text: string | RegExp) {
   return page.getByRole("status").filter({ hasText: text });
 }
+
+/**
+ * Settings pages show the settings cards instead of the top bar stats and right rail (as on the
+ * original), so checks on those run in a second tab on the path, in the same session.
+ */
+export async function onLearnPage(
+  page: Page,
+  check: (learn: Page) => Promise<void>,
+): Promise<void> {
+  const learn = await page.context().newPage();
+  try {
+    await learn.goto("/learn");
+    await check(learn);
+  } finally {
+    await learn.close();
+  }
+}
+
+/** Expects a top bar stat ("Streak: 12 days", "Hearts: 3") on the path, from a settings page. */
+export function expectStat(page: Page, name: string): Promise<void> {
+  return onLearnPage(page, (learn) => expect(learn.getByRole("button", { name })).toBeVisible());
+}

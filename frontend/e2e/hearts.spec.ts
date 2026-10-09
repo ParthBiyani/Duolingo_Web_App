@@ -4,6 +4,7 @@ import type { Api } from "./support/api";
 import { expect, test } from "./support/fixtures";
 import { LessonPage, startActiveLesson } from "./support/lesson";
 import { wrongAnswer } from "./support/oracle";
+import { expectStat } from "./support/ui";
 
 /** Hearts are capped at ten; every sample learner starts with all of them. */
 const MAX_HEARTS = 10;
@@ -130,18 +131,18 @@ test.describe("hearts", () => {
     await api.loseAllHearts(node.next_lesson_id ?? 0);
 
     await page.goto("/settings/preferences");
-    await expect(page.getByRole("button", { name: "Hearts: 0" })).toBeVisible();
+    await expectStat(page, "Hearts: 0");
     const demo = page.getByRole("region", { name: "Demo tools" });
     const fiveHours = demo.getByRole("button", { name: "+5 hours" });
 
     await fiveHours.click();
     await expect(page.getByText("Clock moved: +5 hours")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Hearts: 1" })).toBeVisible();
+    await expectStat(page, "Hearts: 1");
     await fiveHours.click();
-    await expect(page.getByRole("button", { name: "Hearts: 2" })).toBeVisible();
     await expect(demo.getByText("+10 hours", { exact: true })).toBeVisible();
 
     // The next heart is a full five hours after the last one, on the moved clock.
+    await page.goto("/learn");
     await page.getByRole("button", { name: "Hearts: 2" }).click();
     await expect(page.getByRole("dialog")).toContainText(/Next heart in 4:5\d:\d\d/);
     expect((await api.me()).stats.hearts).toBe(2);
