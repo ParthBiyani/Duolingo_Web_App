@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import { Bolt, Flame, Medal, Shield } from "@/components/icons";
+import { LeagueBadge, StatMedal, StatStreak, StatXp } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { Button, Skeleton } from "@/components/ui";
 import { useLeaderboard, useProfile } from "@/lib/api";
@@ -38,7 +38,7 @@ export function ProfileScreen() {
   }
 
   const { user, course, stats, achievements } = profile.data;
-  const leagueColor = board.data?.tiers.find((tier) => tier.name === stats.league_name)?.color;
+  const leagueTier = board.data?.tiers.find((tier) => tier.name === stats.league_name)?.tier ?? 0;
 
   return (
     <div className="pt-6 pb-16">
@@ -50,22 +50,22 @@ export function ProfileScreen() {
         </h2>
         <ul className="mt-4 grid grid-cols-2 gap-3 md:gap-4">
           <StatTile
-            icon={<Flame size={28} muted={stats.streak === 0} />}
+            icon={<StatStreak size={21} />}
             value={formatCount(stats.streak)}
             label={profileStrings.dayStreak}
           />
           <StatTile
-            icon={<Bolt size={28} />}
+            icon={<StatXp size={21} />}
             value={formatCount(stats.xp_total)}
             label={profileStrings.totalXp}
           />
           <StatTile
-            icon={<Shield size={28} color={leagueColor} />}
+            icon={<LeagueBadge tier={leagueTier} size={24} />}
             value={stats.league_name ?? profileStrings.noLeague}
             label={profileStrings.currentLeague}
           />
           <StatTile
-            icon={<Medal place={1} size={28} />}
+            icon={<StatMedal size={21} />}
             value={formatCount(stats.top3_finishes)}
             label={profileStrings.top3}
           />

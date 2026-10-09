@@ -1,4 +1,4 @@
-import { Lock, Shield } from "@/components/icons";
+import { LeagueBadge } from "@/components/icons";
 import type { LeaderboardResponse } from "@/lib/api/types";
 
 import { leaderboardStrings } from "./strings";
@@ -38,24 +38,13 @@ export function LeagueBadgeStrip({ tiers, current }: { tiers: Tier[]; current: n
           >
             <span className="sr-only">{leaderboardStrings.tierBadge(tier.name, state)}</span>
             {state === "locked" ? (
-              <LockedShield size={52} />
+              <LeagueBadge tier={tier.tier} locked size={52} />
             ) : (
-              <Shield color={tier.color} size={state === "current" ? 84 : 52} />
+              <LeagueBadge tier={tier.tier} size={state === "current" ? 84 : 52} />
             )}
           </li>
         );
       })}
     </ul>
-  );
-}
-
-/** Grey shield with a padlock, for leagues the learner has not reached. */
-export function LockedShield({ size }: { size: number }) {
-  return (
-    <span className="relative grid place-items-center" aria-hidden="true">
-      {/* A utility beats the artwork's presentation attributes, turning the whole shield grey. */}
-      <Shield size={size} className="[&_path]:fill-locked-face [&_path]:stroke-locked-face" />
-      <Lock size={Math.round(size * 0.4)} className="absolute top-[30%]" />
-    </span>
   );
 }

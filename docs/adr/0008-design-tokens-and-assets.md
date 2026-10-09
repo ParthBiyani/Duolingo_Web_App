@@ -1,4 +1,4 @@
-# ADR 0008: Design tokens and original assets
+# ADR 0008: Design tokens and assets
 
 - Status: accepted
 - Date: 2026-10-08
@@ -16,8 +16,9 @@ illustrations or sounds.
 - **Fonts:** Duolingo's own typefaces, so text renders exactly as on the original: Duolingo Sans
   (a variable font, weights 100-900, upright and italic) for all UI text and Feather Bold for the
   wordmark. They are self-hosted with `next/font/local` from `frontend/src/app/fonts`.
-- **Icons, mascot and characters:** hand-written SVG React components drawn for this project. The
-  mascot is an original green owl.
+- **Icons and artwork:** Duolingo's own SVG files (navigation, top bar, path nodes, chests, league
+  badges, shop and profile art), served from `frontend/public/duo` and rendered by `DuoImage`.
+  The remaining icons, the mascot poses and the lesson characters are drawn as SVG components.
 - **Picture cards:** use the platform's native emoji glyphs instead of image files.
 - **Sound effects:** synthesised at runtime with the Web Audio API. There are no audio files.
 - **Text-to-speech:** the browser's Speech Synthesis API.

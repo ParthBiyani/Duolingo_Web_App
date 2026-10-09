@@ -4,8 +4,9 @@ A full-stack clone of the Duolingo web app. It recreates the learning path, the 
 varied exercises, and the gamification loop: XP, streaks, hearts, gems, leagues and achievements.
 It is built with **Next.js (TypeScript)**, **FastAPI** and **SQLite**.
 
-> Educational clone built for a hiring assignment; not affiliated with Duolingo. All artwork, icons,
-> sounds and course sentences in this repository are original.
+> Educational clone built for a hiring assignment; not affiliated with Duolingo. The Duolingo name,
+> fonts, icons and artwork belong to Duolingo and are used only to reproduce its look for this
+> assignment. The course sentences and sound effects are original.
 
 **Live demo:** https://duolingo-seven-ecru.vercel.app · **API:** https://duolingo-web-app-9qs3.onrender.com (interactive docs at [`/api/docs`](https://duolingo-web-app-9qs3.onrender.com/api/docs))
 
@@ -197,5 +198,5 @@ docs/      architecture, database, game rules, deployment, decision records
 - The code is [MIT](LICENSE).
 - The fonts are Duolingo's own typefaces (Duolingo Sans and Feather), included only to reproduce the
   original look in this educational clone. They remain Duolingo's property.
-- Icons, mascot and illustrations are original SVGs drawn for this project. Picture cards use the
-  device's emoji font, and sound effects are synthesised in the browser.
+- Icons and artwork in `frontend/public/duo` are Duolingo's, used only to reproduce the original
+  look. Picture cards use the device's emoji font, and sound effects are synthesised in the browser.
