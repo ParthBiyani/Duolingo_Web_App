@@ -9,7 +9,7 @@ export function StartBubble({ label, className }: { label: string; className?: s
     <div
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute bottom-[calc(100%+30px)] left-1/2 z-10 -translate-x-1/2",
+        "pointer-events-none absolute bottom-[calc(100%+6px)] left-1/2 z-10 -translate-x-1/2",
         className,
       )}
     >
