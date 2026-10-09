@@ -11,9 +11,9 @@ It is built with **Next.js (TypeScript)**, **FastAPI** and **SQLite**.
 
 **Live demo:** https://duolingo-seven-ecru.vercel.app · **API:** https://duolingo-web-app-9qs3.onrender.com (interactive docs at [`/api/docs`](https://duolingo-web-app-9qs3.onrender.com/api/docs))
 
-**Log in as a sample learner and explore the path**
+**Log in as a sample learner, open the streak window and explore the path**
 
-![Logging in as Parth Biyani, the top-bar popovers and the learning path](docs/demo/login-and-path.gif)
+![Logging in as Parth Biyani, the top-bar popovers, the streak window and the learning path](docs/demo/login-and-path.gif)
 
 **A lesson: a miss costs a heart, then lesson complete, streak and daily goal**
 
