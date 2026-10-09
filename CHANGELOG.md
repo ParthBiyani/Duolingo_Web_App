@@ -7,6 +7,9 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Streak details:** VIEW MORE in the streak popover opens a Streak window with a month calendar
+  of streak and frozen days, the next streak goal and the Streak Society, backed by
+  `GET /streak/calendar`.
 - **Login:** a login page with four sample learners at different stages in a 2x2 grid, a signed
   `HttpOnly` session cookie (`duo_session`), log out, and a redirect to `/login` without a session.
   Sign-up and the email and password form are "Coming soon".
