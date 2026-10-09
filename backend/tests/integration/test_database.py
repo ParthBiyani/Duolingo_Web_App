@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.core import db as db_module
 from app.core.clock import get_clock_offset, set_clock_offset
 from app.core.db import create_db_engine, get_db, session_scope
+from app.domain.hearts import MAX_HEARTS
 from app.models import DailyActivity, GemTransaction, User, UserStats, XpEvent
 from app.seed.learner import USERNAME
 from tests.conftest import NOW, sqlite_url
@@ -79,10 +80,10 @@ def test_deleting_a_learner_cascades_to_their_rows(db: Session) -> None:
 @pytest.mark.parametrize(
     ("column", "value"),
     [
-        ("hearts", 6),  # more than the maximum
+        ("hearts", MAX_HEARTS + 1),  # more than the maximum
         ("gems", -1),  # a negative balance
         ("streak_freezes", 3),  # more freezes than can be held
-        ("hearts_anchor_at", None),  # 4 hearts but no regeneration clock running
+        ("hearts", MAX_HEARTS - 1),  # a heart missing but no regeneration clock running
     ],
 )
 def test_user_stats_checks_reject_impossible_values(

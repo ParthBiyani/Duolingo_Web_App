@@ -12,7 +12,8 @@ from tests.integration.api.play import active_node, complete, solve_all, start
 def test_shop_lists_items_with_availability(client: TestClient) -> None:
     shop = client.get("/api/v1/shop").json()
     items = {item["key"]: item for item in shop["items"]}
-    assert items["heart_refill"]["price_gems"] == 350 and items["heart_refill"]["available"] is True
+    assert items["heart_refill"]["price_gems"] == 350
+    assert items["heart_refill"]["disabled_reason"] == "full"  # the learner starts with full hearts
     assert items["unlimited_hearts"]["disabled_reason"] == "coming_soon"
     assert items["streak_freeze"]["max_owned"] == 2
 
@@ -30,7 +31,6 @@ def test_streak_freezes_are_capped_at_two(client: TestClient) -> None:
 
 
 def test_refill_needs_missing_hearts_and_enough_gems(client: TestClient, clock: FixedClock) -> None:
-    clock.advance(timedelta(hours=5))  # back to full hearts
     full = client.post("/api/v1/hearts/refill", json={"context": "shop"})
     assert full.status_code == 409 and full.json()["code"] == "hearts_full"
     soon = client.post("/api/v1/shop/purchases", json={"item_key": "unlimited_hearts"})

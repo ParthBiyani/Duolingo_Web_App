@@ -9,6 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.clock import FixedClock
+from app.domain.hearts import MAX_HEARTS
 from app.models import User
 from tests.integration.api.play import (
     active_node,
@@ -50,7 +51,7 @@ def test_a_full_lesson_awards_xp_streak_and_progress(client: TestClient, db: Ses
         first_choice_exercise(session)["id"],
         wrong_answer(db, first_choice_exercise(session)["id"]),
     )
-    assert wrong["outcome"] == "incorrect" and wrong["hearts"] == 3
+    assert wrong["outcome"] == "incorrect" and wrong["hearts"] == MAX_HEARTS - 1
     assert wrong["solution_display"]
 
     solve_all(client, db, session)
@@ -96,7 +97,7 @@ def test_a_repeated_answer_id_does_not_cost_a_second_heart(client: TestClient, d
     }
     first = client.post(f"/api/v1/sessions/{session['id']}/answers", json=body).json()
     second = client.post(f"/api/v1/sessions/{session['id']}/answers", json=body).json()
-    assert first["hearts"] == second["hearts"] == 3
+    assert first["hearts"] == second["hearts"] == MAX_HEARTS - 1
 
 
 def test_an_unfinished_session_cannot_be_completed(client: TestClient) -> None:
@@ -109,7 +110,7 @@ def test_skipping_costs_no_heart(client: TestClient) -> None:
     session = start(client, "lesson", lesson_id=active_node(client)["next_lesson_id"])
     exercise = session["exercises"][0]
     result = answer(client, session["id"], exercise["id"], {"skipped": True})
-    assert result["outcome"] == "skipped" and result["hearts"] == 4
+    assert result["outcome"] == "skipped" and result["hearts"] == MAX_HEARTS
 
 
 def test_out_of_hearts_blocks_new_lessons_until_refilled(client: TestClient, db: Session) -> None:
@@ -126,8 +127,8 @@ def test_out_of_hearts_blocks_new_lessons_until_refilled(client: TestClient, db:
     assert blocked.status_code == 409 and blocked.json()["code"] == "no_hearts"
 
     refill = client.post("/api/v1/hearts/refill", json={"context": "lesson"})
-    assert refill.status_code == 200 and refill.json()["hearts"] == 5
-    assert start(client, "lesson", lesson_id=lesson_id)["hearts"] == 5
+    assert refill.status_code == 200 and refill.json()["hearts"] == MAX_HEARTS
+    assert start(client, "lesson", lesson_id=lesson_id)["hearts"] == MAX_HEARTS
 
 
 def test_locked_lessons_cannot_be_started(client: TestClient) -> None:
@@ -146,11 +147,15 @@ def test_locked_lessons_cannot_be_started(client: TestClient) -> None:
 
 
 def test_practice_earns_a_heart_and_costs_none(client: TestClient, db: Session) -> None:
+    learner = db.scalars(select(User).where(User.username == "parthbiyani")).one()
+    learner.stats.hearts = MAX_HEARTS - 1
+    learner.stats.hearts_anchor_at = datetime(2026, 10, 9, 6, 0, tzinfo=UTC)
+    db.commit()
     session = start(client, "practice")
     assert session["rules"]["hearts_enabled"] is False
     solve_all(client, db, session)
     result = complete(client, session["id"])
-    assert result["hearts_earned"] == 1 and result["hearts"] == 5
+    assert result["hearts_earned"] == 1 and result["hearts"] == MAX_HEARTS
     assert result["skill"] is None
 
 
@@ -217,4 +222,4 @@ def test_cant_listen_now_completes_a_listening_exercise(client: TestClient) -> N
     else:
         return  # the fixture course may not have one in this lesson
     result = answer(client, session["id"], listening[0]["id"], {"skipped": True})
-    assert result["exercise_done"] is True and result["hearts"] == 4
+    assert result["exercise_done"] is True and result["hearts"] == MAX_HEARTS
