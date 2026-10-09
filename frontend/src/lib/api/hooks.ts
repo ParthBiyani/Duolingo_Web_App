@@ -39,6 +39,7 @@ import type {
   ShopItemKey,
   ShopResponse,
   StartSessionRequest,
+  StreakCalendarResponse,
   SubmitAnswerRequest,
   UpdateMeRequest,
 } from "./types";
@@ -156,6 +157,22 @@ export function useProfile(options?: QueryOptions<ProfileResponse>) {
   return useQuery({
     queryKey: queryKeys.profile,
     queryFn: ({ signal }) => api.get<ProfileResponse>("/profile", { signal }),
+    ...options,
+  });
+}
+
+/** One month (`YYYY-MM`) of streak days; `null` asks for the learner's current month. */
+export function useStreakCalendar(
+  month: string | null,
+  options?: QueryOptions<StreakCalendarResponse>,
+) {
+  return useQuery({
+    queryKey: queryKeys.streakCalendar(month),
+    queryFn: ({ signal }) =>
+      api.get<StreakCalendarResponse>(
+        month ? `/streak/calendar?month=${encodeURIComponent(month)}` : "/streak/calendar",
+        { signal },
+      ),
     ...options,
   });
 }
@@ -315,6 +332,7 @@ export function useCompleteSession() {
         queryKeys.leaderboard,
         queryKeys.profile,
         queryKeys.shop,
+        queryKeys.streakCalendars,
       ]);
     },
   });

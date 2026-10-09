@@ -7,6 +7,9 @@ export const queryKeys = {
   shop: ["shop"] as const,
   leaderboard: ["leaderboard"] as const,
   profile: ["profile"] as const,
+  /** Prefix of every month's streak calendar, for invalidating them all at once. */
+  streakCalendars: ["streak", "calendar"] as const,
+  streakCalendar: (month: string | null) => ["streak", "calendar", month ?? "current"] as const,
   session: (id: string) => ["session", id] as const,
   demoClock: ["demo", "clock"] as const,
 };
