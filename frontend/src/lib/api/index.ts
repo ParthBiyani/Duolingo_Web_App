@@ -15,3 +15,4 @@ export {
   shouldRetry,
 } from "./queryClient";
 export * from "./hooks";
+export { keepLeagueResult, keptLeagueResult } from "./leagueResult";

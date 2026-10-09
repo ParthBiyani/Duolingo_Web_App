@@ -4,6 +4,7 @@ import { useState, useSyncExternalStore } from "react";
 
 import { Gem, LeagueBadge } from "@/components/icons";
 import { Button, Modal, ModalTitle } from "@/components/ui";
+import { keptLeagueResult } from "@/lib/api/leagueResult";
 import type { LeaderboardResponse } from "@/lib/api/types";
 
 import { leaderboardStrings } from "./strings";
@@ -53,9 +54,11 @@ export function LeagueResultModal({ board }: { board: LeaderboardResponse }) {
   const [dismissed, setDismissed] = useState(false);
   // The API reports a result once, so the live refresh of the table clears it; keep the first.
   const [firstResult] = useState(board.last_result);
-  const result = board.last_result ?? firstResult;
-
-  if (!result || dismissed || seenWeek === UNKNOWN || seenWeek === board.week_start) return null;
+  if (dismissed || seenWeek === UNKNOWN || seenWeek === board.week_start) return null;
+  // A read made elsewhere (the right rail's league card) may have taken the report: use the
+  // copy every read keeps for this week.
+  const result = board.last_result ?? firstResult ?? keptLeagueResult(board);
+  if (!result) return null;
 
   const league = board.tiers.find((tier) => tier.tier === result.tier_after);
   const leagueName = league?.name ?? board.name;

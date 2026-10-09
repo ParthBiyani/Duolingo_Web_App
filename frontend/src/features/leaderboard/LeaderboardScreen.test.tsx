@@ -2,7 +2,13 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { createQueryClient, type LeaderboardResponse, type Zone } from "@/lib/api";
+import {
+  createQueryClient,
+  keepLeagueResult,
+  keptLeagueResult,
+  type LeaderboardResponse,
+  type Zone,
+} from "@/lib/api";
 
 import { LeaderboardScreen } from "./LeaderboardScreen";
 
@@ -103,6 +109,42 @@ describe("LeaderboardScreen", () => {
       await screen.findByRole("dialog", { name: "You've been promoted to the Silver League!" }),
     ).toBeInTheDocument();
     expect(screen.getByText("You earned 10 gems for a top 3 finish.")).toBeInTheDocument();
+  });
+
+  it("shows last week's result that another screen's read of the table received", async () => {
+    // The rail's league card read the table first, so the API no longer reports the result.
+    keepLeagueResult(
+      board({
+        last_result: { tier_before: 1, tier_after: 2, outcome: "promoted", rank: 3, gems: 5 },
+      }),
+    );
+    renderWith(board());
+
+    expect(
+      await screen.findByRole("dialog", { name: "You've been promoted to the Gold League!" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/You finished #3 last week\./)).toBeInTheDocument();
+  });
+
+  it("keeps a reported result for the week it was reported in only", async () => {
+    keepLeagueResult(
+      board({
+        week_start: "2026-09-28",
+        last_result: { tier_before: 1, tier_after: 2, outcome: "promoted", rank: 3, gems: 5 },
+      }),
+    );
+    renderWith(board());
+
+    await screen.findByRole("list", { name: "Silver League" });
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("stores the result of every read of the table", async () => {
+    const result = { tier_before: 1, tier_after: 1, outcome: "stayed", rank: 9, gems: 0 } as const;
+    renderWith(board({ last_result: result }));
+    await screen.findByRole("dialog");
+
+    expect(keptLeagueResult(board())).toEqual(result);
   });
 
   it("does not show a result the learner already dismissed this week", async () => {

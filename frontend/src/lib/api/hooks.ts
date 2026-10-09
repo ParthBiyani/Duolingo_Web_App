@@ -14,6 +14,7 @@ import {
 } from "@tanstack/react-query";
 
 import { api } from "./client";
+import { keepLeagueResult } from "./leagueResult";
 import { queryKeys } from "./queryKeys";
 import type {
   AdvanceClockRequest,
@@ -148,7 +149,11 @@ export function useShop(options?: QueryOptions<ShopResponse>) {
 export function useLeaderboard(options?: QueryOptions<LeaderboardResponse>) {
   return useQuery({
     queryKey: queryKeys.leaderboard,
-    queryFn: ({ signal }) => api.get<LeaderboardResponse>("/leaderboard", { signal }),
+    queryFn: async ({ signal }) => {
+      const board = await api.get<LeaderboardResponse>("/leaderboard", { signal });
+      keepLeagueResult(board); // reported once, maybe to the rail: kept for the Leaderboards page
+      return board;
+    },
     ...options,
   });
 }
