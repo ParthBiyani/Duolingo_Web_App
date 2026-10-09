@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import {
+  Bolt,
   Check,
   Dumbbell,
   FlagES,
@@ -21,11 +22,14 @@ import {
   PopoverClose,
   PopoverContent,
   PopoverTrigger,
+  ProgressBar,
   toast,
 } from "@/components/ui";
 import { strings } from "@/content/strings";
 import { isApiError, useRefillHearts, useShop, type MeResponse, type StreakDay } from "@/lib/api";
 import { formatCountdown, useServerNow } from "@/lib/time";
+
+import { SETTINGS_HREF } from "./nav-items";
 
 type Stats = MeResponse["stats"];
 
@@ -36,6 +40,7 @@ const formatNumber = (value: number) => value.toLocaleString("en-US");
 
 const showComingSoon = () => toast(strings.common.comingSoon, { id: "coming-soon" });
 
+/** A stat in the top bar; spacing tightens on the narrowest phones so all five fit. */
 function StatTrigger({
   label,
   className,
@@ -49,7 +54,7 @@ function StatTrigger({
     <PopoverTrigger
       aria-label={label}
       className={cn(
-        "flex h-11 items-center gap-2 rounded-xl px-2 text-base font-bold transition-colors hover:bg-surface-hover data-[state=open]:bg-surface-hover",
+        "flex h-11 items-center gap-1 rounded-xl px-1 text-base font-bold transition-colors hover:bg-surface-hover data-[state=open]:bg-surface-hover min-[400px]:gap-2 min-[400px]:px-2",
         className,
       )}
     >
@@ -166,6 +171,57 @@ export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
             {strings.stats.streak.freezes(streak.freezes)}
           </p>
         ) : null}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+// XP ---------------------------------------------------------------------------
+
+/** Total XP, with today's progress towards the daily goal in the popover. */
+export function XpPopover({ stats }: { stats: Stats }) {
+  const goal = stats.daily_goal_xp;
+  const reached = stats.today_xp >= goal;
+
+  return (
+    <Popover>
+      <StatTrigger label={strings.stats.xp.trigger(stats.xp_total)} className="text-gold-shade">
+        <Bolt size={28} />
+        {formatNumber(stats.xp_total)}
+      </StatTrigger>
+      <PopoverContent className="w-80 p-5">
+        <div className="flex items-center gap-4">
+          <Bolt size={56} />
+          <div className="min-w-0">
+            <h2 className="text-heading text-title">{strings.stats.xp.title(stats.xp_total)}</h2>
+            <p className="mt-1 text-muted">{strings.stats.xp.total}</p>
+          </div>
+        </div>
+        <div className="mt-5 rounded-xl border-2 p-4">
+          <h3 className="text-caps text-muted uppercase">{strings.stats.xp.dailyGoal}</h3>
+          <ProgressBar
+            value={goal > 0 ? stats.today_xp / goal : 0}
+            color="gold"
+            className="mt-3 h-5"
+            label={strings.stats.xp.progress(stats.today_xp, goal)}
+            aria-label={strings.stats.xp.progressLabel(stats.today_xp, goal)}
+          />
+          <p className="mt-3 text-muted">
+            {reached ? strings.stats.xp.reached : strings.stats.xp.remaining(goal - stats.today_xp)}
+          </p>
+        </div>
+        <PopoverClose asChild>
+          <Link
+            href={SETTINGS_HREF}
+            className={buttonClassName({
+              variant: "secondary",
+              fullWidth: true,
+              className: "mt-5",
+            })}
+          >
+            {strings.stats.xp.changeGoal}
+          </Link>
+        </PopoverClose>
       </PopoverContent>
     </Popover>
   );

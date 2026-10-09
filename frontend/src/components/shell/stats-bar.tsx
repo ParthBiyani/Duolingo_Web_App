@@ -8,7 +8,13 @@ import { strings } from "@/content/strings";
 import { queryKeys, useMe } from "@/lib/api";
 import { useServerOffset } from "@/lib/time";
 
-import { CoursePopover, GemsPopover, HeartsPopover, StreakPopover } from "./stat-popovers";
+import {
+  CoursePopover,
+  GemsPopover,
+  HeartsPopover,
+  StreakPopover,
+  XpPopover,
+} from "./stat-popovers";
 
 /** Refetches /me just after the next heart regenerates, so the count ticks up on its own. */
 function useRefreshWhenHeartRegenerates(nextHeartAt: string | null | undefined) {
@@ -27,7 +33,7 @@ function useRefreshWhenHeartRegenerates(nextHeartAt: string | null | undefined) 
 }
 
 /**
- * Course flag, streak, gems and hearts, each opening its popover. Shows
+ * Course flag, streak, XP, gems and hearts, each opening its popover. Shows
  * placeholders until /me answers (or while the API is unreachable).
  * Callers choose the spacing, e.g. `className="justify-between"`.
  */
@@ -45,11 +51,12 @@ export function StatsBar({ className }: { className?: string }) {
         <>
           <CoursePopover course={me.course} />
           <StreakPopover streak={me.stats.streak} />
+          <XpPopover stats={me.stats} />
           <GemsPopover gems={me.stats.gems} />
           <HeartsPopover stats={me.stats} />
         </>
       ) : (
-        Array.from({ length: 4 }, (_, index) => (
+        Array.from({ length: 5 }, (_, index) => (
           <Skeleton key={index} className="h-8 w-16 rounded-xl" />
         ))
       )}
