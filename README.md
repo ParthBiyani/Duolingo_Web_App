@@ -198,11 +198,16 @@ cd frontend && npm run test                  # unit and component tests (Vitest)
 cd frontend && npx playwright install chromium && npm run test:e2e   # end-to-end tests
 ```
 
-The end-to-end suite starts its own API on port 8100 and a production build of the frontend on
-port 3100, so it can run next to the development servers.
+The end-to-end suite (`frontend/e2e/`) drives every feature in Chromium as the sample learners:
+logging in and out, the path, every exercise type, hearts, streaks, the daily goal, practice,
+legendary and timed challenges, the top bar popovers, the shared leaderboard, quests, the shop,
+the profile, settings and the demo tools, plus phone-width layouts and an accessibility scan
+(axe) of each screen. Playwright starts its own API on port 8100 (a fresh SQLite file at
+`backend/data/e2e.db`, demo tools on) and a production build of the web app on port 3100, so a
+development setup on 3000/8000 is untouched.
 
 CI runs lint, type checks, unit and integration tests and the production build for both apps on
-every pull request.
+every pull request, then the end-to-end suite.
 
 ## Demo tools
 
