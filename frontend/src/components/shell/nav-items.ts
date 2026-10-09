@@ -1,16 +1,17 @@
 import type { ComponentType } from "react";
 
 import {
-  Chest,
   Dumbbell,
   House,
-  ProfileIcon,
-  Shield,
+  NavLeaderboards,
+  NavQuests,
   Store,
   type IconProps,
 } from "@/components/icons";
 import { cn } from "@/components/ui";
 import { strings } from "@/content/strings";
+
+import { ProfileNavIcon } from "./profile-nav-icon";
 
 export interface NavItem {
   href: string;
@@ -22,10 +23,10 @@ export interface NavItem {
 export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/learn", label: strings.nav.learn, Icon: House },
   { href: "/practice-hub", label: strings.nav.practice, Icon: Dumbbell },
-  { href: "/leaderboard", label: strings.nav.leaderboards, Icon: Shield },
-  { href: "/quests", label: strings.nav.quests, Icon: Chest },
+  { href: "/leaderboard", label: strings.nav.leaderboards, Icon: NavLeaderboards },
+  { href: "/quests", label: strings.nav.quests, Icon: NavQuests },
   { href: "/shop", label: strings.nav.shop, Icon: Store },
-  { href: "/profile", label: strings.nav.profile, Icon: ProfileIcon },
+  { href: "/profile", label: strings.nav.profile, Icon: ProfileNavIcon },
 ];
 
 /** Routes reached through the MORE menu, which is highlighted while one is open. */
@@ -43,10 +44,10 @@ export function isActivePath(pathname: string, href: string): boolean {
  */
 export function sidebarItemClassName(active: boolean): string {
   return cn(
-    "flex h-13 w-full items-center justify-center gap-5 rounded-xl border-2 px-2 text-button uppercase outline-offset-0 transition-colors lg:justify-start lg:px-4",
+    "flex h-[51px] w-full items-center justify-center gap-5 rounded-xl border-2 px-2 text-button leading-[25px] uppercase outline-offset-0 transition-colors lg:justify-start lg:px-3.5",
     active
-      ? "border-selected-border bg-selected-bg text-selected-text"
-      : "border-transparent text-muted hover:bg-surface-hover data-[state=open]:bg-surface-hover",
+      ? "border-selected-border bg-selected-bg text-blue"
+      : "border-transparent text-muted hover:bg-surface-hover data-[state=open]:bg-surface-hover dark:text-body",
   );
 }
 

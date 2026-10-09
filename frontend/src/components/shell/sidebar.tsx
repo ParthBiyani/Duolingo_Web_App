@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { Logo } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { strings } from "@/content/strings";
 
@@ -22,14 +23,9 @@ export function Sidebar() {
       <Link
         href="/learn"
         aria-label={strings.brand.homeLabel}
-        className="mb-4 flex h-14 items-center justify-center rounded-xl lg:justify-start lg:px-4"
+        className="mb-[22px] flex h-[46px] items-center justify-center rounded-xl lg:justify-start lg:px-4 lg:pt-2"
       >
-        <span
-          aria-hidden="true"
-          className="hidden font-display text-display tracking-tight text-green lg:block"
-        >
-          {strings.brand.wordmark}
-        </span>
+        <Logo size={128} className="hidden lg:block" />
         <Mascot pose="idle" size={44} className="lg:hidden" />
       </Link>
 
