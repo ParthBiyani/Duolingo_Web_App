@@ -54,7 +54,9 @@ export function PreferencesScreen() {
 
   return (
     <>
-      <h1 className="text-heading text-title">{settingsStrings.preferences.title}</h1>
+      <h1 className="text-[32px] leading-9 font-bold text-title">
+        {settingsStrings.preferences.title}
+      </h1>
 
       {me.isPending ? (
         <PreferencesSkeleton />
@@ -116,8 +118,8 @@ function ToggleRow({
 }) {
   const id = useId();
   return (
-    <div className="flex items-center justify-between gap-4 px-4 py-3.5">
-      <label htmlFor={id} className="cursor-pointer font-bold text-body">
+    <div className="flex min-h-8 items-center justify-between gap-4">
+      <label htmlFor={id} className="cursor-pointer text-[20px] leading-6 font-bold text-title">
         {label}
       </label>
       <Toggle id={id} checked={checked} onCheckedChange={onChange} />
@@ -138,8 +140,8 @@ function SelectRow({
 }) {
   const id = useId();
   return (
-    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3.5">
-      <label htmlFor={id} className="font-bold text-body">
+    <div className="flex flex-col gap-1">
+      <label htmlFor={id} className="text-[20px] leading-6 font-bold text-title">
         {label}
       </label>
       <Select
@@ -147,7 +149,7 @@ function SelectRow({
         value={value}
         options={options}
         onValueChange={onChange}
-        className="w-full sm:w-48"
+        className="h-[50px] w-full"
       />
     </div>
   );

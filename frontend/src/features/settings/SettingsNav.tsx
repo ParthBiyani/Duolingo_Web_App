@@ -18,57 +18,54 @@ const ACCOUNT_LINKS = [
   { href: "/settings/profile", label: nav.profile },
   { href: "/settings/notifications", label: nav.notifications },
   { href: "/settings/courses", label: nav.courses },
+  { href: null, label: nav.schools },
+  { href: null, label: nav.socialAccounts },
   { href: "/settings/privacy", label: nav.privacy },
 ] as const;
 
 const comingSoon = () => toast(strings.common.comingSoon, { id: "coming-soon" });
 
 const ROW =
-  "flex w-full items-center rounded-card px-3 py-2.5 text-left font-bold transition-colors";
+  "flex h-10 w-full items-center rounded-xl px-[30px] text-left text-[20px] font-bold text-title transition-colors hover:bg-surface-hover";
 
 /**
- * Settings navigation cards: account pages, subscription and support, then LOG OUT. Beside the
- * content from 1024px, below it on smaller screens (two columns on tablets).
+ * Settings navigation cards: account pages, subscription and support, then LOG OUT. In the right
+ * rail from 1160px, below the content on smaller screens (two columns on tablets).
  */
 export function SettingsNav() {
   const pathname = usePathname();
   const { logOut, pending } = useLogOut();
 
   return (
-    <nav aria-label={nav.label} className="mt-10 grid gap-4 md:grid-cols-2 lg:mt-0 lg:grid-cols-1">
-      <NavCard title={nav.account} className="md:row-span-2 lg:row-span-1">
-        <ul>
-          {ACCOUNT_LINKS.map((link) => {
-            const active = pathname === link.href;
-            return (
-              <li key={link.href}>
+    <nav aria-label={nav.label} className="grid gap-4 md:grid-cols-2 xl:grid-cols-1">
+      <NavCard title={nav.account} className="md:row-span-2 xl:row-span-1">
+        <ul className="flex flex-col gap-1">
+          {ACCOUNT_LINKS.map((link) => (
+            <li key={link.label}>
+              {link.href === null ? (
+                <button type="button" onClick={comingSoon} className={ROW}>
+                  {link.label}
+                </button>
+              ) : (
                 <Link
                   href={link.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`${ROW} ${active ? "bg-selected-bg text-selected-text" : "text-body hover:bg-surface-hover"}`}
+                  aria-current={pathname === link.href ? "page" : undefined}
+                  className={ROW}
                 >
                   {link.label}
                 </Link>
-              </li>
-            );
-          })}
+              )}
+            </li>
+          ))}
         </ul>
       </NavCard>
       <NavCard title={nav.subscription}>
-        <button
-          type="button"
-          onClick={comingSoon}
-          className={`${ROW} text-body hover:bg-surface-hover`}
-        >
+        <button type="button" onClick={comingSoon} className={ROW}>
           {nav.choosePlan}
         </button>
       </NavCard>
       <NavCard title={nav.support}>
-        <button
-          type="button"
-          onClick={comingSoon}
-          className={`${ROW} text-body hover:bg-surface-hover`}
-        >
+        <button type="button" onClick={comingSoon} className={ROW}>
           {nav.helpCenter}
         </button>
       </NavCard>
@@ -77,7 +74,7 @@ export function SettingsNav() {
         fullWidth
         loading={pending}
         onClick={logOut}
-        className="md:col-span-2 lg:col-span-1"
+        className="h-12 text-blue md:col-span-2 xl:col-span-1"
       >
         {authStrings.logOut}
       </Button>
@@ -95,8 +92,8 @@ function NavCard({
   children: ReactNode;
 }) {
   return (
-    <section className={`rounded-rail border-2 border-border p-3 ${className}`}>
-      <h2 className="px-3 pt-1 pb-2 text-lead font-bold text-title">{title}</h2>
+    <section className={`rounded-rail border-2 border-border px-4 py-6 ${className}`}>
+      <h2 className="mb-4 px-[30px] text-[24px] leading-8 font-bold text-body">{title}</h2>
       {children}
     </section>
   );
