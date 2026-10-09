@@ -4,6 +4,28 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **Login:** a login page with four sample learners at different stages in a 2x2 grid, a signed
+  `HttpOnly` session cookie (`duo_session`), log out, and a redirect to `/login` without a session.
+  Sign-up and the email and password form are "Coming soon".
+- **Shared leagues:** learners in the same league and week share one live cohort; the seed puts
+  three sample learners in one Silver league.
+- **Lesson:** word hints on Spanish sentences and a loading screen with the dancing owl while a
+  session starts.
+- **Path:** animated characters beside the path, still and grey in locked units, and a "Jump here?"
+  offer on the first node of each locked unit.
+- **Shell:** top bar popovers that open on hover, a right rail that varies by page, and a Shop banner
+  that rotates between the family plan and a Super free trial.
+
+### Changed
+- **Hearts:** the limit is 10 instead of 5 (migration `0002_ten_hearts`), and learners start full.
+- **Look:** Duolingo's own fonts (Duolingo Sans and Feather), icons, artwork and Lottie animations
+  replace Nunito and most of the original drawings.
+- **Hosting:** the live API runs on Render's free plan, so its data is reseeded after a redeploy or
+  spin-down.
+
 ## [1.0.0] - 2026-10-09
 
 ### Added
