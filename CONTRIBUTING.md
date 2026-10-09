@@ -15,13 +15,13 @@
 ```
 
 - **Types:** `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `style`, `build`, `ci`, `chore`, `revert`.
-- **Common scopes:** `backend`, `frontend`, `db`, `api`, `domain`, `seed`, `path`, `lesson`,
+- **Common scopes:** `backend`, `frontend`, `db`, `api`, `domain`, `seed`, `auth`, `path`, `lesson`,
   `gamification`, `profile`, `leaderboard`, `shop`, `quests`, `settings`, `ui`, `design`, `e2e`, `ci`,
   `deploy`, `docs`.
 
 ## Local setup
 1. Follow "Getting started" in the [README](README.md).
-2. Install the hooks once:
+2. Install the hooks once (file hygiene, ruff for the backend, and the commit message check):
    ```bash
    uv tool install pre-commit
    pre-commit install
@@ -32,6 +32,9 @@
 |---|---|
 | Backend | `uv run ruff check . && uv run ruff format --check . && uv run mypy app && uv run pytest` |
 | Frontend | `npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build` |
+| End to end | `npx playwright install chromium && npm run test:e2e` (in `frontend`) |
+
+CI runs the backend and frontend checks on every pull request.
 
 ## Conventions
 - **Backend:** rules belong in `app/domain` as pure functions that take `now` as a parameter.
