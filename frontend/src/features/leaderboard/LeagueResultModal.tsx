@@ -2,7 +2,7 @@
 
 import { useState, useSyncExternalStore } from "react";
 
-import { Gem, Shield } from "@/components/icons";
+import { Gem, LeagueBadge } from "@/components/icons";
 import { Button, Modal, ModalTitle } from "@/components/ui";
 import type { LeaderboardResponse } from "@/lib/api/types";
 
@@ -61,7 +61,7 @@ export function LeagueResultModal({ board }: { board: LeaderboardResponse }) {
       }}
     >
       <div className="flex flex-col items-center gap-4 text-center">
-        <Shield color={league?.color} size={120} />
+        <LeagueBadge tier={league?.tier ?? 0} size={120} />
         <ModalTitle>{title}</ModalTitle>
         <p className="text-muted">
           {leaderboardStrings.result.rank(result.rank)} {leaderboardStrings.result.keepGoing}

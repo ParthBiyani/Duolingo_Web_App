@@ -1,6 +1,6 @@
 "use client";
 
-import { Gem, Heart, Snowflake } from "@/components/icons";
+import { Gem, HeartRefill, HeartUnlimited, Snowflake } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { Button, Skeleton, toast } from "@/components/ui";
 import { strings } from "@/content/strings";
@@ -89,7 +89,7 @@ export function ShopScreen() {
         <ul>
           {refillItem ? (
             <ShopItemRow
-              icon={<Heart size={64} />}
+              icon={<HeartRefill size={80} />}
               name={refillItem.name}
               description={refillItem.description}
               action={
@@ -105,7 +105,7 @@ export function ShopScreen() {
           ) : null}
           {unlimitedItem ? (
             <ShopItemRow
-              icon={<UnlimitedHearts />}
+              icon={<HeartUnlimited size={80} />}
               name={unlimitedItem.name}
               description={unlimitedItem.description}
               action={
@@ -176,18 +176,6 @@ function PriceButton({
       <Gem size={22} />
       {shopStrings.price(price)}
     </Button>
-  );
-}
-
-/** Heart artwork with an infinity badge, for the (coming soon) unlimited hearts offer. */
-function UnlimitedHearts() {
-  return (
-    <span className="relative inline-grid place-items-center" aria-hidden="true">
-      <Heart size={64} />
-      <span className="absolute -right-1 -bottom-1 grid size-7 place-items-center rounded-full bg-purple text-lg leading-none font-extrabold text-white">
-        ∞
-      </span>
-    </span>
   );
 }
 

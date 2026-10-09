@@ -1,6 +1,6 @@
 "use client";
 
-import { Bolt, Chest, ChestOpen, Clock, Lock } from "@/components/icons";
+import { Bolt, ChestOpen, Clock, Lock, QuestChest } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { Button, ProgressBar, Skeleton } from "@/components/ui";
 import { useQuests, type DailyQuest } from "@/lib/api";
@@ -79,7 +79,7 @@ function QuestRow({ quest }: { quest: DailyQuest }) {
   const value = quest.target > 0 ? quest.progress / quest.target : 0;
   return (
     <li className="flex items-center gap-4 p-4">
-      <Bolt size={48} className="shrink-0" />
+      <Bolt size={60} className="shrink-0" />
       <div className="min-w-0 flex-1">
         <p className="text-lead font-bold text-title">{quest.title}</p>
         <div className="mt-3 flex items-center gap-3">
@@ -93,7 +93,11 @@ function QuestRow({ quest }: { quest: DailyQuest }) {
           {quest.completed ? (
             <ChestOpen size={40} title={questsStrings.completed} className="shrink-0" />
           ) : (
-            <Chest size={40} title={questsStrings.reward(quest.chest_gems)} className="shrink-0" />
+            <QuestChest
+              size={40}
+              title={questsStrings.reward(quest.chest_gems)}
+              className="shrink-0"
+            />
           )}
         </div>
       </div>
