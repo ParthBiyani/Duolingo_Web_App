@@ -26,8 +26,7 @@ The stack uses SQLite. It runs inside a single API process, as a file on the API
   - deploys run `alembic upgrade head` before the server starts.
 
 ## Consequences
-- Zero operational overhead. On a host with a persistent disk, the database file is backed up through
-  the host's disk snapshots. The live demo's free host has no persistent disk, so its database is
-  reseeded whenever the instance is replaced (see [ADR 0007](0007-hosting.md)).
+- Zero operational overhead. The database file lives on the host's persistent disk and is backed
+  up through its daily snapshots (see [ADR 0007](0007-hosting.md)).
 - Horizontal scaling would need a move to Postgres. The SQLAlchemy models and migrations are written so
   that change is mechanical.

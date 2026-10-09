@@ -36,8 +36,8 @@ All notable changes to this project are documented here. The format follows
 - **Hearts:** the limit is 10 instead of 5 (migration `0002_ten_hearts`), and learners start full.
 - **Look:** Duolingo's own fonts (Duolingo Sans and Feather), icons, artwork and Lottie animations
   replace Nunito and most of the original drawings.
-- **Hosting:** the live API runs on Render's free plan, so its data is reseeded after a redeploy or
-  spin-down.
+- **README:** shorter, with a section for reviewers, the decisions worth explaining and a schema
+  diagram with every column.
 
 ## [1.0.0] - 2026-10-09
 
