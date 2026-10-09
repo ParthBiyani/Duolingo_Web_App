@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef } from "react";
 
-import { Check, Chest, ChestOpen, Crown, Dumbbell, Star, Trophy } from "@/components/icons";
+import { Crown, DuoImage, Dumbbell } from "@/components/icons";
 import type { PathNode as PathNodeData } from "@/lib/api/types";
 
 import { CrownBadge } from "./CrownBadge";
@@ -38,7 +38,7 @@ const COIN_TONE: Record<NodeTone, string> = {
 export function PathNode({ node, highlight = false, ...buttonProps }: PathNodeProps) {
   const visual = nodeVisual(node);
   const shape = visual.isChest
-    ? "size-[72px] rounded-button active:translate-y-0.5"
+    ? "h-[90px] w-[80px] rounded-button active:translate-y-0.5"
     : `h-[57px] w-[70px] rounded-[50%] active:translate-y-1 ${COIN_TONE[visual.tone]}`;
 
   return (
@@ -68,22 +68,39 @@ export function PathNode({ node, highlight = false, ...buttonProps }: PathNodePr
 }
 
 function NodeGlyphIcon({ glyph, tone }: { glyph: NodeGlyph; tone: NodeTone }) {
-  const color = tone === "locked" ? "text-locked-icon" : "text-white";
+  const locked = tone === "locked";
   switch (glyph) {
     case "star":
-      return <Star size={38} fill="currentColor" className={color} />;
+      return <DuoImage name={locked ? "node-star-locked" : "node-star"} size={42} />;
     case "dumbbell":
-      return <Dumbbell size={40} fill="currentColor" className={color} />;
+      return locked ? (
+        <DuoImage name="node-dumbbell-locked" size={42} />
+      ) : (
+        <Dumbbell size={40} fill="currentColor" className="text-white" />
+      );
     case "trophy":
-      return <Trophy size={38} fill="currentColor" className={color} />;
+      return <DuoImage name={locked ? "node-trophy-locked" : "node-trophy"} size={42} />;
     case "check":
-      return <Check size={38} className={color} />;
+      return <DuoImage name="node-check" size={42} />;
     case "crown":
-      return <Crown size={40} fill="currentColor" className={color} />;
+      return (
+        <Crown
+          size={40}
+          fill="currentColor"
+          className={locked ? "text-locked-icon" : "text-white"}
+        />
+      );
     case "chest":
-      return <Chest size={72} muted={tone === "locked"} />;
+      return locked ? (
+        <>
+          <DuoImage name="chest-locked-light" size={80} className="dark:hidden" />
+          <DuoImage name="chest-locked" size={80} className="hidden dark:block" />
+        </>
+      ) : (
+        <DuoImage name="chest" size={80} />
+      );
     case "chest-open":
-      return <ChestOpen size={72} />;
+      return <DuoImage name="chest-open" size={80} />;
   }
 }
 

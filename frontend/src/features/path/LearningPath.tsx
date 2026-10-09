@@ -72,7 +72,10 @@ export function LearningPath({
     <div className="mx-auto w-full max-w-[592px] overflow-x-clip [--zigzag:0.7] md:[--zigzag:1]">
       <h1 className="sr-only">{pathStrings.pageTitle}</h1>
 
-      <div ref={bannerRef} className="sticky top-(--shell-top) z-20 bg-surface pt-4 md:pt-6">
+      <div
+        ref={bannerRef}
+        className="sticky top-(--shell-top) z-20 bg-surface pt-4 md:pt-6 xl:pt-12"
+      >
         <UnitBanner unit={currentUnit} onGuidebook={onGuidebook} />
       </div>
 
