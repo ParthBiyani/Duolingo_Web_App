@@ -1,12 +1,15 @@
-"""League rivals: 29 simulated learners who share the default learner's weekly cohort.
+"""League rivals: 29 simulated learners who fill each sample learner's weekly cohort.
 
 Rivals are ordinary ``users`` rows with ``is_bot`` set and a weekly XP pace. Their XP is not
 stored up front: the leaderboard adds one ``bot`` XP event per rival per elapsed day when it is
-read (``app.domain.leagues.bot_day_xp``), so the table fills in as simulated time passes.
+read (``app.domain.leagues.bot_day_xp``), so the table fills in as simulated time passes. The
+same rivals make up every learner's cohort, as they do for the cohorts the app forms each new
+week (``app.services.leagues.ensure_cohort``).
 """
 
 import random
 import unicodedata
+from collections.abc import Sequence
 from datetime import datetime
 
 from sqlalchemy.orm import Session
@@ -37,27 +40,12 @@ RIVAL_PACES = (
 )  # fmt: skip
 
 
-def seed_league_week(session: Session, learner: User, now: datetime, tier: int) -> LeagueCohort:
-    """Create this week's cohort at ``tier`` with the learner and the 29 rivals."""
-    week = week_start(local_date(now, learner.timezone))
-    # Everyone has been in the cohort since the week began, in the learner's time zone.
-    week_began = local_midnight_utc(week, learner.timezone)
-    rivals = _rivals(learner, week_began)
-    cohort = LeagueCohort(tier=tier, week_start=week)
-    session.add_all([cohort, *rivals])
-    session.flush()  # assigns the ids the memberships refer to
-    session.add_all(
-        LeagueMembership(cohort_id=cohort.id, user_id=member.id, joined_at=week_began)
-        for member in (learner, *rivals)
-    )
-    session.flush()
-    return cohort
-
-
-def _rivals(learner: User, created_at: datetime) -> list[User]:
+def seed_rivals(session: Session, learner: User, now: datetime) -> list[User]:
+    """Create the 29 rivals, as if they joined when this week began in ``learner``'s time zone."""
+    week_began = local_midnight_utc(week_start(local_date(now, learner.timezone)), learner.timezone)
     paces = list(RIVAL_PACES)
     random.Random("league-rivals").shuffle(paces)  # so a rival's name says nothing about pace
-    return [
+    rivals = [
         User(
             username=_username(first_name, initial),
             display_name=f"{first_name} {initial}.",
@@ -66,10 +54,35 @@ def _rivals(learner: User, created_at: datetime) -> list[User]:
             is_bot=True,
             bot_pace_xp=pace,
             current_course_id=learner.current_course_id,
-            created_at=created_at,
+            created_at=week_began,
         )
         for index, ((first_name, initial), pace) in enumerate(zip(RIVAL_NAMES, paces, strict=True))
     ]
+    session.add_all(rivals)
+    session.flush()  # assigns the ids the memberships refer to
+    return rivals
+
+
+def seed_league_week(
+    session: Session, learner: User, rivals: Sequence[User], now: datetime, tier: int
+) -> LeagueCohort:
+    """Create this week's cohort at ``tier`` with the learner and the rivals.
+
+    Every learner gets a cohort of their own, so each week is finalised (ranks, prizes and the
+    next tier) for exactly one learner, as ``app.services.leagues`` expects.
+    """
+    week = week_start(local_date(now, learner.timezone))
+    # Everyone has been in the cohort since the week began, in the learner's time zone.
+    week_began = local_midnight_utc(week, learner.timezone)
+    cohort = LeagueCohort(tier=tier, week_start=week)
+    session.add(cohort)
+    session.flush()  # assigns the cohort id
+    session.add_all(
+        LeagueMembership(cohort_id=cohort.id, user_id=member.id, joined_at=week_began)
+        for member in (learner, *rivals)
+    )
+    session.flush()
+    return cohort
 
 
 def _username(first_name: str, initial: str) -> str:

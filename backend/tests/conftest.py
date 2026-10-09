@@ -7,7 +7,8 @@ file, so tests never share state and never touch the development database.
 - ``db``: a session on the test's seeded database.
 - ``clock``: a ``FixedClock`` at ``NOW``; move it with ``clock.advance(...)``.
 - ``client``: a ``TestClient`` whose ``get_db``, ``get_clock`` and ``get_settings`` point at the
-  test database, the fixed clock and ``settings``.
+  test database, the fixed clock and ``settings``, logged in as the default learner.
+- ``anonymous_client``: the same, before logging in; ``log_in`` logs any client in.
 """
 
 import shutil
@@ -27,13 +28,16 @@ from app.core.clock import FixedClock, get_clock
 from app.core.config import BACKEND_DIR, Settings, get_settings
 from app.core.db import create_db_engine, get_db
 from app.main import create_app
+from app.seed.learners import PARTH
 from app.seed.runner import seed_database
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 CONTENT_DIR = FIXTURES_DIR / "content"
 
-# Friday 9 October 2026, 12:00 in Asia/Kolkata, the default learner's time zone.
+# Friday 9 October 2026, 12:00 in Asia/Kolkata, the sample learners' time zone.
 NOW = datetime(2026, 10, 9, 6, 30, tzinfo=UTC)
+
+DEFAULT_USERNAME = PARTH.username  # the learner ``client`` is logged in as
 
 
 def sqlite_url(path: Path) -> str:
@@ -136,7 +140,21 @@ def app(settings: Settings, session_factory: sessionmaker[Session], clock: Fixed
     return application
 
 
+def log_in(client: TestClient, username: str = DEFAULT_USERNAME) -> None:
+    """Log ``client`` in as ``username``; the session cookie then rides on every request."""
+    response = client.post("/api/v1/auth/login", json={"username": username})
+    assert response.status_code == 200, response.text
+
+
 @pytest.fixture
-def client(app: FastAPI) -> Iterator[TestClient]:
+def anonymous_client(app: FastAPI) -> Iterator[TestClient]:
+    """A client that has not logged in."""
     with TestClient(app) as test_client:
         yield test_client
+
+
+@pytest.fixture
+def client(anonymous_client: TestClient) -> TestClient:
+    """A client logged in as the default learner, Parth Biyani."""
+    log_in(anonymous_client)
+    return anonymous_client

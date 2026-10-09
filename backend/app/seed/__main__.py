@@ -2,7 +2,7 @@
 
 ``--if-empty`` seeds a fresh database and does nothing once the course exists (safe to run on
 every deploy). ``--reset`` puts the demo back to its starting state: real time again, and a new
-copy of the learner, the rivals and the league week. Course content is kept.
+copy of the sample learners, the rivals and the league weeks. Course content is kept.
 """
 
 import argparse
@@ -27,7 +27,7 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument(
         "--reset",
         action="store_true",
-        help="reset the clock and recreate the learner and league (course content is kept)",
+        help="reset the clock and recreate the learners and leagues (course content is kept)",
     )
     args = parser.parse_args(argv)
     configure_logging(get_settings().log_level)

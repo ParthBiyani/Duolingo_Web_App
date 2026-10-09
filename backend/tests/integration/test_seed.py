@@ -39,32 +39,36 @@ from app.models import (
     XpEvent,
 )
 from app.seed import __main__ as seed_cli
-from app.seed.learner import USERNAME
+from app.seed.learners import ISHA, KABIR, LEARNERS, PARTH, ZOE
 from app.seed.runner import is_seeded, reset_people, seed_database
 from tests.conftest import CONTENT_DIR, NOW, sqlite_url
 
 TODAY = date(2026, 10, 9)  # NOW in Asia/Kolkata
 YESTERDAY = TODAY - timedelta(days=1)
 
-# Two fixture units, each: 4 lesson skills x 3 lessons x 10 exercises, a chest and a
+# Three fixture units, each: 4 lesson skills x 3 lessons x 10 exercises, a chest and a
 # 15-exercise review.
 EXPECTED_ROWS = {
     Course: 6,
-    Unit: 2,
-    Skill: 12,
-    Lesson: 26,
-    Exercise: 2 * (4 * 3 * 10 + 15),
-    User: 30,
-    UserSettings: 1,  # the learner only; rivals have no settings or stats
-    UserStats: 1,
-    DailyActivity: 21 + 12,
+    Unit: 3,
+    Skill: 18,
+    Lesson: 39,
+    Exercise: 3 * (4 * 3 * 10 + 15),
+    User: 4 + 29,  # the sample learners and the rivals they share
+    UserSettings: 4,  # the learners only; rivals have no settings or stats
+    UserStats: 4,
+    DailyActivity: (21 + 12) + 0 + (3 + 4) + (26 + 64),
     League: 10,
-    LeagueCohort: 1,
-    LeagueMembership: 30,
+    LeagueCohort: 4,  # one per learner
+    LeagueMembership: 4 * 30,
     Achievement: 6,
-    UserAchievement: 6,
+    UserAchievement: 4 * 6,
     ShopItem: 4,
 }
+
+
+# A unit's node states with two skills and the chest done, and the third skill started.
+HALFWAY = ["completed", "completed", "completed", "active", "locked", "locked"]
 
 
 def count(db: Session, model: type) -> int:
@@ -75,8 +79,25 @@ def row_counts(db: Session) -> dict[type, int]:
     return {model: count(db, model) for model in EXPECTED_ROWS}
 
 
-def learner(db: Session) -> User:
-    return db.scalars(select(User).where(User.username == USERNAME)).one()
+def learner(db: Session, username: str = PARTH.username) -> User:
+    return db.scalars(select(User).where(User.username == username)).one()
+
+
+def node_states(db: Session, user: User) -> dict[int, str]:
+    """Each path node's state for ``user``, as the path screen computes it."""
+    assert user.current_course is not None
+    nodes = [node for unit in user.current_course.units for node in unit.skills]
+    progress = db.scalars(select(SkillProgress).where(SkillProgress.user_id == user.id))
+    states = compute_node_states(
+        [NodeInput(node.id, node.type, len(node.lessons)) for node in nodes],
+        {
+            row.skill_id: NodeProgress(
+                row.lessons_completed, row.crown_level, row.completed_at is not None
+            )
+            for row in progress
+        },
+    )
+    return {node.id: node.state for node in states}
 
 
 def gem_ledger(db: Session, user_id: int) -> list[GemTransaction]:
@@ -114,20 +135,67 @@ def test_invalid_content_is_rejected_before_anything_is_written(
         engine.dispose()
 
 
-def test_caches_equal_their_ledgers(db: Session) -> None:
-    stats = db.scalars(select(UserStats)).one()
+@pytest.mark.parametrize(
+    ("username", "xp", "gems"),
+    [(PARTH.username, 1240, 500), (ZOE.username, 0, 50), (ISHA.username, 205, 320),
+     (KABIR.username, 4120, 950)],
+)  # fmt: skip
+def test_caches_equal_their_ledgers(db: Session, username: str, xp: int, gems: int) -> None:
+    stats = learner(db, username).stats
     xp_events = db.scalar(select(func.sum(XpEvent.amount)).where(XpEvent.user_id == stats.user_id))
     daily_xp = db.scalar(
         select(func.sum(DailyActivity.xp)).where(DailyActivity.user_id == stats.user_id)
     )
-    assert stats.xp_total == xp_events == daily_xp == 1240
+    assert stats.xp_total == (xp_events or 0) == (daily_xp or 0) == xp
 
     ledger = gem_ledger(db, stats.user_id)
-    assert stats.gems == sum(entry.delta for entry in ledger) == 500
+    assert ledger[0].reason == "seed"  # the opening grant
+    assert stats.gems == sum(entry.delta for entry in ledger) == gems
     balance = 0
     for entry in ledger:
         balance += entry.delta
         assert entry.balance_after == balance >= 0
+
+
+def test_every_learner_starts_with_full_hearts_in_kolkata(db: Session) -> None:
+    for profile in LEARNERS:
+        user = learner(db, profile.username)
+        assert (user.is_bot, user.timezone) == (False, "Asia/Kolkata")
+        assert (user.stats.hearts, user.stats.hearts_anchor_at) == (MAX_HEARTS, None)
+
+
+def test_the_new_learner_has_not_started(db: Session) -> None:
+    user = learner(db, ZOE.username)
+    stats = user.stats
+    assert user.created_at < NOW
+    assert (stats.xp_total, stats.streak_current, stats.streak_longest) == (0, 0, 0)
+    assert (stats.lessons_completed, stats.league_tier, stats.streak_last_date) == (0, 0, None)
+    assert set(node_states(db, user).values()) == {"active", "locked"}
+    rows = db.scalars(select(UserAchievement).where(UserAchievement.user_id == user.id))
+    assert {row.level for row in rows} == {0}
+
+
+def test_the_early_learner_is_halfway_through_unit_one(db: Session) -> None:
+    user = learner(db, ISHA.username)
+    assert user.current_course is not None
+    unit_one = user.current_course.units[0]
+    state = node_states(db, user)
+    assert [state[node.id] for node in unit_one.skills] == HALFWAY
+    assert (user.stats.streak_current, user.stats.streak_last_date) == (4, YESTERDAY)
+    assert user.stats.league_tier == 0
+
+
+def test_the_advanced_learner_is_deep_in_unit_three(db: Session) -> None:
+    user = learner(db, KABIR.username)
+    assert user.current_course is not None
+    unit_one, unit_two, unit_three = user.current_course.units
+    state = node_states(db, user)
+    assert [state[node.id] for node in unit_one.skills] == ["legendary"] + ["completed"] * 5
+    assert [state[node.id] for node in unit_two.skills] == ["legendary"] + ["completed"] * 5
+    assert [state[node.id] for node in unit_three.skills] == HALFWAY
+    stats = user.stats
+    assert (stats.streak_current, stats.streak_freezes, stats.league_tier) == (64, 2, 2)
+    assert (stats.legendary_skills, stats.top3_finishes) == (2, 3)
 
 
 def test_default_learner_state(db: Session) -> None:
@@ -173,26 +241,16 @@ def test_history_is_two_streaks_with_missed_days_between(db: Session) -> None:
 def test_path_shows_unit_one_complete_and_unit_two_started(db: Session) -> None:
     user = learner(db)
     assert user.current_course is not None
-    unit_one, unit_two = user.current_course.units
-    nodes = [*unit_one.skills, *unit_two.skills]
+    unit_one, unit_two, unit_three = user.current_course.units
     progress = {
         row.skill_id: row
         for row in db.scalars(select(SkillProgress).where(SkillProgress.user_id == user.id))
     }
-    states = compute_node_states(
-        [NodeInput(node.id, node.type, len(node.lessons)) for node in nodes],
-        {
-            skill_id: NodeProgress(
-                row.lessons_completed, row.crown_level, row.completed_at is not None
-            )
-            for skill_id, row in progress.items()
-        },
-    )
-    state = {node.id: node.state for node in states}
+    state = node_states(db, user)
     assert [state[node.id] for node in unit_one.skills] == ["legendary"] + ["completed"] * 5
     assert state[unit_two.skills[0].id] == "active"
     assert progress[unit_two.skills[0].id].lessons_completed == 1
-    assert {state[node.id] for node in unit_two.skills[1:]} == {"locked"}
+    assert {state[node.id] for node in [*unit_two.skills[1:], *unit_three.skills]} == {"locked"}
 
     chest = next(node for node in unit_one.skills if node.type == "chest")
     chest_refs = [entry.ref for entry in gem_ledger(db, user.id) if entry.reason == "path_chest"]
@@ -219,10 +277,29 @@ def test_achievement_levels_and_their_gems(db: Session) -> None:
     }
 
 
-def test_league_week_has_the_learner_and_29_rivals(db: Session) -> None:
-    cohort = db.scalars(select(LeagueCohort)).one()
+def test_each_learner_has_a_league_week_with_the_29_rivals(db: Session) -> None:
     monday = date(2026, 10, 5)
-    assert (cohort.tier, cohort.week_start, cohort.finalized_at) == (1, monday, None)
+    rival_sets = []
+    for profile in LEARNERS:
+        user = learner(db, profile.username)
+        cohort = db.scalars(
+            select(LeagueCohort).join(LeagueMembership).where(LeagueMembership.user_id == user.id)
+        ).one()
+        assert (cohort.tier, cohort.week_start, cohort.finalized_at) == (
+            profile.league_tier,
+            monday,
+            None,
+        )
+        humans = [member.user for member in cohort.memberships if not member.user.is_bot]
+        assert humans == [user]
+        rival_sets.append({member.user_id for member in cohort.memberships} - {user.id})
+    assert all(rivals == rival_sets[0] for rivals in rival_sets)
+
+    cohort = db.scalars(
+        select(LeagueCohort)
+        .join(LeagueMembership)
+        .where(LeagueMembership.user_id == learner(db).id)
+    ).one()
     members = cohort.memberships
     rivals = [member.user for member in members if member.user.is_bot]
     assert len(members) == 30
@@ -240,9 +317,14 @@ def test_reset_restores_people_and_keeps_content(db: Session) -> None:
     user.stats.xp_total = 0
     db.execute(delete(XpEvent).where(XpEvent.user_id == user.id))
 
-    reset_people(db, NOW)
+    zoe = learner(db, ZOE.username)
+    zoe.stats.gems = 0
+
+    learners = reset_people(db, NOW)
     db.commit()
 
+    assert [user.username for user in learners] == [profile.username for profile in LEARNERS]
+    assert learner(db, ZOE.username).stats.gems == 50
     fresh = learner(db)
     assert fresh.stats.xp_total == 1240
     assert db.scalar(select(func.sum(XpEvent.amount)).where(XpEvent.user_id == fresh.id)) == 1240
