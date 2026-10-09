@@ -33,6 +33,7 @@ sample learners and the app needs a way to choose between them.
 ## Consequences
 - **Shared demo state per learner.** Everyone who picks the same learner on the live demo shares their
   progress, so Settings has "Reset demo data" and the README explains this.
-- **Each learner has their own league cohort** with the same 29 seeded rivals, so every leaderboard is
-  real and each week is finalised for exactly one learner.
+- **Learners in the same league share a cohort.** The seed puts Parth, Isha and Kabir in one Silver
+  cohort with 27 rivals, so the leaderboard is the same live table whoever is logged in. Finalising a
+  week therefore settles every learner in the cohort at once (see `app/services/leagues.py`).
 - **Rotating `SECRET_KEY` logs everyone out**, which is the intended way to invalidate sessions.

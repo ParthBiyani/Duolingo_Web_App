@@ -36,7 +36,7 @@ It is built with **Next.js (TypeScript)**, **FastAPI** and **SQLite**.
 | Hearts | Lose one per mistake; regenerate one every 5 hours; refill with gems; practise to earn hearts; out-of-hearts modal |
 | Streak | Extends on the first lesson of each local day, streak freezes, week calendar, celebration screen |
 | Daily goal | 1/10/20/30/50 XP goals; progress in the XP popover, the right rail and on Quests; a gem chest when reached |
-| Leagues | Weekly Bronze to Diamond leagues with 29 seeded rivals whose XP accrues live, promotion and demotion zones |
+| Leagues | Weekly Bronze to Diamond leagues of 30, shared by every learner in the same league and week and topped up with rivals whose XP accrues live; promotion and demotion zones |
 | Profile | Streak, total XP, league, top-3 finishes and six achievements with levels |
 | Shop | Heart refill and streak freezes paid with (mocked) gems |
 | Settings | Sound effects, animations, motivational messages, listening exercises, dark mode, daily goal |
@@ -51,14 +51,20 @@ learners and you log in as one with a click; signing up and passwords are "Comin
 
 The seed creates one course, Spanish for English speakers: 3 units, 12 skills and 405 exercises
 across eight exercise types. It also creates four sample learners at different stages, each with a
-full set of 10 hearts and their own league cohort among 29 seeded rivals:
+full set of 10 hearts:
 
 | Learner | Stage |
 |---|---|
 | **Parth Biyani** (@parthbiyani) | Unit 1 complete with one legendary skill, Unit 2 under way, a 12-day streak, 1,240 XP, 500 gems, Silver league |
 | **Ananya Iyer** (@ananyaiyer) | Signed up last night: the very start of Unit 1, 0 XP, no streak, 50 gems, leaderboard still locked |
-| **Isha Nair** (@ishanair) | Halfway through Unit 1, a 4-day streak, 205 XP, 320 gems, Bronze league |
-| **Kabir Malhotra** (@kabirmalhotra) | Deep in Unit 3, a 64-day streak, 4,120 XP, two legendary skills, 950 gems, Gold league |
+| **Isha Nair** (@ishanair) | Halfway through Unit 1, a 4-day streak, 205 XP, 320 gems, Silver league (promoted last week) |
+| **Kabir Malhotra** (@kabirmalhotra) | Deep in Unit 3, a 64-day streak, 4,120 XP, two legendary skills, 950 gems, Silver league (demoted from Gold last week) |
+
+Parth, Isha and Kabir are in the same Silver league this week, so they share one live leaderboard:
+the three of them plus 27 rivals. Log in as any of them to see the same standings with your own
+row highlighted; XP earned in a lesson moves that learner up everyone's table straight away, and
+the rivals keep earning XP through the day. Ananya joins a league once she has finished 10 lessons:
+the open one for her tier and week if it has a rival's seat to give, otherwise a new one.
 
 Each history (XP ledger, daily activity, streaks, gems, skill progress, achievements and league
 finishes) is generated relative to the current date from a short profile in
@@ -183,7 +189,8 @@ CI runs lint, type checks, tests and the production build for both apps on every
 Settings → **Demo tools** moves the server's clock, so you can watch day-based rules play out:
 - **+1 day**, then finish a lesson: the streak extends.
 - **+5 hours**: a heart regenerates.
-- **Next Monday**: the league week rolls over.
+- **Next Monday**: the league week rolls over. Learners promoted or demoted together share their
+  new league too.
 - **Reset demo data**: restores all four sample learners.
 
 ## Assumptions
