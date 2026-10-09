@@ -2,6 +2,7 @@
 
 import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { MotionConfig } from "motion/react";
+import { usePathname } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -16,6 +17,7 @@ import {
 import { toast, Toaster } from "@/components/ui";
 import { strings } from "@/content/strings";
 import { createQueryClient, isApiError, useMe, type Theme } from "@/lib/api";
+import { LOGIN_PATH, leaveForLogin } from "@/lib/auth";
 import { setSoundEnabled } from "@/lib/sound";
 import {
   applyAnimations,
@@ -47,7 +49,9 @@ export function useTheme(): ThemeContextValue {
 /** App-wide providers: data cache, server clock, theme, learner preferences and toasts. */
 export function Providers({ children }: { children: ReactNode }) {
   // One client per browser session; useState keeps it stable across renders.
-  const [queryClient] = useState(() => createQueryClient({ onUnexpectedError: reportError }));
+  const [queryClient] = useState(() =>
+    createQueryClient({ onUnexpectedError: reportError, onUnauthenticated: leaveForLogin }),
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -72,6 +76,11 @@ function reportError(error: unknown, key: string, retry?: () => void) {
     id: key,
     action: retry ? { label: strings.common.retry, onClick: retry } : undefined,
   });
+}
+
+/** The signed-in learner, for their preferences; nobody is signed in on the login page. */
+function useLearner() {
+  return useMe({ enabled: usePathname() !== LOGIN_PATH });
 }
 
 /**
@@ -104,7 +113,7 @@ function ServerClockProvider({ children }: { children: ReactNode }) {
  * cached for the next visit. "system" follows the OS setting live.
  */
 function ThemeProvider({ children }: { children: ReactNode }) {
-  const { data: me } = useMe();
+  const { data: me } = useLearner();
   const serverTheme = me?.settings.theme;
   const storedTheme = useSyncExternalStore(subscribeToStoredTheme, readStoredTheme, () => null);
   const prefersDark = useSyncExternalStore(subscribeToColorScheme, prefersDarkScheme, () => false);
@@ -129,7 +138,7 @@ function ThemeProvider({ children }: { children: ReactNode }) {
 
 /** Mirrors the Animations and Sound effects settings into CSS, motion and audio. */
 function PreferencesProvider({ children }: { children: ReactNode }) {
-  const { data: me } = useMe();
+  const { data: me } = useLearner();
   const animations = me?.settings.animations ?? true;
   const soundEffects = me?.settings.sound_effects ?? true;
 

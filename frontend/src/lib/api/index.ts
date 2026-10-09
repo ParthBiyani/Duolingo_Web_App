@@ -8,5 +8,10 @@ export {
   type RequestOptions,
 } from "./client";
 export { queryKeys } from "./queryKeys";
-export { createQueryClient, isUnexpectedError, shouldRetry } from "./queryClient";
+export {
+  createQueryClient,
+  isUnauthenticated,
+  isUnexpectedError,
+  shouldRetry,
+} from "./queryClient";
 export * from "./hooks";

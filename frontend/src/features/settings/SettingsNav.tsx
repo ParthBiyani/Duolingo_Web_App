@@ -4,8 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
-import { toast } from "@/components/ui";
+import { Button, toast } from "@/components/ui";
 import { strings } from "@/content/strings";
+import { authStrings } from "@/features/auth/strings";
+import { useLogOut } from "@/features/auth/useLogOut";
 
 import { settingsStrings } from "./strings";
 
@@ -25,11 +27,12 @@ const ROW =
   "flex w-full items-center rounded-card px-3 py-2.5 text-left font-bold transition-colors";
 
 /**
- * Settings navigation cards: account pages, subscription and support. Beside the content from
- * 1024px, below it on smaller screens (two columns on tablets).
+ * Settings navigation cards: account pages, subscription and support, then LOG OUT. Beside the
+ * content from 1024px, below it on smaller screens (two columns on tablets).
  */
 export function SettingsNav() {
   const pathname = usePathname();
+  const { logOut, pending } = useLogOut();
 
   return (
     <nav aria-label={nav.label} className="mt-10 grid gap-4 md:grid-cols-2 lg:mt-0 lg:grid-cols-1">
@@ -69,6 +72,15 @@ export function SettingsNav() {
           {nav.helpCenter}
         </button>
       </NavCard>
+      <Button
+        variant="outline"
+        fullWidth
+        loading={pending}
+        onClick={logOut}
+        className="md:col-span-2 lg:col-span-1"
+      >
+        {authStrings.logOut}
+      </Button>
     </nav>
   );
 }

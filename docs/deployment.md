@@ -31,6 +31,7 @@ flowchart LR
    | `APP_ENV` | `production` |
    | `DEMO_TOOLS` | `true` (enables the simulated clock used in the demo) |
    | `LOG_LEVEL` | `info` |
+   | `SECRET_KEY` | a long random string, e.g. from `python -c "import secrets; print(secrets.token_urlsafe(32))"` |
 
 4. Deploy. The start command runs `alembic upgrade head`, then `python -m app.seed --if-empty` (a no-op
    once seeded), then `uvicorn`. Check `https://<service>.onrender.com/api/health`, which should return

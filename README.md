@@ -44,16 +44,25 @@ It is built with **Next.js (TypeScript)**, **FastAPI** and **SQLite**.
 | Demo tools | Simulate the passing of time (+1 hour, +5 hours, +1 day, next week) and reset the demo data |
 
 Placeholders, as the assignment allows: speech recognition, purchases and Super, friends, and other
-languages are shown as "Coming soon". Authentication is simplified to a default signed-in learner.
+languages are shown as "Coming soon". Authentication is simplified: the login page lists the sample
+learners and you log in as one with a click; signing up and passwords are "Coming soon".
 
 ## Sample data
 
 The seed creates one course, Spanish for English speakers: 3 units, 12 skills and 405 exercises
-across eight exercise types. It also creates a sample learner, **Parth Biyani (@parthbiyani)**, part
-way through the course: Unit 1 complete with one legendary skill, Unit 2 under way, a 12-day streak,
-1,240 XP, 500 gems, a full set of 10 hearts, a place in the Silver league among 29 seeded rivals, and six
-achievements in progress. The learner's history is generated relative to the current date, so the app
-is ready to use straight after seeding.
+across eight exercise types. It also creates four sample learners at different stages, each with a
+full set of 10 hearts and their own league cohort among 29 seeded rivals:
+
+| Learner | Stage |
+|---|---|
+| **Parth Biyani** (@parthbiyani) | Unit 1 complete with one legendary skill, Unit 2 under way, a 12-day streak, 1,240 XP, 500 gems, Silver league |
+| **Zoe Fernandes** (@zoefernandes) | Signed up last night: the very start of Unit 1, 0 XP, no streak, 50 gems, leaderboard still locked |
+| **Isha Nair** (@ishanair) | Halfway through Unit 1, a 4-day streak, 205 XP, 320 gems, Bronze league |
+| **Kabir Malhotra** (@kabirmalhotra) | Deep in Unit 3, a 64-day streak, 4,120 XP, two legendary skills, 950 gems, Gold league |
+
+Each history (XP ledger, daily activity, streaks, gems, skill progress, achievements and league
+finishes) is generated relative to the current date from a short profile in
+`backend/app/seed/learners.py`, so the app is ready to use straight after seeding.
 
 ## Tech stack
 
@@ -114,6 +123,7 @@ The base path is `/api/v1`. Errors are RFC 9457 problem details:
 
 | Method and path | Purpose |
 |---|---|
+| `GET /auth/learners` · `POST /auth/login` · `POST /auth/logout` | Sample learners, log in as one (sets the session cookie), log out |
 | `GET /me` · `PATCH /me` · `PATCH /me/settings` | Learner, settled stats, daily goal, preferences |
 | `GET /courses/current/path` | Units and nodes with the learner's state |
 | `POST /skills/{id}/chest` | Open a treasure chest node |
@@ -153,6 +163,7 @@ npm run dev
 | `APP_ENV` | backend | `development` | `development`, `test` or `production` |
 | `DEMO_TOOLS` | backend | off | Enables the simulated clock and data reset (`/api/v1/demo/*`) |
 | `LOG_LEVEL` | backend | `info` | Log level |
+| `SECRET_KEY` | backend | a development key | Signs the session cookie; set a long random value in production |
 | `API_ORIGIN` | frontend | `http://127.0.0.1:8000` | Where `/api/*` is proxied; required for production builds |
 | `NEXT_PUBLIC_DEMO_TOOLS` | frontend | on | Set to `false` to hide the Demo tools section |
 
@@ -173,12 +184,14 @@ Settings → **Demo tools** moves the server's clock, so you can watch day-based
 - **+1 day**, then finish a lesson: the streak extends.
 - **+5 hours**: a heart regenerates.
 - **Next Monday**: the league week rolls over.
-- **Reset demo data**: restores the sample learner.
+- **Reset demo data**: restores all four sample learners.
 
 ## Assumptions
 
-- **One default learner.** The assignment allows simplified authentication. Every visitor of the demo
-  shares the same learner; use "Reset demo data" to start over.
+- **Sample learners instead of accounts.** The assignment allows simplified authentication. The login
+  page lists the four sample learners and a click logs in as one, with a signed, HttpOnly session
+  cookie; there are no passwords and sign-up is "Coming soon". Every visitor who picks the same
+  learner shares their progress; use "Reset demo data" to start over.
 - **Gems are mocked.** There are no real purchases.
 - **Game rules** (XP, hearts, streak, leagues) follow Duolingo's documented rules where they are public.
   Where they aren't, sensible values are documented in [docs/game-rules.md](docs/game-rules.md).

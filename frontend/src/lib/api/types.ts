@@ -35,6 +35,28 @@ export interface ProblemDetails {
   code: string;
 }
 
+// Auth (no session needed) -------------------------------------------------
+
+/** GET /auth/learners: a sample learner as the login page shows them. */
+export interface SampleLearner {
+  username: string;
+  display_name: string;
+  avatar_color: string;
+  initials: string;
+  xp_total: number;
+  /** The streak as it stands today (0 once a missed day broke it). */
+  streak: number;
+  /** The unit holding the learner's next node on the path. */
+  unit_number: number;
+  unit_title: string;
+  league_name: string;
+}
+
+/** POST /auth/login; answers with the SampleLearner and sets the session cookie. */
+export interface LoginRequest {
+  username: string;
+}
+
 // Learner ------------------------------------------------------------------
 
 export interface Settings {

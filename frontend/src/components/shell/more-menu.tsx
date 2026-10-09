@@ -3,8 +3,17 @@
 import Link from "next/link";
 
 import { Dots } from "@/components/icons";
-import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger, toast } from "@/components/ui";
+import {
+  Dropdown,
+  DropdownContent,
+  DropdownItem,
+  DropdownSeparator,
+  DropdownTrigger,
+  toast,
+} from "@/components/ui";
 import { strings } from "@/content/strings";
+import { authStrings } from "@/features/auth/strings";
+import { useLogOut } from "@/features/auth/useLogOut";
 
 import { SETTINGS_HREF, sidebarItemClassName, tabItemClassName } from "./nav-items";
 
@@ -14,9 +23,10 @@ interface MoreMenuProps {
   active: boolean;
 }
 
-/** The MORE entry: Settings and Help. */
+/** The MORE entry: Settings, Help and Log out. */
 export function MoreMenu({ placement, active }: MoreMenuProps) {
   const inSidebar = placement === "sidebar";
+  const { logOut, pending } = useLogOut();
 
   return (
     <Dropdown>
@@ -32,6 +42,10 @@ export function MoreMenu({ placement, active }: MoreMenuProps) {
         </DropdownItem>
         <DropdownItem onSelect={() => toast(strings.common.comingSoon, { id: "help" })}>
           {strings.nav.help}
+        </DropdownItem>
+        <DropdownSeparator />
+        <DropdownItem disabled={pending} onSelect={logOut}>
+          {authStrings.logOut}
         </DropdownItem>
       </DropdownContent>
     </Dropdown>

@@ -21,7 +21,7 @@ export const demoStrings = {
   reset: "Reset demo data",
   resetTitle: "Reset demo data?",
   resetBody:
-    "This puts the sample learner's progress, gems, hearts, streak and league back to their starting state and resets the clock.",
+    "This puts every sample learner's progress, gems, hearts, streak and league back to their starting state and resets the clock.",
   resetConfirm: "Reset",
   resetCancel: "Cancel",
   resetDone: "Demo data reset",
