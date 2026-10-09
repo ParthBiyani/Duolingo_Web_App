@@ -23,7 +23,7 @@ export function Sidebar() {
       <Link
         href="/learn"
         aria-label={strings.brand.homeLabel}
-        className="mb-[22px] flex h-[46px] items-center justify-center rounded-xl lg:justify-start lg:px-4 lg:pt-2"
+        className="mb-[22px] flex h-[46px] items-center justify-center rounded-xl lg:justify-start lg:px-4"
       >
         <Logo size={128} className="hidden lg:block" />
         <Mascot pose="idle" size={44} className="lg:hidden" />
