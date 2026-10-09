@@ -66,14 +66,24 @@ longest streak of first-try correct answers in the session.
 ## Leagues
 
 - **10 tiers:** Bronze, Silver, Gold, Sapphire, Ruby, Emerald, Amethyst, Pearl, Obsidian and Diamond.
-- **Cohorts:** 30 learners: one sample learner and 29 seeded rivals. Each sample learner has a cohort of
-  their own, with the same rivals.
+- **Cohorts:** 30 learners per league per week. Learners in the same league and week share one cohort,
+  topped up with simulated rivals, so they all see the same live table. A learner who needs a cohort
+  (on unlocking the leaderboard after 10 lessons, or in a new week) joins the open cohort for their
+  league and week, taking the seat of the rival lowest in the table; a new cohort is formed only when
+  none has a seat left. Learners promoted or demoted together therefore stay together.
+- **Rivals** sit in at most one cohort per week. They are reused from week to week and new ones are
+  created when more are needed.
 - **The week** runs from Monday 00:00 to Monday 00:00 in the learner's time zone.
 - **Ranking:** weekly XP, highest first. A tie goes to whoever reached that total first.
 - **Promotion slots:** 20, 15, 10, 7, 7, 7, 7, 7, 5 and 0 (Bronze to Diamond).
 - **Demotion:** the bottom 5 are demoted, except in Bronze.
 - **Top 3** earn gems.
-- **Rival XP** is generated deterministically per day and written to the same XP ledger.
+- **Live standings:** ranks are summed from the XP ledger on every read, so XP one learner earns shows
+  on every other member's table straight away.
+- **Rival XP** is generated deterministically per day and written to the same XP ledger; today's
+  amount grows with the share of the day that has passed.
+- **End of the week:** the first member to open the app after the week ends closes it for the whole
+  cohort: final ranks, outcomes, prizes and next leagues for every learner in it, exactly once.
 
 ## Achievements
 
@@ -84,6 +94,6 @@ Each level reached awards 25 gems.
 | Wildfire | best streak (days) | 3, 7, 14, 30, 50, 75, 125, 180, 250, 365 |
 | Sage | total XP | 100, 250, 500, 1000, 2000, 4000, 7500, 12500, 20000, 30000 |
 | Sharpshooter | lessons without mistakes | 1, 5, 20, 50, 100 |
-| Champion | leaderboard unlocked, then league tiers reached | 10 levels |
+| Champion | leaderboard unlocked, then the highest league reached | 10 levels |
 | Overachiever | XP earned in one day | 50, 100, 200 |
 | Legendary | skills passed at legendary level | 1, 5, 10, 25, 50 |

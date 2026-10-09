@@ -42,7 +42,7 @@ erDiagram
 | | `exercises` | Ordered exercises with a type `CHECK` over the 8 supported types, the prompt, source text, TTS text and the "new word" flag. |
 | | `exercise_options` | Choices (`is_correct`), word-bank tiles (`answer_position`, NULL for distractors) and match pairs (`pair_key`). |
 | | `exercise_answers` | Accepted typed answers; the canonical answer is flagged. |
-| Learners | `users` | The four sample learners plus seeded league rivals (`is_bot`, `bot_pace_xp`). Stores the time zone. |
+| Learners | `users` | The four sample learners plus league rivals (`is_bot`, `bot_pace_xp`), created as cohorts need them. Stores the time zone. |
 | | `user_settings` | Sound, animations, motivational messages, listening exercises, theme, daily goal (`CHECK IN (1,10,20,30,50)`). |
 | | `user_stats` | Current state: hearts (0–10) with the regeneration anchor, streak, freezes (0–2), league tier, and cached `xp_total` and `gems`. |
 | | `skill_progress` | Per learner and skill: lessons completed and crown level (0–2), with completed and legendary timestamps. |
@@ -52,7 +52,7 @@ erDiagram
 | | `gem_transactions` | Every gem change, with its reason and balance after. A partial unique index `(user_id, reason, ref)` blocks double rewards. |
 | | `daily_activity` | Per learner and local day: XP, sessions, the goal in force, the time the goal was met, the streak status (`extended` or `frozen`). |
 | Catalogue | `leagues` | 10 tiers with promotion and demotion counts and top-3 rewards. |
-| | `league_cohorts` / `league_memberships` | Weekly groups of 30 learners, with final rank and outcome once the week closes. |
+| | `league_cohorts` / `league_memberships` | Weekly groups of 30 per league, shared by the learners in that league and topped up with rivals, with final rank and outcome once the week closes. |
 | | `achievements` / `user_achievements` | Achievement definitions with thresholds, and each learner's level and progress. |
 | | `shop_items` | Heart refill, streak freeze, legendary entry, unlimited hearts (unavailable). |
 | | `app_settings` | Key/value settings, used for the simulated clock offset. |
