@@ -43,6 +43,17 @@ export type LessonModal = "quit" | "outOfHearts" | null;
 /** Why the player finished; decides the destination and whether the session is abandoned. */
 export type ExitReason = "complete" | "quit" | "no-thanks" | "practice" | "failed";
 
+/**
+ * Where the player goes when it closes. A finished session of a skill returns to
+ * `/learn?done=<skillId>`, so the path pops the level just played; everything else returns to
+ * the plain path, or to practice when the learner chose to practise for hearts.
+ */
+export function exitPath(exit: ExitReason, skillId: number | null | undefined): string {
+  if (exit === "practice") return "/practice";
+  if (exit === "complete" && skillId != null) return `/learn?done=${skillId}`;
+  return "/learn";
+}
+
 /** check = CHECK, skip = SKIP, silent-skip = "Can't listen/speak now", match = one tapped pair. */
 export type SubmissionKind = "check" | "skip" | "silent-skip" | "match";
 

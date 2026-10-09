@@ -177,8 +177,9 @@ describe("LessonPlayer", () => {
     expect(await screen.findByText(lessonStrings.completeTitle.lesson)).toBeVisible();
     expect(answersTo("/sessions/:id/complete")).toHaveLength(1);
     expect(screen.getByText(lessonStrings.totalXp)).toBeVisible();
+    // The path pops the level just played (skill 7).
     await user.click(screen.getByRole("button", { name: "Continue" }));
-    await waitFor(() => expect(push).toHaveBeenCalledWith("/learn"));
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/learn?done=7"));
     expect(answersTo("/sessions/:id/abandon")).toHaveLength(0);
   });
 

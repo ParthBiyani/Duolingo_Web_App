@@ -41,6 +41,7 @@ import {
   createInitialState,
   currentExercise,
   currentItem,
+  exitPath,
   isInteractive,
   lessonProgress,
   lessonReducer,
@@ -205,7 +206,7 @@ export function LessonPlayer({ kind, lessonId, skillId }: LessonPlayerProps) {
     const id = state.session?.id;
     const abandoning = exit === "quit" || exit === "no-thanks" || exit === "practice";
     if (abandoning && id !== undefined) abandonSession.mutate(id);
-    router.push(exit === "practice" ? "/practice" : "/learn");
+    router.push(exitPath(exit, state.session?.skill_id));
   });
   const exit = state.phase === "done" ? state.exit : null;
   useEffect(() => {
