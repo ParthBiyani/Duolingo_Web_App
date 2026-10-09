@@ -437,3 +437,7 @@ docs/      architecture, database, game rules, deployment, decision records, dem
 The code is [MIT](LICENSE). The fonts (Duolingo Sans and Feather), icons, artwork and Lottie
 animations in `frontend/public/duo` are Duolingo's property, included only to reproduce the original
 look. Picture cards use the device's emoji font and sound effects are synthesised in the browser.
+
+## Author
+
+Built by Parth Biyani ([@ParthBiyani](https://github.com/ParthBiyani)).
