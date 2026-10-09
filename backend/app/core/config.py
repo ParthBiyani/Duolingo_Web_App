@@ -14,6 +14,9 @@ DEFAULT_DATABASE_URL = f"sqlite:///{(BACKEND_DIR / 'data' / 'app.db').as_posix()
 
 LogLevel = Literal["debug", "info", "warning", "error", "critical"]
 
+DEV_SECRET_KEY = "dev-only-secret-key-change-me"
+"""Signs session cookies when SECRET_KEY is unset. Fine locally; set a real one when deployed."""
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -24,6 +27,12 @@ class Settings(BaseSettings):
     app_env: Literal["development", "test", "production"] = "development"
     demo_tools: bool = False  # enables /api/v1/demo/* (simulated clock and data reset)
     log_level: LogLevel = "info"
+    secret_key: str = DEV_SECRET_KEY  # signs the session cookie (HMAC-SHA256)
+
+    @property
+    def secure_cookies(self) -> bool:
+        """Mark cookies ``Secure`` (HTTPS only) in production; local development is plain HTTP."""
+        return self.app_env == "production"
 
     @field_validator("log_level", mode="before")
     @classmethod

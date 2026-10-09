@@ -1,0 +1,98 @@
+# Test fixture: a small but valid unit (the real course lives in app/seed/content/).
+unit:
+  slug: unit-3
+  section: 1
+  position: 3
+  title: In town
+  description: Find your way around town, go shopping and talk about jobs and travel
+  color: blue
+skills:
+  - slug: places
+    type: lesson
+    title: Places
+    icon: star
+    vocab:
+      - { es: "la ciudad", en: "the city", emoji: "🏙️" }
+      - { es: "el parque", en: "the park", emoji: "🌳" }
+      - { es: "la escuela", en: "the school", emoji: "🏫" }
+      - { es: "el hospital", en: "the hospital", emoji: "🏥" }
+      - { es: "la playa", en: "the beach", emoji: "🏖️" }
+      - { es: "el museo", en: "the museum", emoji: "🏛️" }
+      - { es: "la tienda", en: "the shop", emoji: "🏪" }
+      - { es: "el banco", en: "the bank", emoji: "🏦" }
+    sentences:
+      - { es: "La ciudad es grande.", en: "The city is big." }
+      - { es: "Vamos al parque.", en: "We are going to the park.", alt_en: ["We're going to the park."] }
+      - { es: "La escuela está cerca.", en: "The school is near.", alt_en: ["The school is close."] }
+      - { es: "El museo es bonito.", en: "The museum is pretty.", alt_en: ["The museum is beautiful."] }
+      - { es: "Me gusta la playa.", en: "I like the beach." }
+      - { es: "El banco está lejos.", en: "The bank is far." }
+  - slug: shopping
+    type: lesson
+    title: Shopping
+    icon: star
+    vocab:
+      - { es: "el dinero", en: "the money", emoji: "💵" }
+      - { es: "la bolsa", en: "the bag", emoji: "👜" }
+      - { es: "el precio", en: "the price", emoji: "🏷️" }
+      - { es: "barato", en: "cheap" }
+      - { es: "caro", en: "expensive" }
+      - { es: "comprar", en: "to buy", emoji: "🛒" }
+      - { es: "pagar", en: "to pay", emoji: "💳" }
+      - { es: "el regalo", en: "the gift", emoji: "🎁" }
+    sentences:
+      - { es: "Quiero comprar un regalo.", en: "I want to buy a gift.", alt_en: ["I want to buy a present."] }
+      - { es: "El precio es bajo.", en: "The price is low." }
+      - { es: "La bolsa es cara.", en: "The bag is expensive." }
+      - { es: "No tengo dinero.", en: "I do not have money.", alt_en: ["I don't have money.", "I have no money."] }
+      - { es: "Pago con tarjeta.", en: "I pay by card.", alt_en: ["I pay with a card."] }
+      - { es: "Es muy barato.", en: "It is very cheap.", alt_en: ["It's very cheap."] }
+  - slug: unit-3-chest
+    type: chest
+    title: Treasure chest
+    icon: chest
+    chest_gems: 10
+  - slug: jobs
+    type: lesson
+    title: Jobs
+    icon: star
+    vocab:
+      - { es: "el médico", en: "the doctor", emoji: "🧑‍⚕️" }
+      - { es: "la profesora", en: "the teacher", emoji: "🧑‍🏫" }
+      - { es: "el cocinero", en: "the cook", emoji: "🧑‍🍳" }
+      - { es: "la abogada", en: "the lawyer" }
+      - { es: "el bombero", en: "the firefighter", emoji: "🧑‍🚒" }
+      - { es: "la artista", en: "the artist", emoji: "🧑‍🎨" }
+      - { es: "el trabajo", en: "the job", emoji: "💼" }
+      - { es: "la oficina", en: "the office", emoji: "🏢" }
+    sentences:
+      - { es: "Mi madre es médica.", en: "My mother is a doctor." }
+      - { es: "Él es cocinero.", en: "He is a cook.", alt_en: ["He's a cook."] }
+      - { es: "Ella trabaja en una oficina.", en: "She works in an office." }
+      - { es: "Me gusta mi trabajo.", en: "I like my job." }
+      - { es: "La profesora es simpática.", en: "The teacher is nice.", alt_en: ["The teacher is kind."] }
+      - { es: "El bombero es valiente.", en: "The firefighter is brave." }
+  - slug: travel
+    type: lesson
+    title: Travel
+    icon: star
+    vocab:
+      - { es: "el tren", en: "the train", emoji: "🚆" }
+      - { es: "el avión", en: "the plane", emoji: "✈️" }
+      - { es: "el autobús", en: "the bus", emoji: "🚌" }
+      - { es: "la maleta", en: "the suitcase", emoji: "🧳" }
+      - { es: "el billete", en: "the ticket", emoji: "🎫" }
+      - { es: "el hotel", en: "the hotel", emoji: "🏨" }
+      - { es: "el mapa", en: "the map", emoji: "🗺️" }
+      - { es: "viajar", en: "to travel" }
+    sentences:
+      - { es: "El tren sale hoy.", en: "The train leaves today." }
+      - { es: "Tengo un billete.", en: "I have a ticket." }
+      - { es: "La maleta es pesada.", en: "The suitcase is heavy." }
+      - { es: "Me gusta viajar.", en: "I like to travel.", alt_en: ["I like travelling.", "I like traveling."] }
+      - { es: "El hotel está en el centro.", en: "The hotel is in the centre.", alt_en: ["The hotel is in the center."] }
+      - { es: "Necesito un mapa.", en: "I need a map." }
+  - slug: unit-3-review
+    type: unit_review
+    title: Unit review
+    icon: trophy

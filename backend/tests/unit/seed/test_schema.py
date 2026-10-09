@@ -38,7 +38,7 @@ def test_the_course_content_is_valid_and_builds_405_exercises() -> None:
 
 
 def test_the_fixture_content_is_valid() -> None:
-    assert [unit.unit.slug for unit in load_units(CONTENT_DIR)] == ["unit-1", "unit-2"]
+    assert [unit.unit.slug for unit in load_units(CONTENT_DIR)] == ["unit-1", "unit-2", "unit-3"]
 
 
 def test_skills_must_follow_the_path_order(unit_data: dict[str, Any]) -> None:

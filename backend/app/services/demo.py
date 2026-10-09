@@ -21,7 +21,10 @@ def advance_clock(db: Session, now: datetime, seconds: int) -> ClockResponse:
 
 
 def reset_demo(db: Session) -> None:
-    """Restore the sample learner, rivals and league week, and set the clock back to real time."""
+    """Restore the sample learners, rivals and league weeks, and set the clock back to real time.
+
+    Session cookies name a learner by username, so everyone stays logged in across a reset.
+    """
     set_clock_offset(db, 0)
     reset_people(db, SystemClock().now())
     db.commit()

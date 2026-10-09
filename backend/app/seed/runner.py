@@ -10,10 +10,11 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.models import Course, LeagueCohort, User
-from app.seed.bots import seed_league_week
+from app.seed.bots import seed_league_week, seed_rivals
 from app.seed.catalog import SPANISH_COURSE_SLUG, seed_catalog
 from app.seed.course import seed_course_content
-from app.seed.learner import LEAGUE_TIER, seed_learner
+from app.seed.learner import seed_learner
+from app.seed.learners import LEARNERS
 from app.seed.schema import CONTENT_DIR, load_units
 
 
@@ -24,7 +25,7 @@ def is_seeded(session: Session) -> bool:
 
 
 def seed_database(session: Session, now: datetime, content_dir: Path = CONTENT_DIR) -> bool:
-    """Seed an empty database: catalogue, course content, the learner and the rivals.
+    """Seed an empty database: catalogue, course content, the learners and the rivals.
 
     Returns False without writing anything when the database is already seeded.
     """
@@ -37,8 +38,8 @@ def seed_database(session: Session, now: datetime, content_dir: Path = CONTENT_D
     return True
 
 
-def reset_people(session: Session, now: datetime) -> User:
-    """Replace the learner, the rivals and the league cohorts with fresh ones as of ``now``.
+def reset_people(session: Session, now: datetime) -> list[User]:
+    """Replace the learners, the rivals and the league cohorts with fresh ones as of ``now``.
 
     Course content and the catalogue are kept. Deleting the users cascades to every
     per-learner row (progress, sessions, ledgers, activity, memberships and achievements).
@@ -55,8 +56,13 @@ def reset_people(session: Session, now: datetime) -> User:
     return seed_people(session, course, now)
 
 
-def seed_people(session: Session, course: Course, now: datetime) -> User:
-    """Seed the default learner and this week's league cohort; return the learner."""
-    learner = seed_learner(session, course, now)
-    seed_league_week(session, learner, now, tier=LEAGUE_TIER)
-    return learner
+def seed_people(session: Session, course: Course, now: datetime) -> list[User]:
+    """Seed the sample learners, the rivals and each learner's league cohort for this week.
+
+    Returns the learners in ``LEARNERS`` order.
+    """
+    learners = [seed_learner(session, course, profile, now) for profile in LEARNERS]
+    rivals = seed_rivals(session, learners[0], now)
+    for learner, profile in zip(learners, LEARNERS, strict=True):
+        seed_league_week(session, learner, rivals, now, tier=profile.league_tier)
+    return learners

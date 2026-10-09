@@ -14,12 +14,11 @@ from app.core.clock import get_clock_offset, set_clock_offset
 from app.core.db import create_db_engine, get_db, session_scope
 from app.domain.hearts import MAX_HEARTS
 from app.models import DailyActivity, GemTransaction, User, UserStats, XpEvent
-from app.seed.learner import USERNAME
-from tests.conftest import NOW, sqlite_url
+from tests.conftest import DEFAULT_USERNAME, NOW, sqlite_url
 
 
 def learner_id(db: Session) -> int:
-    user_id = db.scalar(select(User.id).where(User.username == USERNAME))
+    user_id = db.scalar(select(User.id).where(User.username == DEFAULT_USERNAME))
     assert user_id is not None
     return user_id
 

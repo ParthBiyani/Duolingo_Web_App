@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 
 from app import __version__
 from app.api.v1 import router as api_v1_router
-from app.core.config import Settings, get_settings
+from app.core.config import DEV_SECRET_KEY, Settings, get_settings
 from app.core.db import engine, get_db
 from app.core.errors import AppError, register_exception_handlers
 from app.core.logging import configure_logging, request_id_var
@@ -72,6 +72,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             settings.app_env,
             "on" if settings.demo_tools else "off",
         )
+        if settings.app_env == "production" and settings.secret_key == DEV_SECRET_KEY:
+            logger.warning("SECRET_KEY is not set: session cookies use the development key")
         yield
         engine.dispose()
 
