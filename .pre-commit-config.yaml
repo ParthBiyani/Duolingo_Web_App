@@ -16,6 +16,8 @@ repos:
         exclude: ^frontend/(tsconfig.*\.json)$
       - id: check-added-large-files
         args: [--maxkb=800]
+        # The README demo recordings are documentation media, not source.
+        exclude: ^docs/demo/.*.gif$
       - id: detect-private-key
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.16.10
