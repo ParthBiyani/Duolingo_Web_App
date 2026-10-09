@@ -1,6 +1,6 @@
 import { DuoImage } from "./DuoImage";
 import type { IconProps } from "./IconBase";
 
-export function Gem(props: IconProps) {
-  return <DuoImage name="gem" {...props} />;
+export function Logo(props: IconProps) {
+  return <DuoImage name="logo" {...props} />;
 }

@@ -12,7 +12,11 @@ const ALL = Object.entries(icons).filter(([, value]) => typeof value === "functi
 ][];
 
 /** Props an icon needs beyond the shared ones. */
-const REQUIRED: Record<string, Record<string, unknown>> = { Medal: { place: 2 } };
+const REQUIRED: Record<string, Record<string, unknown>> = {
+  Medal: { place: 2 },
+  LeagueBadge: { tier: 1 },
+  DuoImage: { name: "gem" },
+};
 
 describe("icons", () => {
   it("exports every icon the app imports", () => {
@@ -48,16 +52,32 @@ describe("icons", () => {
         "Clock",
         "Snowflake",
         "Mic",
+        "BannerBack",
+        "DuoImage",
+        "Guidebook",
+        "HeartRefill",
+        "HeartUnlimited",
+        "LeagueBadge",
+        "Logo",
+        "NavLeaderboards",
+        "NavQuests",
+        "QuestChest",
+        "StatMedal",
+        "StatStreak",
+        "StatXp",
+        "SuperLogo",
+        "SuperOwl",
       ].sort(),
     );
   });
 
   it.each(ALL)("%s is decorative without a title", (name, Icon) => {
     const { container } = render(<Icon {...REQUIRED[name]} />);
-    const svg = container.querySelector("svg");
-    expect(svg).toHaveAttribute("aria-hidden", "true");
-    expect(svg).not.toHaveAttribute("role");
-    expect(svg).toHaveAttribute("width", "24");
+    // Drawn icons are inline SVG; the original artwork is an <img> of its SVG file.
+    const graphic = container.querySelector("svg, img");
+    expect(graphic).toHaveAttribute("aria-hidden", "true");
+    expect(graphic).not.toHaveAttribute("role");
+    expect(graphic).toHaveAttribute("width", "24");
     expect(screen.queryByRole("img")).toBeNull();
   });
 
@@ -71,9 +91,9 @@ describe("icons", () => {
 
   it("greys out the flame when muted", () => {
     const { container, rerender } = render(<icons.Flame />);
-    expect(container.innerHTML).toContain("#FF9600");
+    expect(container.querySelector("img")).toHaveAttribute("src", "/duo/streak.svg");
     rerender(<icons.Flame muted />);
-    expect(container.innerHTML).not.toContain("#FF9600");
+    expect(container.querySelector("img")).toHaveAttribute("src", "/duo/streak-off.svg");
   });
 
   it("paints the shield in the given colour", () => {
