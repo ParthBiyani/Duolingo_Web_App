@@ -93,6 +93,15 @@ export const lessonStrings = {
 
   // Loading and errors
   loading: "Getting your lesson ready",
+  loadingCaption: "Loading...",
+  loadingFacts: [
+    "Spanish is the official language of 20 countries.",
+    "Learning a few minutes every day beats one long session a week.",
+    "Saying new words out loud helps you remember them.",
+    "Spanish has two verbs for “to be”: ser and estar.",
+    "The letter ñ is only one of the sounds English doesn't have.",
+    "Mistakes are part of learning: missed exercises come back at the end.",
+  ],
   loadErrorTitle: "We couldn't start this lesson",
   loadErrorBody: "Check your connection and give it another go.",
   completeErrorTitle: "We couldn't save your results",
