@@ -109,7 +109,7 @@ export function ShopScreen() {
               name={unlimitedItem.name}
               description={unlimitedItem.description}
               action={
-                <Button variant="super" onClick={comingSoon}>
+                <Button variant="outline" className="text-magenta" onClick={comingSoon}>
                   {shopStrings.freeTrial}
                 </Button>
               }
@@ -173,8 +173,9 @@ function PriceButton({
       aria-label={shopStrings.buyLabel(item.name, price)}
       title={unaffordable ? shopStrings.notEnoughGems : undefined}
     >
-      <Gem size={22} />
-      {shopStrings.price(price)}
+      <span className="text-blue">{shopStrings.getFor}</span>
+      <Gem size={20} />
+      <span className="text-blue">{shopStrings.price(price)}</span>
     </Button>
   );
 }
