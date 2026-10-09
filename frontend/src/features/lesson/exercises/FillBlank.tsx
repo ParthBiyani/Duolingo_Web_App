@@ -25,7 +25,7 @@ export function FillBlank({ exercise, draft, onDraft, locked }: ExerciseProps) {
   useNumberKeys(options.length, !locked, (index) => onDraft({ option_id: options[index].id }));
 
   return (
-    <div className="flex flex-col gap-6 md:gap-8">
+    <div className="flex flex-col gap-6 md:gap-8 short:gap-3 md:short:gap-4">
       <SpeechBubble variant={characterFor(exercise)}>
         <p lang={exercise.source_lang ?? undefined} className="leading-8">
           {before}
@@ -41,7 +41,11 @@ export function FillBlank({ exercise, draft, onDraft, locked }: ExerciseProps) {
           {after}
         </p>
       </SpeechBubble>
-      <div role="group" aria-label={exercise.prompt} className="flex flex-col gap-2 md:gap-3">
+      <div
+        role="group"
+        aria-label={exercise.prompt}
+        className="flex flex-col gap-2 md:gap-3 md:shorter:gap-2"
+      >
         {options.map((option, index) => (
           <ChoiceRow
             key={option.id}

@@ -48,7 +48,7 @@ export function LessonFooter({
 
   return (
     <footer className="shrink-0 border-t-2 border-border">
-      <div className="mx-auto flex w-full max-w-[1000px] items-center justify-between gap-4 px-4 py-4 md:h-[140px] md:px-10 md:py-0">
+      <div className="mx-auto flex w-full max-w-[1000px] items-center justify-between gap-4 px-4 py-4 md:h-[140px] md:px-10 md:py-0 short:py-3 md:short:h-[100px]">
         {mode === "answer" ? (
           <>
             <Button

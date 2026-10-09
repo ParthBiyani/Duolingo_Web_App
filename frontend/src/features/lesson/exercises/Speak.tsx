@@ -14,7 +14,7 @@ export function Speak({ exercise, locked, autoplayAudio, onSkipSilently }: Exerc
   useAutoplay(exercise.source_lang === "es" ? audioText(exercise) : null, autoplayAudio);
 
   return (
-    <div className="flex flex-col gap-6 md:gap-8">
+    <div className="flex flex-col gap-6 md:gap-8 short:gap-3 md:short:gap-4">
       {exercise.source_text ? (
         <SpeechBubble variant={characterFor(exercise)}>
           <SourceLine exercise={exercise} />

@@ -51,7 +51,7 @@ export function FeedbackBar({
           : "bg-feedback-wrong-bg text-feedback-wrong-text",
       )}
     >
-      <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-4 px-4 pt-4 pb-5 md:h-[140px] md:flex-row md:items-center md:justify-between md:gap-6 md:px-10 md:py-0">
+      <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-4 px-4 pt-4 pb-5 md:h-[140px] md:flex-row md:items-center md:justify-between md:gap-6 md:px-10 md:py-0 short:pt-3 short:pb-3 md:short:h-[112px] shorter:gap-2">
         <div role="status" className="flex min-w-0 items-center gap-4">
           <span
             aria-hidden="true"

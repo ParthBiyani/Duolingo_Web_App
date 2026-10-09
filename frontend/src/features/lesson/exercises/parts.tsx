@@ -69,8 +69,12 @@ export function SpeakerButton({ text, className }: { text: string; className?: s
 export function SpeechBubble({ variant, children }: { variant: 1 | 2 | 3; children: ReactNode }) {
   return (
     <div className="flex items-end gap-1 md:gap-3">
-      <Character variant={variant} size={136} className="h-auto w-[88px] shrink-0 md:w-[136px]" />
-      <div className="relative mb-7 min-w-0 rounded-panel border-2 border-border bg-surface px-4 py-3 text-base leading-6 text-body md:mb-12">
+      <Character
+        variant={variant}
+        size={136}
+        className="h-auto w-[88px] shrink-0 md:w-[136px] short:w-[72px] md:short:w-[88px] shorter:w-[60px] md:shorter:w-[72px]"
+      />
+      <div className="relative mb-7 min-w-0 rounded-panel border-2 border-border bg-surface px-4 py-3 text-base leading-6 text-body md:mb-12 md:short:mb-7 shorter:mb-5 md:shorter:mb-5">
         <span
           aria-hidden="true"
           className="absolute top-1/2 -left-[9px] size-4 -translate-y-1/2 rotate-45 border-b-2 border-l-2 border-border bg-surface"
@@ -134,7 +138,7 @@ export function TextAnswer({
       autoComplete="off"
       autoCorrect="off"
       autoCapitalize="off"
-      className="min-h-[150px] w-full resize-none rounded-tile border-2 border-border bg-surface-hover px-3 py-2.5 text-lead text-body placeholder:text-disabled read-only:cursor-default focus:border-selected-border focus:outline-none"
+      className="min-h-[150px] w-full resize-none rounded-tile border-2 border-border bg-surface-hover px-3 py-2.5 text-lead text-body placeholder:text-disabled read-only:cursor-default focus:border-selected-border focus:outline-none short:min-h-[104px]"
     />
   );
 }

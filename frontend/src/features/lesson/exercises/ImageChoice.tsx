@@ -32,7 +32,7 @@ export function ImageChoice({ exercise, draft, onDraft, locked }: ExerciseProps)
             aria-disabled={locked}
             onClick={locked ? undefined : () => onDraft({ option_id: option.id })}
             className={cx(
-              "flex min-h-[170px] flex-col rounded-tile border-2 p-3 transition-[background-color,border-color,translate,box-shadow] duration-100 md:h-[254px]",
+              "flex min-h-[170px] flex-col rounded-tile border-2 p-3 transition-[background-color,border-color,translate,box-shadow] duration-100 md:h-[254px] md:short:h-[196px]",
               isSelected
                 ? "border-selected-border bg-selected-bg text-selected-text shadow-edge-selected"
                 : "border-border bg-surface text-body shadow-edge-border",
