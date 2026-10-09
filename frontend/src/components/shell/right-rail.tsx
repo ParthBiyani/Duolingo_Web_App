@@ -15,6 +15,8 @@ import {
 } from "@/components/icons";
 import { buttonClassName, cn, ProgressBar, Skeleton, toast } from "@/components/ui";
 import { strings } from "@/content/strings";
+import { SettingsNav } from "@/features/settings/SettingsNav";
+import { settingsStrings } from "@/features/settings/strings";
 import { useLeaderboard, useMe, useQuests, type DailyQuest } from "@/lib/api";
 
 import { StatsBar } from "./stats-bar";
@@ -331,6 +333,17 @@ export function RightRail() {
     pathname.startsWith(`/${name}`),
   );
   const [railRef, railTop] = useStickToBottom();
+  // Settings pages replace the whole rail with their navigation cards.
+  if (pathname.startsWith("/settings")) {
+    return (
+      <aside
+        aria-label={settingsStrings.nav.label}
+        className="sticky top-0 hidden w-92 shrink-0 self-start py-6 xl:block"
+      >
+        <SettingsNav />
+      </aside>
+    );
+  }
   return (
     <aside
       ref={railRef}

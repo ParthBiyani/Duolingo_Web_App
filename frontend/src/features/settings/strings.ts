@@ -40,6 +40,8 @@ export const settingsStrings = {
     profile: "Profile",
     notifications: "Notifications",
     courses: "Courses",
+    schools: "Duolingo for Schools",
+    socialAccounts: "Social accounts",
     privacy: "Privacy settings",
     subscription: "Subscription",
     choosePlan: "Choose a plan",
