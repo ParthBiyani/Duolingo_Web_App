@@ -5,7 +5,7 @@
 
 ## Context
 Streaks depend on calendar days in the learner's time zone, hearts regenerate every five hours, and
-leagues roll over weekly. The assignment asks for this day logic to be simulated and testable.
+leagues roll over weekly. This day logic has to be simulated and testable.
 
 ## Decision
 - **Rules are pure functions** of stored state, `now` and the learner's time zone. They live in
@@ -24,4 +24,4 @@ leagues roll over weekly. The assignment asks for this day logic to be simulated
 ## Consequences
 - Tests can cover any calendar scenario (midnight in IST versus UTC, a missed day with a freeze, week
   rollover) deterministically.
-- Evaluators can watch a streak grow or hearts refill in seconds.
+- Anyone trying the demo can watch a streak grow or hearts refill in seconds.

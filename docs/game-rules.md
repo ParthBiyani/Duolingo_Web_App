@@ -19,26 +19,37 @@ longest streak of first-try correct answers in the session.
 ## Hearts
 
 - A learner has at most **10** hearts and starts with all of them.
-- Each incorrect CHECK in a lesson or review costs one heart, including each wrong match in "Select the
-  matching pairs".
+- Each incorrect CHECK in a lesson or a review (including a unit review) costs one heart, including
+  each wrong match in "Select the matching pairs".
 - These never cost a heart:
   - SKIP: the exercise is re-queued instead;
   - an answer accepted as a typo;
-  - practice and timed sessions.
-- **Regeneration:** +1 heart every **5 hours**, computed lazily from an anchor timestamp.
+  - "Can't listen now" and the speaking exercise, which are set aside without a penalty;
+  - practice, timed and legendary sessions.
+- **Regeneration:** +1 heart every **5 hours**, computed lazily from an anchor timestamp. The clock
+  starts when the first heart is lost and stops when hearts are full again.
 - **Refill to full:**
-  - 350 gems in the shop;
+  - 350 gems in the shop or from the hearts popover;
   - 450 gems from the out-of-hearts dialog during a lesson.
-- **Practice to earn hearts:** a passed practice session gives +1 heart.
-- **At 0 hearts:** a lesson pauses on the out-of-hearts dialog, which offers refill, practice or quit.
-  Quitting fails the lesson: no XP and no progress.
+- **Practice to earn hearts:** a completed practice session gives +1 heart, up to the maximum.
+- **At 0 hearts:** a lesson can't be started, and a lesson in progress pauses on the out-of-hearts
+  dialog, which offers refill, practice or quit. Quitting fails the lesson: no XP and no progress.
 
 ## Lessons
 
+- A lesson has 10 exercises and a unit review 15. Practice draws 10 exercises from completed lessons.
 - Every exercise must eventually be answered correctly.
 - Wrong or skipped exercises are asked again at the end, marked "previous mistake".
-- After the 4th exercise, and at 5 and 10 correct answers in a row, the mascot appears with a short
-  message. These can be turned off with **Motivational messages**.
+- **Grading** happens on the server. Answers are compared after lowercasing, dropping punctuation
+  and collapsing spaces. A missing accent, or a single slip (one letter added, missing, changed or
+  two swapped) when both texts are at least 5 characters long, counts as a typo: accepted, with the
+  correct spelling shown.
+- **Word hints:** the Spanish words of a sentence have a dotted underline; hovering, focusing or
+  tapping one shows its meaning. Hints gloss single words and set phrases, never the whole sentence,
+  and a word introduced by a "new word" exercise is marked as new.
+- When the first previous mistake comes up, at 5 and 10 correct answers in a row, and once after the
+  4th exercise, the owl appears with a short message. These can be turned off with **Motivational
+  messages**.
 
 ## Streak
 
@@ -54,30 +65,42 @@ longest streak of first-try correct answers in the session.
 
 ## Path
 
-- **Section 1** has three units. Each unit has:
+- **Section 1** has three units. Each unit has six nodes:
   - four lesson skills of three lessons each;
-  - a treasure chest node worth 10 gems, which can be opened once;
+  - a treasure chest node (after the second skill) worth 10 gems, which can be opened once;
   - a unit review node.
 - Nodes unlock strictly in order.
 - The active node shows a progress ring (lessons completed out of total) and a START bubble.
-- **Crowns:** a completed skill earns crown level 1. Passing its legendary challenge (100 gems to enter,
-  at most 3 mistakes) earns crown level 2 and turns the node gold.
+- The first node of a locked unit offers "Jump here?"; skipping ahead is "Coming soon".
+- **Crowns:** a completed skill earns crown level 1. Replaying it is a review (5 XP).
+- **Legendary challenge:** on a completed lesson skill, for 100 gems: 15 exercises drawn from the
+  skill, no hearts, at most 3 mistakes (the 4th fails the challenge). Passing earns crown level 2
+  and turns the node gold.
+
+## Timed practice
+
+- 20 exercises drawn from completed lessons (multiple choice, picture choice, fill in the blank and
+  word-bank translation).
+- The timer starts at 30 seconds and each correct answer adds 7. The session ends when the timer
+  runs out or the exercises do, and pays 1 XP per correct answer.
 
 ## Leagues
 
 - **10 tiers:** Bronze, Silver, Gold, Sapphire, Ruby, Emerald, Amethyst, Pearl, Obsidian and Diamond.
+- **Unlocking:** the leaderboard unlocks after 10 completed lessons (lessons, reviews and legendary
+  challenges count).
 - **Cohorts:** 30 learners per league per week. Learners in the same league and week share one cohort,
   topped up with simulated rivals, so they all see the same live table. A learner who needs a cohort
-  (on unlocking the leaderboard after 10 lessons, or in a new week) joins the open cohort for their
-  league and week, taking the seat of the rival lowest in the table; a new cohort is formed only when
-  none has a seat left. Learners promoted or demoted together therefore stay together.
+  (on unlocking the leaderboard, or in a new week) joins the open cohort for their league and week,
+  taking the seat of the rival lowest in the table; a new cohort is formed only when none has a seat
+  left. Learners promoted or demoted together therefore stay together.
 - **Rivals** sit in at most one cohort per week. They are reused from week to week and new ones are
   created when more are needed.
 - **The week** runs from Monday 00:00 to Monday 00:00 in the learner's time zone.
 - **Ranking:** weekly XP, highest first. A tie goes to whoever reached that total first.
 - **Promotion slots:** 20, 15, 10, 7, 7, 7, 7, 7, 5 and 0 (Bronze to Diamond).
 - **Demotion:** the bottom 5 are demoted, except in Bronze.
-- **Top 3** earn gems.
+- **Top 3** earn gems: from 20, 10 and 5 in Bronze up to 75, 60 and 50 in Diamond.
 - **Live standings:** ranks are summed from the XP ledger on every read, so XP one learner earns shows
   on every other member's table straight away.
 - **Rival XP** is generated deterministically per day and written to the same XP ledger; today's

@@ -5,15 +5,17 @@
 - Date: 2026-10-08
 
 ## Context
-The assignment allows simplified authentication ("assume a default logged-in learner") but requires that
-all progress persists per user. One default learner made it hard to show the app at different stages
+Authentication can be simplified (a default logged-in learner is enough), but all progress must
+persist per user. One default learner made it hard to show the app at different stages
 (a brand-new learner, a locked leaderboard, a long streak, a high league), so the seed now creates four
 sample learners and the app needs a way to choose between them.
 
 ## Decision
 - **One seam.** A single FastAPI dependency, `get_current_user`, resolves the learner. It reads the
   `duo_session` cookie and answers `401` with the code `not_authenticated` when the cookie is missing,
-  forged or names no learner. Every other route depends on it; nothing else decides who the learner is.
+  forged or names no learner. Every route that reads or changes a learner's data depends on it;
+  nothing else decides who the learner is. Only the auth routes, the demo tools (`/api/v1/demo/*`,
+  which act on the whole demo rather than one learner) and the health check work without it.
 - **Log in by picking a sample learner.** `GET /api/v1/auth/learners` lists the learners (public, for the
   login page), `POST /api/v1/auth/login {username}` sets the cookie for an existing non-rival user and
   `POST /api/v1/auth/logout` clears it. The login form for an email and password and sign-up are shown
