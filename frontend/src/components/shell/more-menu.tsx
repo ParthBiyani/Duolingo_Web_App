@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRef, useState, type PointerEvent } from "react";
 
-import { Dots } from "@/components/icons";
+import { Dots, DuoImage } from "@/components/icons";
 import {
   Dropdown,
   DropdownContent,
@@ -23,28 +24,63 @@ interface MoreMenuProps {
   active: boolean;
 }
 
-/** The MORE entry: Settings, Help and Log out. */
+const comingSoon = () => toast(strings.common.comingSoon, { id: "coming-soon" });
+
+/** Caps rows of the menu, as in the original. */
+const ROW = "text-button leading-4 text-body uppercase";
+
+/**
+ * The MORE entry: Duolingo English Test and Podcast (coming soon), Settings, Help and Log out.
+ * Like the original it opens while a mouse hovers it; clicks and taps still work.
+ */
 export function MoreMenu({ placement, active }: MoreMenuProps) {
   const inSidebar = placement === "sidebar";
   const { logOut, pending } = useLogOut();
+  const [open, setOpen] = useState(false);
+  const closeTimer = useRef<number | undefined>(undefined);
+  const hover = {
+    onPointerEnter: (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
+      window.clearTimeout(closeTimer.current);
+      setOpen(true);
+    },
+    onPointerLeave: (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
+      closeTimer.current = window.setTimeout(() => setOpen(false), 150);
+    },
+  };
 
   return (
-    <Dropdown>
+    <Dropdown open={open} onOpenChange={setOpen} modal={false}>
       <DropdownTrigger
+        {...hover}
         className={inSidebar ? sidebarItemClassName(active) : tabItemClassName(active)}
       >
         <Dots size={32} className="shrink-0" />
         <span className={inSidebar ? "sr-only lg:not-sr-only" : "sr-only"}>{strings.nav.more}</span>
       </DropdownTrigger>
-      <DropdownContent side={inSidebar ? "right" : "top"} align="end">
-        <DropdownItem asChild>
-          <Link href={SETTINGS_HREF}>{strings.nav.settings}</Link>
+      <DropdownContent
+        {...hover}
+        side={inSidebar ? "right" : "top"}
+        align="end"
+        className="w-[290px]"
+      >
+        <DropdownItem onSelect={comingSoon} className={`${ROW} gap-5`}>
+          <DuoImage name="more-english-test" size={32} />
+          {strings.nav.englishTest}
         </DropdownItem>
-        <DropdownItem onSelect={() => toast(strings.common.comingSoon, { id: "help" })}>
-          {strings.nav.help}
+        <DropdownItem onSelect={comingSoon} className={`${ROW} gap-5`}>
+          <DuoImage name="more-podcast" size={32} />
+          {strings.nav.podcast}
         </DropdownItem>
         <DropdownSeparator />
-        <DropdownItem disabled={pending} onSelect={logOut}>
+        <DropdownItem asChild className={ROW}>
+          <Link href={SETTINGS_HREF}>{strings.nav.settings}</Link>
+        </DropdownItem>
+        <DropdownItem onSelect={comingSoon} className={ROW}>
+          {strings.nav.help}
+        </DropdownItem>
+        <DropdownItem disabled={pending} onSelect={logOut} className={ROW}>
           {authStrings.logOut}
         </DropdownItem>
       </DropdownContent>

@@ -40,6 +40,8 @@ export const strings = {
     more: "More",
     settings: "Settings",
     help: "Help",
+    englishTest: "Duolingo English Test",
+    podcast: "Podcast",
   },
 
   stats: {

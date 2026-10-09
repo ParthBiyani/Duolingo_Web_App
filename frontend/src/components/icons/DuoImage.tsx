@@ -53,6 +53,8 @@ export type DuoAsset =
   | "heart-bar"
   | "gem-small"
   | "gems-chest"
+  | "more-english-test"
+  | "more-podcast"
   | `league-${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`;
 
 interface DuoImageProps extends IconProps {
