@@ -71,3 +71,27 @@ def credit_streak(s: StreakState, today: date) -> StreakCredit:
         freezes=s.freezes,
     )
     return StreakCredit(state, extended=True, milestone=current in MILESTONES)
+
+
+STREAK_GOALS = (7, 14, 30, 50, 100, 365)  # the streak goals a learner works through in order
+
+
+@dataclass(frozen=True)
+class StreakGoal:
+    start: int  # the goal already reached (1 before the first one)
+    target: int  # the next goal, always above the current streak
+
+
+def streak_goal(current: int) -> StreakGoal:
+    """The next streak goal for a streak of ``current`` days and the goal before it.
+
+    After the last goal, every further whole year is the next goal.
+    """
+    start = 1
+    for goal in STREAK_GOALS:
+        if current < goal:
+            return StreakGoal(start=start, target=goal)
+        start = goal
+    last = STREAK_GOALS[-1]
+    target = (current // last + 1) * last
+    return StreakGoal(start=target - last, target=target)

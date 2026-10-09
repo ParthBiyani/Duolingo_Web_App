@@ -6,11 +6,14 @@ from app.domain.dates import local_date
 from app.domain.streak import (
     MAX_FREEZES,
     MILESTONES,
+    STREAK_GOALS,
     StreakCredit,
+    StreakGoal,
     StreakSettle,
     StreakState,
     credit_streak,
     settle_streak,
+    streak_goal,
 )
 
 TODAY = date(2026, 10, 9)
@@ -184,3 +187,31 @@ def test_local_midnight_decides_which_day_a_session_counts_for(tz: str, expected
         today = local_date(finished_at, tz)
         state = credit_streak(settle_streak(state, today).state, today).state
     assert state.current == expected
+
+
+# Streak goals
+
+
+def test_streak_goals() -> None:
+    assert STREAK_GOALS == (7, 14, 30, 50, 100, 365)
+
+
+@pytest.mark.parametrize(
+    ("current", "start", "target"),
+    [
+        (0, 1, 7),
+        (2, 1, 7),
+        (6, 1, 7),
+        (7, 7, 14),
+        (12, 7, 14),
+        (14, 14, 30),
+        (99, 50, 100),
+        (364, 100, 365),
+        (365, 365, 730),
+        (800, 730, 1095),
+    ],
+)
+def test_the_next_streak_goal_is_above_the_current_streak(
+    current: int, start: int, target: int
+) -> None:
+    assert streak_goal(current) == StreakGoal(start=start, target=target)
