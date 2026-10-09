@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.1.0] - 2026-10-09
 
 ### Added
 - **Streak details:** VIEW MORE in the streak popover opens a Streak window with a month calendar
@@ -21,6 +21,16 @@ All notable changes to this project are documented here. The format follows
   offer on the first node of each locked unit.
 - **Shell:** top bar popovers that open on hover, a right rail that varies by page, and a Shop banner
   that rotates between the family plan and a Super free trial.
+- **End-to-end tests:** a Playwright suite of 81 tests across every screen and flow, with axe
+  checks, run in CI on every pull request.
+- **README:** demo GIFs replace the screenshots.
+
+### Fixed
+- A finished lesson returns to the path with the played level popping.
+- Top bar popovers have accessible names and close when a link inside them is followed.
+- Last week's league result stays available for the Leaderboards page.
+- The league shown in the top bar and profile updates as soon as a league week ends.
+- The streak popover shows Streak Society membership from a 7-day streak.
 
 ### Changed
 - **Hearts:** the limit is 10 instead of 5 (migration `0002_ten_hearts`), and learners start full.
