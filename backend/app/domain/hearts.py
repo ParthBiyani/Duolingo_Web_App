@@ -8,7 +8,7 @@ intervals that have passed since then.
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-MAX_HEARTS = 5
+MAX_HEARTS = 10
 REGEN = timedelta(hours=5)
 
 

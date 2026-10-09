@@ -3,8 +3,12 @@
 from datetime import timedelta
 
 from fastapi.testclient import TestClient
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from app.core.clock import FixedClock
+from app.domain.hearts import MAX_HEARTS
+from app.models import User
 
 
 def test_me_returns_the_seeded_learner(client: TestClient) -> None:
@@ -12,8 +16,8 @@ def test_me_returns_the_seeded_learner(client: TestClient) -> None:
     assert body["user"]["display_name"] == "Parth Biyani"
     assert body["user"]["timezone"] == "Asia/Kolkata"
     stats = body["stats"]
-    assert stats["hearts"] == 4 and stats["hearts_max"] == 5
-    assert stats["next_heart_at"] is not None
+    assert stats["hearts"] == stats["hearts_max"] == MAX_HEARTS  # everyone starts full
+    assert stats["next_heart_at"] is None  # no regeneration clock while full
     assert stats["streak"]["current"] == 12
     assert stats["streak"]["extended_today"] is False
     assert len(stats["streak"]["week"]) == 7
@@ -21,10 +25,16 @@ def test_me_returns_the_seeded_learner(client: TestClient) -> None:
     assert body["server_now"].startswith("2026-10-09T06:30")
 
 
-def test_hearts_regenerate_lazily_over_time(client: TestClient, clock: FixedClock) -> None:
+def test_hearts_regenerate_lazily_over_time(
+    client: TestClient, db: Session, clock: FixedClock
+) -> None:
+    learner = db.scalars(select(User).where(User.username == "parthbiyani")).one()
+    learner.stats.hearts, learner.stats.hearts_anchor_at = MAX_HEARTS - 1, clock.now()
+    db.commit()
+    assert client.get("/api/v1/me").json()["stats"]["next_heart_at"] is not None
     clock.advance(timedelta(hours=5))
     stats = client.get("/api/v1/me").json()["stats"]
-    assert stats["hearts"] == 5
+    assert stats["hearts"] == MAX_HEARTS
     assert stats["next_heart_at"] is None
 
 

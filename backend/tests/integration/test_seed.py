@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.core.clock import get_clock_offset, set_clock_offset
 from app.core.db import create_db_engine
 from app.domain.dates import local_midnight_utc
+from app.domain.hearts import MAX_HEARTS
 from app.domain.path_state import NodeInput, NodeProgress, compute_node_states
 from app.models import (
     Achievement,
@@ -139,7 +140,7 @@ def test_default_learner_state(db: Session) -> None:
     )
     assert user.created_at.date() == date(2026, 8, 20)
     assert user.settings.daily_goal_xp == 20
-    assert (stats.hearts, stats.hearts_anchor_at) == (4, NOW - timedelta(hours=2))
+    assert (stats.hearts, stats.hearts_anchor_at) == (MAX_HEARTS, None)
     assert stats.streak_current == 12
     assert stats.streak_longest == 21
     assert stats.streak_last_date == YESTERDAY

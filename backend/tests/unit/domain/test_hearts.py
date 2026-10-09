@@ -15,6 +15,7 @@ from app.domain.hearts import (
 
 T0 = datetime(2026, 10, 9, 9, 0, tzinfo=UTC)
 FULL = HeartsState(MAX_HEARTS, None)
+LAST = MAX_HEARTS - 1  # one heart missing
 
 
 def lose(state: HeartsState, times: int, now: datetime) -> HeartsState:
@@ -26,10 +27,10 @@ def lose(state: HeartsState, times: int, now: datetime) -> HeartsState:
 @pytest.mark.parametrize(
     ("hearts", "anchor"),
     [
-        pytest.param(6, None, id="above-maximum"),
+        pytest.param(MAX_HEARTS + 1, None, id="above-maximum"),
         pytest.param(-1, T0, id="negative"),
-        pytest.param(4, None, id="missing-without-anchor"),
-        pytest.param(5, T0, id="full-with-anchor"),
+        pytest.param(LAST, None, id="missing-without-anchor"),
+        pytest.param(MAX_HEARTS, T0, id="full-with-anchor"),
     ],
 )
 def test_impossible_states_are_rejected(hearts: int, anchor: datetime | None) -> None:
@@ -38,22 +39,22 @@ def test_impossible_states_are_rejected(hearts: int, anchor: datetime | None) ->
 
 
 def test_losing_a_heart_from_full_starts_the_clock() -> None:
-    assert lose_heart(FULL, T0) == HeartsState(4, T0)
+    assert lose_heart(FULL, T0) == HeartsState(LAST, T0)
 
 
 def test_a_lost_heart_comes_back_after_exactly_five_hours() -> None:
     state = lose_heart(FULL, T0)
     assert next_heart_at(state) == T0 + timedelta(hours=5)
-    assert settle_hearts(state, T0 + timedelta(hours=4, minutes=59)) == HeartsState(4, T0)
+    assert settle_hearts(state, T0 + timedelta(hours=4, minutes=59)) == HeartsState(LAST, T0)
     assert settle_hearts(state, T0 + timedelta(hours=5)) == FULL
 
 
-def test_all_five_hearts_come_back_after_twenty_five_hours() -> None:
-    empty = lose(FULL, 5, T0)
+def test_every_heart_comes_back_one_per_interval() -> None:
+    empty = lose(FULL, MAX_HEARTS, T0)
     assert empty == HeartsState(0, T0)
-    almost = settle_hearts(empty, T0 + timedelta(hours=24, minutes=59))
-    assert almost == HeartsState(4, T0 + 4 * REGEN)
-    assert settle_hearts(empty, T0 + timedelta(hours=25)) == FULL
+    almost = settle_hearts(empty, T0 + MAX_HEARTS * REGEN - timedelta(minutes=1))
+    assert almost == HeartsState(LAST, T0 + LAST * REGEN)
+    assert settle_hearts(empty, T0 + MAX_HEARTS * REGEN) == FULL
 
 
 @pytest.mark.parametrize(
@@ -66,8 +67,8 @@ def test_all_five_hearts_come_back_after_twenty_five_hours() -> None:
         pytest.param(timedelta(hours=5), HeartsState(1, T0 + REGEN), id="5h"),
         pytest.param(timedelta(hours=7), HeartsState(1, T0 + REGEN), id="7h"),
         pytest.param(timedelta(hours=10), HeartsState(2, T0 + 2 * REGEN), id="10h"),
-        pytest.param(timedelta(hours=24), HeartsState(4, T0 + 4 * REGEN), id="24h"),
-        pytest.param(timedelta(hours=25), FULL, id="25h"),
+        pytest.param(LAST * REGEN, HeartsState(LAST, T0 + LAST * REGEN), id="all-but-one"),
+        pytest.param(MAX_HEARTS * REGEN, FULL, id="all"),
         pytest.param(timedelta(days=30), FULL, id="30d"),
     ],
 )
@@ -86,17 +87,17 @@ def test_the_anchor_is_kept_across_further_losses() -> None:
     state = lose_heart(FULL, T0)
     state = lose_heart(state, T0 + timedelta(hours=1))
     state = lose_heart(state, T0 + timedelta(hours=2))
-    assert state == HeartsState(2, T0)
+    assert state == HeartsState(MAX_HEARTS - 3, T0)
     assert next_heart_at(state) == T0 + REGEN
-    assert settle_hearts(state, T0 + REGEN) == HeartsState(3, T0 + REGEN)
+    assert settle_hearts(state, T0 + REGEN) == HeartsState(MAX_HEARTS - 2, T0 + REGEN)
 
 
 def test_losing_a_heart_settles_regeneration_first() -> None:
     later = T0 + timedelta(hours=6)
     # Back to full by the time of the mistake, so the clock restarts at the mistake.
-    assert lose_heart(HeartsState(4, T0), later) == HeartsState(4, later)
+    assert lose_heart(HeartsState(LAST, T0), later) == HeartsState(LAST, later)
     # One heart came back at T0 + 5h and one is lost: the clock keeps its 5-hour rhythm.
-    assert lose_heart(HeartsState(3, T0), later) == HeartsState(3, T0 + REGEN)
+    assert lose_heart(HeartsState(LAST - 1, T0), later) == HeartsState(LAST - 1, T0 + REGEN)
 
 
 def test_hearts_never_go_below_zero() -> None:
@@ -118,7 +119,7 @@ def test_gaining_a_heart_keeps_the_regeneration_clock() -> None:
 
 
 def test_gaining_the_last_missing_heart_stops_the_clock() -> None:
-    assert gain_heart(HeartsState(4, T0), T0 + timedelta(hours=1)) == FULL
+    assert gain_heart(HeartsState(LAST, T0), T0 + timedelta(hours=1)) == FULL
 
 
 def test_gaining_a_heart_when_full_stays_full() -> None:
@@ -126,8 +127,8 @@ def test_gaining_a_heart_when_full_stays_full() -> None:
 
 
 def test_gaining_a_heart_settles_regeneration_first() -> None:
-    # Three hearts, one regenerated at T0 + 5h, plus the practice reward: full.
-    assert gain_heart(HeartsState(3, T0), T0 + timedelta(hours=5)) == FULL
+    # Two missing, one regenerated at T0 + 5h, plus the practice reward: full.
+    assert gain_heart(HeartsState(LAST - 1, T0), T0 + timedelta(hours=5)) == FULL
 
 
 def test_refill_fills_every_heart() -> None:

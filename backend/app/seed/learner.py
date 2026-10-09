@@ -25,6 +25,7 @@ from sqlalchemy.orm import Session
 from app.domain.achievements import ACHIEVEMENTS, GEMS_PER_LEVEL, level_for
 from app.domain.dates import local_date, local_midnight_utc, week_start
 from app.domain.goals import GOAL_CHEST_GEMS
+from app.domain.hearts import MAX_HEARTS
 from app.domain.leagues import reward_gems
 from app.domain.xp import LEGENDARY_XP, LESSON_XP, MAX_COMBO_BONUS, REVIEW_XP
 from app.models import (
@@ -79,8 +80,7 @@ MISSED_DAYS = 17
 LEGENDARY_DAY = 13  # 1-based: the 85 XP day ends with Greetings' Legendary challenge
 
 GEMS = 500
-HEARTS = 4
-HEART_LOST_AGO = timedelta(hours=2)  # so the next heart arrives in 3 hours
+HEARTS = MAX_HEARTS  # every learner starts with full hearts
 STREAK_FREEZES = 1
 LEAGUE_TIER = 1  # Silver this week
 PODIUM_TIER = 0  # both podium finishes were in Bronze
@@ -147,7 +147,7 @@ def seed_learner(session: Session, course: Course, now: datetime) -> User:
             xp_total=sum(s.amount for s in history),
             gems=GEMS,
             hearts=HEARTS,
-            hearts_anchor_at=now - HEART_LOST_AGO,
+            hearts_anchor_at=None,
             streak_current=len(CURRENT_STREAK_XP),
             streak_longest=max(len(PAST_STREAK_XP), len(CURRENT_STREAK_XP)),
             streak_last_date=days[-1],

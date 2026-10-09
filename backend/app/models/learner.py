@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Literal, get_args
 from sqlalchemy import CheckConstraint, ForeignKey, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 
+from app.domain.hearts import MAX_HEARTS
 from app.models.base import Base, check_bool, check_in, int_default, to_date
 
 if TYPE_CHECKING:
@@ -83,11 +84,13 @@ class UserStats(Base):
     __table_args__ = (
         CheckConstraint("xp_total >= 0", name="xp_total_min"),
         CheckConstraint("gems >= 0", name="gems_min"),
-        CheckConstraint("hearts BETWEEN 0 AND 5", name="hearts_range"),
+        CheckConstraint(f"hearts BETWEEN 0 AND {MAX_HEARTS}", name="hearts_range"),
         CheckConstraint("streak_current >= 0", name="streak_current_min"),
         CheckConstraint("streak_freezes BETWEEN 0 AND 2", name="streak_freezes_range"),
         # The regeneration clock runs exactly while hearts are missing.
-        CheckConstraint("(hearts = 5) = (hearts_anchor_at IS NULL)", name="hearts_anchor"),
+        CheckConstraint(
+            f"(hearts = {MAX_HEARTS}) = (hearts_anchor_at IS NULL)", name="hearts_anchor"
+        ),
     )
 
     user_id: Mapped[int] = mapped_column(
@@ -95,7 +98,7 @@ class UserStats(Base):
     )
     xp_total: Mapped[int] = mapped_column(server_default=int_default(0))
     gems: Mapped[int] = mapped_column(server_default=int_default(0))
-    hearts: Mapped[int] = mapped_column(server_default=int_default(5))
+    hearts: Mapped[int] = mapped_column(server_default=int_default(MAX_HEARTS))
     hearts_anchor_at: Mapped[datetime | None]
     streak_current: Mapped[int] = mapped_column(server_default=int_default(0))
     streak_longest: Mapped[int] = mapped_column(server_default=int_default(0))
