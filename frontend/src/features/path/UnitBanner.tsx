@@ -30,7 +30,7 @@ export function UnitBanner({ unit, onGuidebook }: UnitBannerProps) {
         type="button"
         onClick={onGuidebook}
         aria-label={pathStrings.guidebook}
-        className="flex shrink-0 items-center gap-3 rounded-button border-2 border-(--unit-shade) px-3 py-2.5 text-button uppercase shadow-[0_2px_0_var(--unit-shade)] transition-[translate,box-shadow,background-color] duration-100 hover:bg-white/10 focus-visible:outline-white active:translate-y-0.5 active:shadow-none md:px-4"
+        className="flex h-[54px] shrink-0 items-center gap-3 rounded-button border-2 border-b-4 border-(--unit-shade) px-3.5 text-button uppercase transition-[translate,background-color] duration-100 hover:bg-white/10 focus-visible:outline-white active:translate-y-0.5 active:border-b-2"
       >
         <Guidebook size={24} />
         <span className="max-md:hidden">{pathStrings.guidebook}</span>

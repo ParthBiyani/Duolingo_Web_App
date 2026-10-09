@@ -297,7 +297,10 @@ export function XpPopover({ stats }: { stats: Stats }) {
   return (
     <StatPopover>
       <StatTrigger label={strings.stats.xp.trigger(stats.xp_total)} className="text-gold-shade">
-        <Bolt size={22} />
+        <Bolt
+          size={20}
+          className="[filter:drop-shadow(1.5px_0_0_white)_drop-shadow(-1.5px_0_0_white)_drop-shadow(0_1.5px_0_white)_drop-shadow(0_-1.5px_0_white)]"
+        />
         {formatNumber(stats.xp_total)}
       </StatTrigger>
       <StatContent className="w-80 p-5">
@@ -381,7 +384,7 @@ function NextHeartCountdown({ at }: { at: string }) {
 
 /** One action row of the hearts panel: a bordered, pressable bar with caps label. */
 const heartRow =
-  "flex h-[56px] w-full items-center justify-between gap-3 rounded-2xl border-2 border-border px-3 text-button leading-[18px] text-title uppercase shadow-edge-border transition-[translate,box-shadow,background-color] duration-100 hover:bg-surface-hover active:translate-y-0.5 active:shadow-none disabled:cursor-default disabled:opacity-60 disabled:active:translate-y-0";
+  "flex h-[50px] w-full items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-border px-3 text-button leading-[18px] text-title uppercase transition-[translate,background-color] duration-100 hover:bg-surface-hover active:translate-y-0.5 active:border-b-2 disabled:cursor-default disabled:opacity-60 disabled:active:translate-y-0 disabled:active:border-b-4";
 
 function HeartsPanel({ stats }: { stats: Stats }) {
   const refill = useRefillHearts();
