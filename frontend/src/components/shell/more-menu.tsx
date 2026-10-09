@@ -31,7 +31,8 @@ const ROW = "text-button leading-4 text-body uppercase";
 
 /**
  * The MORE entry: Duolingo English Test and Podcast (coming soon), Settings, Help and Log out.
- * Like the original it opens while a mouse hovers it; clicks and taps still work.
+ * Like the original it opens while a mouse hovers it and ignores mouse clicks; taps and the keyboard
+ * still work.
  */
 export function MoreMenu({ placement, active }: MoreMenuProps) {
   const inSidebar = placement === "sidebar";
@@ -54,6 +55,11 @@ export function MoreMenu({ placement, active }: MoreMenuProps) {
     <Dropdown open={open} onOpenChange={setOpen} modal={false}>
       <DropdownTrigger
         {...hover}
+        // With a mouse the menu follows the hover, so a click on MORE does nothing (as on the
+        // original); touch and the keyboard still open and close it.
+        onPointerDown={(event) => {
+          if (event.pointerType === "mouse") event.preventDefault();
+        }}
         className={inSidebar ? sidebarItemClassName(active) : tabItemClassName(active)}
       >
         <Dots size={32} className="shrink-0" />
