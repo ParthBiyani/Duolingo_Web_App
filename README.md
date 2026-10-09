@@ -10,21 +10,21 @@ It is built with **Next.js (TypeScript)**, **FastAPI** and **SQLite**.
 
 **Live demo:** https://duolingo-seven-ecru.vercel.app · **API:** https://duolingo-web-app-9qs3.onrender.com (interactive docs at [`/api/docs`](https://duolingo-web-app-9qs3.onrender.com/api/docs))
 
-| Learning path | Lesson and feedback bar |
-|---|---|
-| ![Learning path with the active skill, chest and unit review](docs/screenshots/learn.png) | ![Picture exercise answered correctly, with the green feedback bar](docs/screenshots/lesson-correct.png) |
+**Log in as a sample learner and explore the path**
 
-| Lesson complete | Streak extended |
-|---|---|
-| ![Lesson complete with total XP and accuracy](docs/screenshots/lesson-complete.png) | ![Streak celebration with the week calendar](docs/screenshots/streak.png) |
+![Logging in as Parth Biyani, the top-bar popovers and the learning path](docs/demo/login-and-path.gif)
 
-| Profile and achievements | League leaderboard |
-|---|---|
-| ![Profile with statistics and achievements](docs/screenshots/profile.png) | ![Silver league standings](docs/screenshots/leaderboard.png) |
+**A lesson: a miss costs a heart, then lesson complete, streak and daily goal**
 
-| Dark mode | Phone |
-|---|---|
-| ![Learning path in dark mode](docs/screenshots/dark-learn.png) | <img src="docs/screenshots/mobile-learn.png" alt="Learning path on a phone" width="300"> |
+![Playing a lesson to the end, with the feedback bar, heart loss and celebrations](docs/demo/lesson.gif)
+
+**Leaderboard, quests, shop and profile**
+
+![The shared Silver league, daily quests, the shop and the profile](docs/demo/leagues-shop-profile.gif)
+
+**Dark mode on a phone**
+
+<img src="docs/demo/phone-dark.gif" alt="The app in dark mode at phone width" width="320">
 
 ## Features
 
