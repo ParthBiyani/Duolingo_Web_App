@@ -53,7 +53,7 @@ flowchart LR
 ```bash
 curl -s https://<app>.vercel.app/api/health               # status ok, seeded true
 curl -sI https://<app>.vercel.app/ | grep -i x-robots-tag  # noindex
-curl -sI https://<app>.vercel.app/api/v1/me | grep -i cache-control   # no-store
+curl -s -D - -o /dev/null https://<app>.vercel.app/api/v1/me | grep -i cache-control   # no-store
 ```
 
 **Persistence check:**
