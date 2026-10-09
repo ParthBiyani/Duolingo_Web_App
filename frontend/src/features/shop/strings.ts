@@ -1,0 +1,27 @@
+/** Every string shown in the Shop. Item names and descriptions come from the API catalogue. */
+export const shopStrings = {
+  pageTitle: "Shop",
+  superBadge: "Super",
+  superTitle: "Try Super for free",
+  superBody: "No ads, unlimited hearts and personalised practice to learn faster.",
+  superCta: "Try 2 weeks free",
+
+  hearts: "Hearts",
+  powerUps: "Power-Ups",
+  full: "Full",
+  freeTrial: "Free trial",
+  equipped: "Equipped",
+  equippedCount: (owned: number, max: number) => `${owned}/${max} equipped`,
+  price: (gems: number) => `${gems}`,
+  buyLabel: (name: string, gems: number) => `Buy ${name} for ${gems} gems`,
+  notEnoughGems: "You don't have enough gems for this yet.",
+
+  refillDone: "Your hearts are full again!",
+  freezeDone: "Streak Freeze equipped!",
+  purchaseFailed: "That purchase didn't go through. Please try again.",
+
+  loading: "Loading the shop",
+  loadErrorTitle: "We couldn't load the shop",
+  loadErrorBody: "Check your connection and give it another go.",
+  retry: "Try again",
+} as const;
