@@ -56,7 +56,7 @@ full set of 10 hearts and their own league cohort among 29 seeded rivals:
 | Learner | Stage |
 |---|---|
 | **Parth Biyani** (@parthbiyani) | Unit 1 complete with one legendary skill, Unit 2 under way, a 12-day streak, 1,240 XP, 500 gems, Silver league |
-| **Zoe Fernandes** (@zoefernandes) | Signed up last night: the very start of Unit 1, 0 XP, no streak, 50 gems, leaderboard still locked |
+| **Ananya Iyer** (@ananyaiyer) | Signed up last night: the very start of Unit 1, 0 XP, no streak, 50 gems, leaderboard still locked |
 | **Isha Nair** (@ishanair) | Halfway through Unit 1, a 4-day streak, 205 XP, 320 gems, Bronze league |
 | **Kabir Malhotra** (@kabirmalhotra) | Deep in Unit 3, a 64-day streak, 4,120 XP, two legendary skills, 950 gems, Gold league |
 
