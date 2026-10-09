@@ -63,6 +63,7 @@ export const strings = {
       viewList: "View list",
       societyTitle: "Streak Society",
       societyBody: "Reach a 7 day streak to join the Streak Society and earn exclusive rewards.",
+      viewMore: "View more",
       dayStatus: {
         extended: "streak extended",
         frozen: "streak frozen",

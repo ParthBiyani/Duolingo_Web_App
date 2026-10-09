@@ -24,6 +24,7 @@ import {
   toast,
 } from "@/components/ui";
 import { strings } from "@/content/strings";
+import { StreakModal } from "@/features/streak/StreakModal";
 import { isApiError, useRefillHearts, useShop, type MeResponse, type StreakDay } from "@/lib/api";
 import { formatCountdown, useServerNow } from "@/lib/time";
 
@@ -47,6 +48,9 @@ interface HoverHandlers {
 }
 
 const HoverContext = createContext<HoverHandlers | null>(null);
+
+/** Closes the surrounding stat popover, even while the mouse is still over it. */
+const CloseContext = createContext<() => void>(() => undefined);
 
 /**
  * A stat popover that, like the original, opens while a mouse hovers the stat or its panel.
@@ -73,15 +77,23 @@ function StatPopover({ children }: { children: ReactNode }) {
     },
   };
 
+  const close = () => {
+    hovering.current = false;
+    window.clearTimeout(closeTimer.current);
+    setOpen(false);
+  };
+
   return (
     <HoverContext.Provider value={handlers}>
-      <Popover
-        open={open}
-        // A click on a stat the mouse already opened would toggle it shut: keep it open instead.
-        onOpenChange={(next) => setOpen(next || hovering.current)}
-      >
-        {children}
-      </Popover>
+      <CloseContext.Provider value={close}>
+        <Popover
+          open={open}
+          // A click on a stat the mouse already opened would toggle it shut: keep it open instead.
+          onOpenChange={(next) => setOpen(next || hovering.current)}
+        >
+          {children}
+        </Popover>
+      </CloseContext.Provider>
     </HoverContext.Provider>
   );
 }
@@ -197,7 +209,30 @@ function WeekStrip({ week }: { week: StreakDay[] }) {
   );
 }
 
+/** The popover's last button: closes it and opens the Streak modal in its place. */
+function ViewMoreButton({ onOpenModal }: { onOpenModal: () => void }) {
+  const closePopover = useContext(CloseContext);
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        closePopover();
+        onOpenModal();
+      }}
+      className={buttonClassName({
+        variant: "secondary",
+        size: "lg",
+        fullWidth: true,
+        className: "-mt-1 rounded-xl",
+      })}
+    >
+      {strings.stats.streak.viewMore}
+    </button>
+  );
+}
+
 export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
+  const [modalOpen, setModalOpen] = useState(false);
   const extended = streak.extended_today;
   const message = extended
     ? strings.stats.streak.extended
@@ -206,84 +241,88 @@ export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
       : strings.stats.streak.start;
 
   return (
-    <StatPopover>
-      <StatTrigger
-        label={strings.stats.streak.trigger(streak.current)}
-        className={extended ? "text-orange" : "text-disabled"}
-      >
-        <Flame size={23} muted={!extended} />
-        {formatNumber(streak.current)}
-      </StatTrigger>
-      <StatContent className="w-[387px] overflow-hidden p-0">
-        <div className={cn("px-[22px] pt-6 pb-5", extended ? "bg-streak-header" : "bg-raised")}>
-          <div className="flex items-start gap-4">
-            <div className="min-w-0 flex-1">
-              <h2
-                className={cn(
-                  "text-[25px] leading-[34px] font-bold",
-                  extended ? "text-white" : "text-title",
-                )}
-              >
-                {strings.stats.streak.title(streak.current)}
-              </h2>
-              <p className={cn("mt-2 leading-6", extended ? "text-white" : "text-muted")}>
-                {message}
-              </p>
-            </div>
-            <DuoImage
-              name="streak-calendar-flame"
-              size={64}
-              className={cn("mt-4 shrink-0", !extended && "grayscale")}
-            />
-          </div>
-          {streak.week.length > 0 ? (
-            <div className="mt-6 rounded-xl bg-surface px-4 pt-3 pb-4">
-              <WeekStrip week={streak.week} />
-            </div>
-          ) : null}
-          {streak.freezes > 0 ? (
-            <p
-              className={cn(
-                "mt-3 flex items-center gap-2 font-bold",
-                extended ? "text-white" : "text-muted",
-              )}
-            >
-              <Snowflake size={20} />
-              {strings.stats.streak.freezes(streak.freezes)}
-            </p>
-          ) : null}
-        </div>
-        <div className="flex flex-col gap-5 p-5">
-          <div className="flex h-[136px] items-center overflow-hidden rounded-2xl bg-friend-streak">
-            <DuoImage name="friend-streaks" size={142} className="shrink-0 self-end" />
-            <div className="min-w-0 flex-1 pr-5 text-white">
-              <p className="leading-5 font-bold">{strings.stats.streak.friendTitle}</p>
-              <p className="mt-1 leading-6">{strings.stats.streak.friendBody}</p>
-              <button
-                type="button"
-                onClick={showComingSoon}
-                className="mt-3 h-10 w-full rounded-xl bg-white text-button text-friend-streak uppercase shadow-[0_3px_0_rgb(0_0_0/0.15)] active:translate-y-0.5 active:shadow-none"
-              >
-                {strings.stats.streak.viewList}
-              </button>
-            </div>
-          </div>
-          <div className="rounded-2xl border-2 border-border p-5">
-            <div className="flex gap-6">
-              <DuoImage name="streak-society-locked" size={58} className="shrink-0 self-start" />
-              <div className="min-w-0">
-                <p className="leading-6 font-bold text-title">
-                  {strings.stats.streak.societyTitle}
-                </p>
-                <p className="mt-2 leading-6 text-muted dark:text-body">
-                  {strings.stats.streak.societyBody}
+    <>
+      <StatPopover>
+        <StatTrigger
+          label={strings.stats.streak.trigger(streak.current)}
+          className={extended ? "text-orange" : "text-disabled"}
+        >
+          <Flame size={23} muted={!extended} />
+          {formatNumber(streak.current)}
+        </StatTrigger>
+        <StatContent className="w-[387px] overflow-hidden p-0">
+          <div className={cn("px-[22px] pt-6 pb-5", extended ? "bg-streak-header" : "bg-raised")}>
+            <div className="flex items-start gap-4">
+              <div className="min-w-0 flex-1">
+                <h2
+                  className={cn(
+                    "text-[25px] leading-[34px] font-bold",
+                    extended ? "text-white" : "text-title",
+                  )}
+                >
+                  {strings.stats.streak.title(streak.current)}
+                </h2>
+                <p className={cn("mt-2 leading-6", extended ? "text-white" : "text-muted")}>
+                  {message}
                 </p>
               </div>
+              <DuoImage
+                name="streak-calendar-flame"
+                size={64}
+                className={cn("mt-4 shrink-0", !extended && "grayscale")}
+              />
             </div>
+            {streak.week.length > 0 ? (
+              <div className="mt-6 rounded-xl bg-surface px-4 pt-3 pb-4">
+                <WeekStrip week={streak.week} />
+              </div>
+            ) : null}
+            {streak.freezes > 0 ? (
+              <p
+                className={cn(
+                  "mt-3 flex items-center gap-2 font-bold",
+                  extended ? "text-white" : "text-muted",
+                )}
+              >
+                <Snowflake size={20} />
+                {strings.stats.streak.freezes(streak.freezes)}
+              </p>
+            ) : null}
           </div>
-        </div>
-      </StatContent>
-    </StatPopover>
+          <div className="flex flex-col gap-5 p-5">
+            <div className="flex h-[136px] items-center overflow-hidden rounded-2xl bg-friend-streak">
+              <DuoImage name="friend-streaks" size={142} className="shrink-0 self-end" />
+              <div className="min-w-0 flex-1 pr-5 text-white">
+                <p className="leading-5 font-bold">{strings.stats.streak.friendTitle}</p>
+                <p className="mt-1 leading-6">{strings.stats.streak.friendBody}</p>
+                <button
+                  type="button"
+                  onClick={showComingSoon}
+                  className="mt-3 h-10 w-full rounded-xl bg-white text-button text-friend-streak uppercase shadow-[0_3px_0_rgb(0_0_0/0.15)] active:translate-y-0.5 active:shadow-none"
+                >
+                  {strings.stats.streak.viewList}
+                </button>
+              </div>
+            </div>
+            <div className="rounded-2xl border-2 border-border p-5">
+              <div className="flex gap-6">
+                <DuoImage name="streak-society-locked" size={58} className="shrink-0 self-start" />
+                <div className="min-w-0">
+                  <p className="leading-6 font-bold text-title">
+                    {strings.stats.streak.societyTitle}
+                  </p>
+                  <p className="mt-2 leading-6 text-muted dark:text-body">
+                    {strings.stats.streak.societyBody}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <ViewMoreButton onOpenModal={() => setModalOpen(true)} />
+          </div>
+        </StatContent>
+      </StatPopover>
+      <StreakModal open={modalOpen} onOpenChange={setModalOpen} streak={streak} />
+    </>
   );
 }
 

@@ -149,6 +149,7 @@ The base path is `/api/v1`. Errors are RFC 9457 problem details:
 | `POST /sessions/{id}/abandon` | Quit a session |
 | `POST /hearts/refill` · `GET /shop` · `POST /shop/purchases` | Gem spending |
 | `GET /leaderboard` · `GET /profile` · `GET /quests` | League standings, statistics, daily goal quest |
+| `GET /streak/calendar?month=YYYY-MM` | One month of streak days, the streak and its next goal |
 | `GET /demo/clock` · `POST /demo/clock/advance` · `POST /demo/reset` | Demo tools; `404` unless `DEMO_TOOLS=true` |
 | `GET /api/health` | Health check (outside `/api/v1`) |
 
