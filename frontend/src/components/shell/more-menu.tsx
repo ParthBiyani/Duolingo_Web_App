@@ -39,6 +39,7 @@ export function MoreMenu({ placement, active }: MoreMenuProps) {
   const { logOut, pending } = useLogOut();
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<number | undefined>(undefined);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const hover = {
     onPointerEnter: (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;
@@ -54,6 +55,7 @@ export function MoreMenu({ placement, active }: MoreMenuProps) {
   return (
     <Dropdown open={open} onOpenChange={setOpen} modal={false}>
       <DropdownTrigger
+        ref={triggerRef}
         {...hover}
         // With a mouse the menu follows the hover, so a click on MORE does nothing (as on the
         // original); touch and the keyboard still open and close it.
@@ -67,6 +69,13 @@ export function MoreMenu({ placement, active }: MoreMenuProps) {
       </DropdownTrigger>
       <DropdownContent
         {...hover}
+        // A mouse click on MORE counts as a click outside the open menu; ignore it so the menu
+        // stays open while hovered. Taps still close it.
+        onPointerDownOutside={(event) => {
+          const original = event.detail.originalEvent;
+          const onTrigger = triggerRef.current?.contains(original.target as Node) ?? false;
+          if (original.pointerType === "mouse" && onTrigger) event.preventDefault();
+        }}
         side={inSidebar ? "right" : "top"}
         align="end"
         className="w-[290px]"
