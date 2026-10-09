@@ -47,7 +47,13 @@ interface HoverHandlers {
   onPointerLeave: (event: PointerEvent) => void;
 }
 
-const HoverContext = createContext<HoverHandlers | null>(null);
+/** Hover handlers for the stat itself and for its panel. */
+interface HoverParts {
+  trigger: HoverHandlers;
+  panel: HoverHandlers;
+}
+
+const HoverContext = createContext<HoverParts | null>(null);
 
 /** Closes the surrounding stat popover, even while the mouse is still over it. */
 const CloseContext = createContext<() => void>(() => undefined);
@@ -59,37 +65,41 @@ const CloseContext = createContext<() => void>(() => undefined);
 function StatPopover({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<number | undefined>(undefined);
-  const hovering = useRef(false);
+  const onStat = useRef(false);
   useEffect(() => () => window.clearTimeout(closeTimer.current), []);
 
-  const handlers: HoverHandlers = {
+  const hover = (part: "trigger" | "panel"): HoverHandlers => ({
     onPointerEnter: (event) => {
       if (event.pointerType !== "mouse") return;
-      hovering.current = true;
+      if (part === "trigger") onStat.current = true;
       window.clearTimeout(closeTimer.current);
       setOpen(true);
     },
     onPointerLeave: (event) => {
       if (event.pointerType !== "mouse") return;
-      hovering.current = false;
+      if (part === "trigger") onStat.current = false;
       window.clearTimeout(closeTimer.current);
       closeTimer.current = window.setTimeout(() => setOpen(false), HOVER_CLOSE_DELAY_MS);
     },
-  };
+  });
 
   const close = () => {
-    hovering.current = false;
+    onStat.current = false;
     window.clearTimeout(closeTimer.current);
     setOpen(false);
   };
 
   return (
-    <HoverContext.Provider value={handlers}>
+    <HoverContext.Provider value={{ trigger: hover("trigger"), panel: hover("panel") }}>
       <CloseContext.Provider value={close}>
         <Popover
           open={open}
           // A click on a stat the mouse already opened would toggle it shut: keep it open instead.
-          onOpenChange={(next) => setOpen(next || hovering.current)}
+          // Closing from inside the panel (a link, Escape) still closes it.
+          onOpenChange={(next) => {
+            if (!next) window.clearTimeout(closeTimer.current);
+            setOpen(next || onStat.current);
+          }}
         >
           {children}
         </Popover>
@@ -98,10 +108,16 @@ function StatPopover({ children }: { children: ReactNode }) {
   );
 }
 
-/** The panel of a stat popover; keeps it open while the mouse is over it. */
-function StatContent(props: ComponentProps<typeof PopoverContent>) {
+/**
+ * The panel of a stat popover; keeps it open while the mouse is over it. Radix gives the panel
+ * the dialog role, so it is named after its heading (`label`) for assistive tech.
+ */
+function StatContent({
+  label,
+  ...props
+}: ComponentProps<typeof PopoverContent> & { label: string }) {
   const hover = useContext(HoverContext);
-  return <PopoverContent {...props} {...hover} />;
+  return <PopoverContent aria-label={label} {...props} {...hover?.panel} />;
 }
 
 /** A stat in the top bar; spacing tightens on the narrowest phones so all five fit. */
@@ -117,7 +133,7 @@ function StatTrigger({
   const hover = useContext(HoverContext);
   return (
     <PopoverTrigger
-      {...hover}
+      {...hover?.trigger}
       aria-label={label}
       className={cn(
         "flex h-11 items-center gap-1 rounded-xl px-1 text-[15px] leading-5 font-bold transition-colors hover:bg-surface-hover data-[state=open]:bg-surface-hover min-[400px]:gap-2 min-[400px]:px-2",
@@ -138,7 +154,7 @@ export function CoursePopover({ course }: { course: MeResponse["course"] }) {
         <FlagES size={31} className="rounded-[18%] outline-2 outline-border dark:outline-white" />
         <span className="text-[16px] leading-6 text-title">1</span>
       </StatTrigger>
-      <StatContent className="w-72">
+      <StatContent label={strings.stats.course.heading} className="w-72">
         <h2 className="text-caps text-muted uppercase">{strings.stats.course.heading}</h2>
         <div className="mt-3 flex items-center gap-3 rounded-xl border-2 border-selected-border bg-selected-bg p-3">
           <FlagES size={36} className="rounded-md" />
@@ -251,7 +267,10 @@ export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
           <Flame size={23} muted={!extended} />
           {formatNumber(streak.current)}
         </StatTrigger>
-        <StatContent className="w-[387px] overflow-hidden p-0">
+        <StatContent
+          label={strings.stats.streak.title(streak.current)}
+          className="w-[387px] overflow-hidden p-0"
+        >
           <div className={cn("px-[22px] pt-6 pb-5", extended ? "bg-streak-header" : "bg-raised")}>
             <div className="flex items-start gap-4">
               <div className="min-w-0 flex-1">
@@ -347,7 +366,7 @@ export function XpPopover({ stats }: { stats: Stats }) {
         />
         {formatNumber(stats.xp_total)}
       </StatTrigger>
-      <StatContent className="w-80 p-5">
+      <StatContent label={strings.stats.xp.title(stats.xp_total)} className="w-80 p-5">
         <div className="flex items-center gap-4">
           <Bolt size={56} />
           <div className="min-w-0">
@@ -394,7 +413,7 @@ export function GemsPopover({ gems }: { gems: number }) {
         <Gem size={22} />
         {formatNumber(gems)}
       </StatTrigger>
-      <StatContent className="w-[383px] py-5 pr-6 pl-3">
+      <StatContent label={strings.stats.gems.title} className="w-[383px] py-5 pr-6 pl-3">
         <div className="flex items-center gap-3">
           <DuoImage name="gems-chest" size={100} className="shrink-0" />
           <div className="min-w-0">
@@ -524,7 +543,11 @@ export function HeartsPopover({ stats }: { stats: Stats }) {
         <DuoImage name={empty ? "heart-empty" : "heart-bar"} size={28} />
         {stats.hearts}
       </StatTrigger>
-      <StatContent align="end" className="w-[402px] px-7 pt-7 pb-6">
+      <StatContent
+        label={strings.stats.hearts.title}
+        align="end"
+        className="w-[402px] px-7 pt-7 pb-6"
+      >
         <HeartsPanel stats={stats} />
       </StatContent>
     </StatPopover>

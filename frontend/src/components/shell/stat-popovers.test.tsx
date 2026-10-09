@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
@@ -54,6 +54,28 @@ describe("XpPopover", () => {
       "href",
       "/settings/preferences",
     );
+  });
+
+  it("names its panel after the heading, as a dialog must be named", async () => {
+    await openXp(makeStats());
+
+    expect(screen.getByRole("dialog", { name: "1,240 XP" })).toBeVisible();
+  });
+
+  it("opens on hover, stays open when the hovered stat is clicked, and closes from its panel", async () => {
+    const user = userEvent.setup();
+    render(<XpPopover stats={makeStats()} />);
+    const stat = screen.getByRole("button", { name: "Total XP: 1,240" });
+
+    await user.hover(stat);
+    expect(await screen.findByRole("dialog")).toBeVisible();
+    await user.click(stat); // the mouse opened it: a click must not toggle it shut
+    expect(screen.getByRole("dialog")).toBeVisible();
+
+    // With the mouse on the panel, closing it (Escape, or a link inside) closes it.
+    await user.hover(screen.getByRole("dialog"));
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   });
 
   it("celebrates a reached goal and caps the bar", async () => {
