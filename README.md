@@ -50,7 +50,7 @@ languages are shown as "Coming soon". Authentication is simplified to a default 
 The seed creates one course, Spanish for English speakers: 3 units, 12 skills and 405 exercises
 across eight exercise types. It also creates a sample learner, **Parth Biyani (@parthbiyani)**, part
 way through the course: Unit 1 complete with one legendary skill, Unit 2 under way, a 12-day streak,
-1,240 XP, 500 gems, 4 hearts, a place in the Silver league among 29 seeded rivals, and six
+1,240 XP, 500 gems, a full set of 10 hearts, a place in the Silver league among 29 seeded rivals, and six
 achievements in progress. The learner's history is generated relative to the current date, so the app
 is ready to use straight after seeding.
 
