@@ -176,6 +176,22 @@ def test_a_demotion_keeps_the_champion_level_reached(other: TestClient, db: Sess
     assert champion()["level"] == 3
 
 
+def test_me_and_the_profile_show_the_new_league_before_the_leaderboard_is_read(
+    client: TestClient, db: Session, clock: FixedClock
+) -> None:
+    give_xp(db, PARTH.username, 5_000)  # first in Silver: promoted to Gold
+    board(client)
+    clock.advance(timedelta(days=7))
+
+    me = client.get("/api/v1/me").json()
+    assert me["stats"]["league"]["name"] == "Gold"
+    assert client.get("/api/v1/profile").json()["stats"]["league_name"] == "Gold"
+
+    # Closing the week on those reads still leaves the result for the leaderboard to show.
+    result = board(client)["last_result"]
+    assert result is not None and (result["outcome"], result["rank"]) == ("promoted", 1)
+
+
 def test_the_week_is_finalised_once_for_every_learner_in_it(
     client: TestClient, other: TestClient, db: Session, clock: FixedClock
 ) -> None:
