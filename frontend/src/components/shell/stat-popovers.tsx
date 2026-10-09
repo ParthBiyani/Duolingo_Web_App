@@ -1,7 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+  type PointerEvent,
+  type ReactNode,
+} from "react";
 
 import {
   Bolt,
@@ -40,6 +49,60 @@ const formatNumber = (value: number) => value.toLocaleString("en-US");
 
 const showComingSoon = () => toast(strings.common.comingSoon, { id: "coming-soon" });
 
+/** How long the pointer may be off both the stat and its panel before the panel closes. */
+const HOVER_CLOSE_DELAY_MS = 150;
+
+interface HoverHandlers {
+  onPointerEnter: (event: PointerEvent) => void;
+  onPointerLeave: (event: PointerEvent) => void;
+}
+
+const HoverContext = createContext<HoverHandlers | null>(null);
+
+/**
+ * A stat popover that, like the original, opens while a mouse hovers the stat or its panel.
+ * Clicks and taps still toggle it, so touch screens and keyboards work as before.
+ */
+function StatPopover({ children }: { children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const closeTimer = useRef<number | undefined>(undefined);
+  const hovering = useRef(false);
+  useEffect(() => () => window.clearTimeout(closeTimer.current), []);
+
+  const handlers: HoverHandlers = {
+    onPointerEnter: (event) => {
+      if (event.pointerType !== "mouse") return;
+      hovering.current = true;
+      window.clearTimeout(closeTimer.current);
+      setOpen(true);
+    },
+    onPointerLeave: (event) => {
+      if (event.pointerType !== "mouse") return;
+      hovering.current = false;
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = window.setTimeout(() => setOpen(false), HOVER_CLOSE_DELAY_MS);
+    },
+  };
+
+  return (
+    <HoverContext.Provider value={handlers}>
+      <Popover
+        open={open}
+        // A click on a stat the mouse already opened would toggle it shut: keep it open instead.
+        onOpenChange={(next) => setOpen(next || hovering.current)}
+      >
+        {children}
+      </Popover>
+    </HoverContext.Provider>
+  );
+}
+
+/** The panel of a stat popover; keeps it open while the mouse is over it. */
+function StatContent(props: ComponentProps<typeof PopoverContent>) {
+  const hover = useContext(HoverContext);
+  return <PopoverContent {...props} {...hover} />;
+}
+
 /** A stat in the top bar; spacing tightens on the narrowest phones so all five fit. */
 function StatTrigger({
   label,
@@ -50,8 +113,10 @@ function StatTrigger({
   className?: string;
   children: ReactNode;
 }) {
+  const hover = useContext(HoverContext);
   return (
     <PopoverTrigger
+      {...hover}
       aria-label={label}
       className={cn(
         "flex h-11 items-center gap-1 rounded-xl px-1 text-[15px] leading-5 font-bold transition-colors hover:bg-surface-hover data-[state=open]:bg-surface-hover min-[400px]:gap-2 min-[400px]:px-2",
@@ -67,12 +132,12 @@ function StatTrigger({
 
 export function CoursePopover({ course }: { course: MeResponse["course"] }) {
   return (
-    <Popover>
+    <StatPopover>
       <StatTrigger label={strings.stats.course.trigger(course.title)}>
         <FlagES size={31} />
         <span className="text-[16px] leading-6 text-title">1</span>
       </StatTrigger>
-      <PopoverContent className="w-72">
+      <StatContent className="w-72">
         <h2 className="text-caps text-muted uppercase">{strings.stats.course.heading}</h2>
         <div className="mt-3 flex items-center gap-3 rounded-xl border-2 border-selected-border bg-selected-bg p-3">
           <FlagES size={36} className="rounded-md" />
@@ -91,8 +156,8 @@ export function CoursePopover({ course }: { course: MeResponse["course"] }) {
           </span>
           {strings.stats.course.addCourse}
         </button>
-      </PopoverContent>
-    </Popover>
+      </StatContent>
+    </StatPopover>
   );
 }
 
@@ -143,7 +208,7 @@ export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
       : strings.stats.streak.start;
 
   return (
-    <Popover>
+    <StatPopover>
       <StatTrigger
         label={strings.stats.streak.trigger(streak.current)}
         className={extended ? "text-orange" : "text-disabled"}
@@ -151,7 +216,7 @@ export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
         <Flame size={23} muted={!extended} />
         {formatNumber(streak.current)}
       </StatTrigger>
-      <PopoverContent className="w-90 p-5">
+      <StatContent className="w-90 p-5">
         <div className="flex items-center gap-4">
           <div className="min-w-0 flex-1">
             <h2 className={cn("text-heading", extended ? "text-orange" : "text-title")}>
@@ -172,8 +237,8 @@ export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
             {strings.stats.streak.freezes(streak.freezes)}
           </p>
         ) : null}
-      </PopoverContent>
-    </Popover>
+      </StatContent>
+    </StatPopover>
   );
 }
 
@@ -185,12 +250,12 @@ export function XpPopover({ stats }: { stats: Stats }) {
   const reached = stats.today_xp >= goal;
 
   return (
-    <Popover>
+    <StatPopover>
       <StatTrigger label={strings.stats.xp.trigger(stats.xp_total)} className="text-gold-shade">
         <Bolt size={22} />
         {formatNumber(stats.xp_total)}
       </StatTrigger>
-      <PopoverContent className="w-80 p-5">
+      <StatContent className="w-80 p-5">
         <div className="flex items-center gap-4">
           <Bolt size={56} />
           <div className="min-w-0">
@@ -223,8 +288,8 @@ export function XpPopover({ stats }: { stats: Stats }) {
             {strings.stats.xp.changeGoal}
           </Link>
         </PopoverClose>
-      </PopoverContent>
-    </Popover>
+      </StatContent>
+    </StatPopover>
   );
 }
 
@@ -232,12 +297,12 @@ export function XpPopover({ stats }: { stats: Stats }) {
 
 export function GemsPopover({ gems }: { gems: number }) {
   return (
-    <Popover>
+    <StatPopover>
       <StatTrigger label={strings.stats.gems.trigger(gems)} className="text-blue">
         <Gem size={22} />
         {formatNumber(gems)}
       </StatTrigger>
-      <PopoverContent className="w-80 p-5">
+      <StatContent className="w-80 p-5">
         <div className="flex items-center gap-4">
           <Gem size={56} />
           <div className="min-w-0">
@@ -257,8 +322,8 @@ export function GemsPopover({ gems }: { gems: number }) {
             {strings.stats.gems.shop}
           </Link>
         </PopoverClose>
-      </PopoverContent>
-    </Popover>
+      </StatContent>
+    </StatPopover>
   );
 }
 
@@ -371,7 +436,7 @@ function HeartsPanel({ stats }: { stats: Stats }) {
 export function HeartsPopover({ stats }: { stats: Stats }) {
   const empty = stats.hearts === 0;
   return (
-    <Popover>
+    <StatPopover>
       <StatTrigger
         label={strings.stats.hearts.trigger(stats.hearts)}
         className={empty ? "text-disabled" : "text-red"}
@@ -379,9 +444,9 @@ export function HeartsPopover({ stats }: { stats: Stats }) {
         {empty ? <HeartEmpty size={28} /> : <Heart size={28} />}
         {stats.hearts}
       </StatTrigger>
-      <PopoverContent align="end" className="w-90 p-5">
+      <StatContent align="end" className="w-90 p-5">
         <HeartsPanel stats={stats} />
-      </PopoverContent>
-    </Popover>
+      </StatContent>
+    </StatPopover>
   );
 }
