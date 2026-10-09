@@ -389,6 +389,23 @@ export interface ProfileResponse {
   achievements: AchievementView[];
 }
 
+/** GET /streak/calendar?month=YYYY-MM: one month of streak days and the next streak goal. */
+export interface StreakCalendarResponse {
+  /** The month shown, `YYYY-MM`. */
+  month: string;
+  today: LocalDate;
+  /** The month the learner joined; there is no history before it. */
+  first_month: string;
+  current: number;
+  longest: number;
+  extended_today: boolean;
+  freezes: number;
+  /** The goal already reached (1 before the first one) and the next one. */
+  goal: { start: number; target: number };
+  /** Every day of the month, first to last. */
+  days: { date: LocalDate; status: StreakDay["status"] }[];
+}
+
 export interface DailyQuest {
   key: "daily_goal";
   title: string;
