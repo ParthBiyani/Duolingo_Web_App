@@ -37,7 +37,7 @@ def test_demo_reset_restores_every_learner_and_keeps_the_session(
         learners = client.get("/api/v1/auth/learners").json()
         assert [learner["username"] for learner in learners] == [
             "parthbiyani",
-            "zoefernandes",
+            "ananyaiyer",
             "ishanair",
             "kabirmalhotra",
         ]

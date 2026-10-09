@@ -46,7 +46,7 @@ def test_parths_history_matches_the_plan() -> None:
 def test_the_learners_are_at_different_stages() -> None:
     assert [profile.username for profile in LEARNERS] == [
         "parthbiyani",
-        "zoefernandes",
+        "ananyaiyer",
         "ishanair",
         "kabirmalhotra",
     ]

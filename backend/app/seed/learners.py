@@ -6,7 +6,7 @@ relative to "now", so a fresh seed or a demo reset always tells the same story:
 - Parth Biyani (@parthbiyani) joined 50 days ago and kept a 21-day streak, took a break, and is
   now on a 12-day streak that last grew yesterday: 1,240 XP, unit 1 complete with Greetings at
   Legendary, the first lesson of unit 2 done, Silver league, 500 gems.
-- Zoe Fernandes (@zoefernandes) signed up last night and has not started: no XP, no streak,
+- Ananya Iyer (@ananyaiyer) signed up last night and has not started: no XP, no streak,
   the leaderboard still locked and a small welcome balance of gems.
 - Isha Nair (@ishanair) is a week and a half in, halfway through unit 1: 205 XP, a 4-day
   streak, Bronze league.
@@ -38,8 +38,8 @@ PARTH = LearnerProfile(
 )
 
 ZOE = LearnerProfile(
-    username="zoefernandes",
-    display_name="Zoe Fernandes",
+    username="ananyaiyer",
+    display_name="Ananya Iyer",
     avatar_color="#FF9600",
     daily_goal_xp=10,
     gems=50,

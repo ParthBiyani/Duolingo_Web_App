@@ -24,10 +24,10 @@ const LEARNERS: SampleLearner[] = [
     league_name: "Silver",
   },
   {
-    username: "zoefernandes",
-    display_name: "Zoe Fernandes",
+    username: "ananyaiyer",
+    display_name: "Ananya Iyer",
     avatar_color: "#FF9600",
-    initials: "ZF",
+    initials: "AI",
     xp_total: 0,
     streak: 0,
     unit_number: 1,
@@ -87,7 +87,7 @@ describe("LoginScreen", () => {
     const parth = await screen.findByRole("button", { name: /Parth Biyani/ });
     expect(parth).toHaveTextContent("PB");
     expect(parth).toHaveTextContent("Unit 2 · 1,240 XP · 12-day streak");
-    expect(screen.getByRole("button", { name: /Zoe Fernandes/ })).toHaveTextContent(
+    expect(screen.getByRole("button", { name: /Ananya Iyer/ })).toHaveTextContent(
       "Unit 1 · 0 XP · no streak",
     );
     expect(screen.getByRole("button", { name: /Kabir Malhotra/ })).toHaveTextContent(
