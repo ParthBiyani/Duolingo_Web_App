@@ -44,6 +44,7 @@ from app.schemas.session import (
     SessionRules,
     SkillSummary,
     SkipAnswer,
+    SourceToken,
     StreakSummary,
     TextAnswer,
     Tile,
@@ -53,7 +54,7 @@ from app.schemas.session import (
 from app.schemas.session import (
     Exercise as ExerciseOut,
 )
-from app.services import achievements, leagues
+from app.services import achievements, hints, leagues
 from app.services.common import (
     activity_for,
     add_gems,
@@ -141,6 +142,17 @@ def _by_role(exercise: Exercise, role: str) -> list[ExerciseOption]:
     return sorted((o for o in exercise.options if o.role == role), key=lambda o: o.position)
 
 
+def _source_tokens(exercise: Exercise) -> list[SourceToken]:
+    """Word hints for a Spanish source sentence; on a new-word exercise the word shows as new."""
+    if exercise.source_lang != "es" or not exercise.source_text:
+        return []
+    new = bool(exercise.is_new_word)
+    return [
+        SourceToken(text=token.text, hint=token.hint, is_new=new and token.hint is not None)
+        for token in hints.tokenize(exercise.source_text)
+    ]
+
+
 def _serialise(exercise: Exercise, rng: random.Random) -> ExerciseOut:
     choices = _by_role(exercise, "choice")
     tiles = _by_role(exercise, "tile")
@@ -153,6 +165,7 @@ def _serialise(exercise: Exercise, rng: random.Random) -> ExerciseOut:
         prompt=exercise.prompt,
         source_text=exercise.source_text,
         source_lang=exercise.source_lang,
+        source_tokens=_source_tokens(exercise),
         tts_text=exercise.tts_text,
         is_new_word=bool(exercise.is_new_word),
         options=[Option(id=o.id, text=o.text, image=o.image_key) for o in choices],

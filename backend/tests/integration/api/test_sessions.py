@@ -30,6 +30,19 @@ def test_exercises_are_sent_without_answers(client: TestClient) -> None:
     assert session["rules"]["hearts_enabled"] is True
 
 
+def test_spanish_sentences_come_with_word_hints(client: TestClient) -> None:
+    session = start(client, "lesson", lesson_id=active_node(client)["next_lesson_id"])
+    for exercise in session["exercises"]:
+        tokens = exercise["source_tokens"]
+        if exercise["source_lang"] != "es":
+            assert tokens == []
+            continue
+        assert "".join(token["text"] for token in tokens) == exercise["source_text"]
+        assert any(token["hint"] for token in tokens)
+        if exercise["is_new_word"]:
+            assert all(token["is_new"] for token in tokens if token["hint"])
+
+
 def test_starting_twice_with_the_same_id_replays_the_session(client: TestClient) -> None:
     body = {
         "id": str(uuid.uuid4()),
