@@ -20,6 +20,8 @@ export interface PathNodeProps extends Omit<ComponentPropsWithRef<"button">, "ch
   node: PathNodeData;
   /** The node just changed state (the learner is back from a lesson): pop once. */
   highlight?: boolean;
+  /** First node of a locked unit: offered as a place to jump ahead to. */
+  jump?: boolean;
 }
 
 /** Coin face, 3D bottom edge and pressed edge for each tone. */
@@ -35,8 +37,10 @@ const COIN_TONE: Record<NodeTone, string> = {
  * depend on its state (progress ring, START bubble, crown badge). Every other prop goes to the
  * button so Radix `Popover.Trigger asChild` can attach its handlers and ref.
  */
-export function PathNode({ node, highlight = false, ...buttonProps }: PathNodeProps) {
-  const visual = nodeVisual(node);
+export function PathNode({ node, highlight = false, jump = false, ...buttonProps }: PathNodeProps) {
+  const visual = jump
+    ? { ...nodeVisual(node), tone: "unit" as const, glyph: "jump" as const, showBubble: true }
+    : nodeVisual(node);
   const shape = visual.isChest
     ? "h-[90px] w-[80px] rounded-button active:translate-y-0.5"
     : `h-[57px] w-[70px] rounded-[50%] active:translate-y-1 ${COIN_TONE[visual.tone]}`;
@@ -49,7 +53,13 @@ export function PathNode({ node, highlight = false, ...buttonProps }: PathNodePr
       {visual.showRing ? <ProgressRing value={nodeProgress(node)} /> : null}
       {visual.showBubble ? (
         <StartBubble
-          label={node.type === "chest" ? pathStrings.open : pathStrings.start}
+          label={
+            jump
+              ? pathStrings.jumpHere
+              : node.type === "chest"
+                ? pathStrings.open
+                : pathStrings.start
+          }
           className="group-has-[button[data-state=open]]/node:hidden"
         />
       ) : null}
@@ -104,6 +114,8 @@ function NodeGlyphIcon({ glyph, tone }: { glyph: NodeGlyph; tone: NodeTone }) {
       );
     case "chest-open":
       return <DuoImage name="chest-open" size={80} />;
+    case "jump":
+      return <DuoImage name="node-jump" size={42} />;
   }
 }
 
