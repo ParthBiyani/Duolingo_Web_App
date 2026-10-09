@@ -13,7 +13,7 @@ import {
   SuperLogo,
   SuperOwl,
 } from "@/components/icons";
-import { cn, ProgressBar, Skeleton, toast } from "@/components/ui";
+import { buttonClassName, cn, ProgressBar, Skeleton, toast } from "@/components/ui";
 import { strings } from "@/content/strings";
 import { useLeaderboard, useMe, useQuests, type DailyQuest } from "@/lib/api";
 
@@ -186,6 +186,28 @@ function DailyQuestsCard() {
   );
 }
 
+// Monthly challenges (quests page) --------------------------------------------------
+
+function MonthlyChallengeCard() {
+  return (
+    <RailCard>
+      <div className="flex gap-2">
+        <div className="min-w-0 flex-1 pt-1">
+          <h2 className="leading-7 font-bold text-title">{strings.rail.monthly.title}</h2>
+          <p className="mt-2 leading-6 text-muted dark:text-body">{strings.rail.monthly.body}</p>
+        </div>
+        <DuoImage name="monthly-challenge" size={116} className="-mr-2 shrink-0" />
+      </div>
+      <Link
+        href="/learn"
+        className={buttonClassName({ variant: "outline", fullWidth: true, className: "mt-6" })}
+      >
+        {strings.rail.monthly.cta}
+      </Link>
+    </RailCard>
+  );
+}
+
 // Friends (profile page) -------------------------------------------------------------
 
 function FriendsCard() {
@@ -282,22 +304,28 @@ function RailFooter() {
  * not a scroll container of its own, so the document is the only scroller.
  */
 export function RightRail() {
-  // Like the original, the profile page swaps the promos for friend features.
-  const onProfile = usePathname().startsWith("/profile");
+  // Like the original, some pages swap the default cards: the profile shows friend features,
+  // Quests the monthly challenge, and the Shop drops the Super promo it already leads with.
+  const pathname = usePathname();
+  const page = (["profile", "quests", "shop"] as const).find((name) =>
+    pathname.startsWith(`/${name}`),
+  );
   return (
     <aside
       aria-label={strings.rail.label}
       className="sticky top-0 hidden w-92 shrink-0 flex-col gap-4 self-start py-6 xl:flex"
     >
       <StatsBar className="mb-2 justify-between px-2" />
-      {onProfile ? (
+      {page === "profile" ? (
         <>
           <FriendsCard />
           <AddFriendsCard />
         </>
+      ) : page === "quests" ? (
+        <MonthlyChallengeCard />
       ) : (
         <>
-          <SuperCard />
+          {page === "shop" ? null : <SuperCard />}
           <LeagueCard />
           <DailyQuestsCard />
         </>

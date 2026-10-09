@@ -126,6 +126,11 @@ export const strings = {
       progress: (progress: number, target: number) => `${progress} / ${target}`,
       empty: "New quests arrive tomorrow.",
     },
+    monthly: {
+      title: "Monthly challenges unlock soon!",
+      body: "Complete each month’s challenge to earn exclusive badges",
+      cta: "Start a lesson",
+    },
     friends: {
       following: "Following",
       followers: "Followers",

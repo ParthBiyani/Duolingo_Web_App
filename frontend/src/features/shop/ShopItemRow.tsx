@@ -25,7 +25,7 @@ export function ShopItemRow({
           <h3 className="text-lead font-bold text-title">{name}</h3>
           {badge}
         </div>
-        <p className="mt-1 text-muted">{description}</p>
+        <p className="mt-1 text-muted dark:text-body">{description}</p>
       </div>
       <div className="col-span-2 flex justify-end md:col-span-1">{action}</div>
     </li>

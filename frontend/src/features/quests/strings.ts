@@ -1,10 +1,10 @@
 /** Every string shown on the Quests page. Visual casing (caps) is applied with CSS. */
 export const questsStrings = {
   pageTitle: "Quests",
-  bannerTitle: "Welcome to Quests!",
-  bannerBody: "Complete quests to earn rewards. Fresh ones arrive every day!",
+  bannerTitle: "Welcome!",
+  bannerBody: "Complete quests to earn rewards! Quests refresh every day.",
   dailyQuests: "Daily Quests",
-  timeLeft: (left: string) => `${left} left`,
+  timeLeft: (left: string) => left,
   progress: (progress: number, target: number) => `${progress} / ${target}`,
   progressLabel: (title: string, progress: number, target: number) =>
     `${title}: ${progress} of ${target}`,

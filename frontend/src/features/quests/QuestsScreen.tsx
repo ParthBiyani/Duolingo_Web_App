@@ -1,6 +1,6 @@
 "use client";
 
-import { Bolt, ChestOpen, Clock, Lock, QuestChest } from "@/components/icons";
+import { Bolt, ChestOpen, Clock, DuoImage, QuestChest } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { Button, ProgressBar, Skeleton } from "@/components/ui";
 import { useQuests, type DailyQuest } from "@/lib/api";
@@ -37,17 +37,17 @@ export function QuestsScreen() {
     <div className="mx-auto w-full max-w-[600px] pt-6 pb-16">
       <h1 className="sr-only">{questsStrings.pageTitle}</h1>
 
-      <section className="flex items-center justify-between gap-4 overflow-hidden rounded-rail bg-purple py-5 pr-4 pl-6 text-white">
+      <section className="flex min-h-[232px] items-center justify-between gap-4 overflow-hidden rounded-rail bg-quests-banner pr-6 pl-6 text-on-green">
         <div className="min-w-0">
-          <h2 className="text-heading">{questsStrings.bannerTitle}</h2>
-          <p className="mt-2 max-w-sm">{questsStrings.bannerBody}</p>
+          <h2 className="text-[25px] leading-[34px] font-bold">{questsStrings.bannerTitle}</h2>
+          <p className="mt-2 max-w-sm leading-6">{questsStrings.bannerBody}</p>
         </div>
-        <Mascot pose="cheer" size={112} className="shrink-0 max-md:h-auto max-md:w-20" />
+        <DuoImage name="quests-hero" size={172} className="shrink-0 max-md:w-28" />
       </section>
 
       <section aria-labelledby="daily-quests-heading" className="mt-8">
         <div className="flex items-center justify-between gap-4">
-          <h2 id="daily-quests-heading" className="text-heading text-title">
+          <h2 id="daily-quests-heading" className="text-[25px] leading-7 font-bold text-title">
             {questsStrings.dailyQuests}
           </h2>
           <QuestTimeLeft endsAt={endsAt} />
@@ -63,12 +63,11 @@ export function QuestsScreen() {
           <p className="mt-4 text-muted">{questsStrings.empty}</p>
         )}
 
-        <div className="mt-4 flex items-center gap-4 rounded-rail border-2 border-border p-4">
-          <Lock size={40} />
-          <div>
-            <p className="text-lead font-bold text-title">{questsStrings.moreSoonTitle}</p>
-            <p className="mt-1 text-muted">{questsStrings.moreSoonBody}</p>
-          </div>
+        <div className="mt-4 flex min-h-[99px] items-center gap-6 rounded-rail border-2 border-border bg-raised px-5">
+          <DuoImage name="quests-locked" size={60} className="shrink-0" />
+          <p className="text-lead leading-7 font-bold text-disabled">
+            {questsStrings.moreSoonTitle}
+          </p>
         </div>
       </section>
     </div>
