@@ -326,6 +326,17 @@ def ensure_cohort(db: Session, learner: User, now: datetime) -> LeagueCohort | N
         cohort = db.get(LeagueCohort, membership.cohort_id)
         assert cohort is not None
         return cohort
+    close_past_weeks(db, learner, now)
+    return _join(db, learner, week_start, now)
+
+
+def close_past_weeks(db: Session, learner: User, now: datetime) -> None:
+    """Finalise every finished week the learner took part in that is still open.
+
+    Reads that show the learner's league (``/me``, the profile) call this first, so a new week
+    shows the league the learner moved to even before anything reads the leaderboard.
+    """
+    week_start, _ = _week_bounds(learner, now)
     for old in db.scalars(
         select(LeagueCohort)
         .join(LeagueMembership, LeagueMembership.cohort_id == LeagueCohort.id)
@@ -337,7 +348,6 @@ def ensure_cohort(db: Session, learner: User, now: datetime) -> LeagueCohort | N
         .order_by(LeagueCohort.week_start)
     ).all():
         _finalise(db, old, now)
-    return _join(db, learner, week_start, now)
 
 
 def learner_rank(db: Session, learner: User, now: datetime) -> tuple[int, int | None]:
