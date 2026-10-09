@@ -2,7 +2,18 @@
 
 from fastapi import APIRouter
 
-from app.api.v1 import auth, demo, hearts, leaderboard, me, path, profile, sessions, shop
+from app.api.v1 import (
+    auth,
+    demo,
+    hearts,
+    leaderboard,
+    me,
+    path,
+    profile,
+    sessions,
+    shop,
+    streak,
+)
 
 router = APIRouter(prefix="/api/v1")
 router.include_router(auth.router)
@@ -13,4 +24,5 @@ router.include_router(hearts.router)
 router.include_router(shop.router)
 router.include_router(leaderboard.router)
 router.include_router(profile.router)
+router.include_router(streak.router)
 router.include_router(demo.router)

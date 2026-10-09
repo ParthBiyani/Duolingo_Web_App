@@ -195,14 +195,11 @@ def add_gems(
     return True
 
 
-# --- streak week strip --------------------------------------------------------------------------
+# --- streak days ---------------------------------------------------------------------------------
 
 
-def streak_week(db: Session, user: User, now: datetime) -> list[StreakDay]:
-    """The current Monday-to-Sunday week with each day's streak status."""
-    today = today_for(user, now)
-    start = dates.week_start(today)
-    days = [start + timedelta(days=offset) for offset in range(7)]
+def streak_statuses(db: Session, user: User, days: list[date], today: date) -> list[DayStatus]:
+    """Each day's streak status as the learner sees it on ``today``, in the order given."""
     rows = db.scalars(
         select(DailyActivity).where(
             DailyActivity.user_id == user.id,
@@ -210,7 +207,7 @@ def streak_week(db: Session, user: User, now: datetime) -> list[StreakDay]:
         )
     ).all()
     status_by_day = {as_date(row.local_date): row.streak_status for row in rows}
-    week: list[StreakDay] = []
+    statuses: list[DayStatus] = []
     for day in days:
         stored = status_by_day.get(day, "none")
         status: DayStatus
@@ -224,7 +221,17 @@ def streak_week(db: Session, user: User, now: datetime) -> list[StreakDay]:
             status = "future"
         else:
             status = "missed"
-        week.append(
-            StreakDay(date=date_text(day), label=WEEKDAY_LABELS[day.weekday()], status=status)
-        )
-    return week
+        statuses.append(status)
+    return statuses
+
+
+def streak_week(db: Session, user: User, now: datetime) -> list[StreakDay]:
+    """The current Monday-to-Sunday week with each day's streak status."""
+    today = today_for(user, now)
+    start = dates.week_start(today)
+    days = [start + timedelta(days=offset) for offset in range(7)]
+    statuses = streak_statuses(db, user, days, today)
+    return [
+        StreakDay(date=date_text(day), label=WEEKDAY_LABELS[day.weekday()], status=status)
+        for day, status in zip(days, statuses, strict=True)
+    ]
