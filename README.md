@@ -195,6 +195,7 @@ docs/      architecture, database, game rules, deployment, decision records
 ## License and credits
 
 - The code is [MIT](LICENSE).
-- The font is [Nunito](https://fonts.google.com/specimen/Nunito) (SIL Open Font License).
+- The fonts are Duolingo's own typefaces (Duolingo Sans and Feather), included only to reproduce the
+  original look in this educational clone. They remain Duolingo's property.
 - Icons, mascot and illustrations are original SVGs drawn for this project. Picture cards use the
   device's emoji font, and sound effects are synthesised in the browser.

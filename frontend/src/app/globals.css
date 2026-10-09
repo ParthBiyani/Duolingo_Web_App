@@ -147,7 +147,8 @@
 
 /* Theme-switched roles exposed as Tailwind colours, shadows and the font. */
 @theme inline {
-  --font-sans: var(--font-nunito), ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-sans: var(--font-duolingo-sans), "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-feather), var(--font-duolingo-sans), sans-serif;
 
   --color-surface: var(--surface);
   --color-surface-hover: var(--surface-hover);

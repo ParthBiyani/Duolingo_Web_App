@@ -24,7 +24,10 @@ export function Sidebar() {
         aria-label={strings.brand.homeLabel}
         className="mb-4 flex h-14 items-center justify-center rounded-xl lg:justify-start lg:px-4"
       >
-        <span aria-hidden="true" className="hidden text-display tracking-tight text-green lg:block">
+        <span
+          aria-hidden="true"
+          className="hidden font-display text-display tracking-tight text-green lg:block"
+        >
           {strings.brand.wordmark}
         </span>
         <Mascot pose="idle" size={44} className="lg:hidden" />
