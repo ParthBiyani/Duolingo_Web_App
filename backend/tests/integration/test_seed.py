@@ -54,13 +54,13 @@ EXPECTED_ROWS = {
     Skill: 18,
     Lesson: 39,
     Exercise: 3 * (4 * 3 * 10 + 15),
-    User: 4 + 29,  # the sample learners and the rivals they share
+    User: 4 + 27,  # the sample learners and the rivals who fill their shared cohort
     UserSettings: 4,  # the learners only; rivals have no settings or stats
     UserStats: 4,
     DailyActivity: (21 + 12) + 0 + (3 + 4) + (26 + 64),
     League: 10,
-    LeagueCohort: 4,  # one per learner
-    LeagueMembership: 4 * 30,
+    LeagueCohort: 1,  # Parth, Isha and Kabir share Silver; Ananya's leaderboard is locked
+    LeagueMembership: 30,
     Achievement: 6,
     UserAchievement: 4 * 6,
     ShopItem: 4,
@@ -182,7 +182,7 @@ def test_the_early_learner_is_halfway_through_unit_one(db: Session) -> None:
     state = node_states(db, user)
     assert [state[node.id] for node in unit_one.skills] == HALFWAY
     assert (user.stats.streak_current, user.stats.streak_last_date) == (4, YESTERDAY)
-    assert user.stats.league_tier == 0
+    assert user.stats.league_tier == 1  # promoted to Silver at the end of last week
 
 
 def test_the_advanced_learner_is_deep_in_unit_three(db: Session) -> None:
@@ -194,8 +194,14 @@ def test_the_advanced_learner_is_deep_in_unit_three(db: Session) -> None:
     assert [state[node.id] for node in unit_two.skills] == ["legendary"] + ["completed"] * 5
     assert [state[node.id] for node in unit_three.skills] == HALFWAY
     stats = user.stats
-    assert (stats.streak_current, stats.streak_freezes, stats.league_tier) == (64, 2, 2)
-    assert (stats.legendary_skills, stats.top3_finishes) == (2, 3)
+    assert (stats.streak_current, stats.streak_freezes, stats.league_tier) == (64, 2, 1)
+    assert (stats.legendary_skills, stats.top3_finishes) == (2, 2)
+    champion = db.scalars(
+        select(UserAchievement)
+        .join(Achievement)
+        .where(UserAchievement.user_id == user.id, Achievement.key == "champion")
+    ).one()
+    assert champion.level == 3  # reached Gold before the demotion, and a level is kept
 
 
 def test_default_learner_state(db: Session) -> None:
@@ -277,37 +283,25 @@ def test_achievement_levels_and_their_gems(db: Session) -> None:
     }
 
 
-def test_each_learner_has_a_league_week_with_the_29_rivals(db: Session) -> None:
+def test_unlocked_learners_share_one_league_week_with_27_rivals(db: Session) -> None:
     monday = date(2026, 10, 5)
-    rival_sets = []
-    for profile in LEARNERS:
-        user = learner(db, profile.username)
-        cohort = db.scalars(
-            select(LeagueCohort).join(LeagueMembership).where(LeagueMembership.user_id == user.id)
-        ).one()
-        assert (cohort.tier, cohort.week_start, cohort.finalized_at) == (
-            profile.league_tier,
-            monday,
-            None,
-        )
-        humans = [member.user for member in cohort.memberships if not member.user.is_bot]
-        assert humans == [user]
-        rival_sets.append({member.user_id for member in cohort.memberships} - {user.id})
-    assert all(rivals == rival_sets[0] for rivals in rival_sets)
+    cohort = db.scalars(select(LeagueCohort)).one()
+    assert (cohort.tier, cohort.week_start, cohort.finalized_at) == (1, monday, None)
 
-    cohort = db.scalars(
-        select(LeagueCohort)
-        .join(LeagueMembership)
-        .where(LeagueMembership.user_id == learner(db).id)
-    ).one()
     members = cohort.memberships
+    humans = {member.user.username for member in members if not member.user.is_bot}
+    assert humans == {PARTH.username, ISHA.username, KABIR.username}  # all in Silver
+    assert all(profile.league_tier == 1 for profile in LEARNERS if profile.username in humans)
+    zoe = learner(db, ZOE.username)
+    assert db.get(LeagueMembership, (cohort.id, zoe.id)) is None  # locked: no cohort yet
+
     rivals = [member.user for member in members if member.user.is_bot]
     assert len(members) == 30
-    assert len(rivals) == 29
+    assert len(rivals) == 27
     assert {member.joined_at for member in members} == {local_midnight_utc(monday, "Asia/Kolkata")}
     assert all(rival.bot_pace_xp is not None and 40 <= rival.bot_pace_xp <= 600 for rival in rivals)
     assert all(re.fullmatch(r"\w+ [A-Z]\.", rival.display_name) for rival in rivals)
-    assert len({rival.username for rival in rivals}) == 29
+    assert len({rival.username for rival in rivals}) == 27
     assert len({rival.avatar_color for rival in rivals}) > 5
 
 

@@ -50,6 +50,8 @@ def evaluate(db: Session, user: User, now: datetime) -> list[AchievementUnlock]:
         thresholds = [int(t) for t in load_json(definition.thresholds)]
         level, progress, _target = level_for(metric_value(db, user, definition.metric), thresholds)
         row = stored.get(definition.id)
+        if row is not None and level < row.level:
+            continue  # a level once reached is kept, as after a league demotion
         if row is None:
             row = UserAchievement(
                 user_id=user.id, achievement_id=definition.id, level=0, progress=0, updated_at=now
@@ -79,10 +81,18 @@ def evaluate(db: Session, user: User, now: datetime) -> list[AchievementUnlock]:
 
 
 def views(db: Session, user: User) -> list[AchievementView]:
+    stored = {
+        row.achievement_id: row.level
+        for row in db.scalars(select(UserAchievement).where(UserAchievement.user_id == user.id))
+    }
     result: list[AchievementView] = []
     for definition in _definitions(db):
         thresholds = [int(t) for t in load_json(definition.thresholds)]
-        level, progress, target = level_for(metric_value(db, user, definition.metric), thresholds)
+        value = metric_value(db, user, definition.metric)
+        kept = stored.get(definition.id, 0)
+        if kept > level_for(value, thresholds)[0]:
+            value = thresholds[kept - 1]  # a level once reached is kept (see ``evaluate``)
+        level, progress, target = level_for(value, thresholds)
         shown_target = thresholds[min(level, len(thresholds) - 1)]
         result.append(
             AchievementView(

@@ -44,3 +44,25 @@ def test_demo_reset_restores_every_learner_and_keeps_the_session(
         me = client.get("/api/v1/me").json()  # the cookie names the learner, not their id
         assert me["user"]["username"] == "ishanair"
         assert me["settings"]["daily_goal_xp"] == 10
+
+
+def test_demo_reset_puts_the_learners_back_in_one_shared_league(
+    app: FastAPI, settings: Settings
+) -> None:
+    enabled = settings.model_copy(update={"demo_tools": True})
+    app.dependency_overrides[get_settings] = lambda: enabled
+    with TestClient(app) as client:
+        log_in(client, "kabirmalhotra")
+        client.post("/api/v1/demo/clock/advance", json={"seconds": 7 * 24 * 3600})
+        client.get("/api/v1/leaderboard")  # a new week: last week is finalised, new cohorts form
+        assert client.post("/api/v1/demo/reset").status_code == 204
+
+        tables = []
+        for username in ("parthbiyani", "ishanair", "kabirmalhotra"):
+            log_in(client, username)
+            board = client.get("/api/v1/leaderboard").json()
+            assert (board["name"], len(board["rows"]), board["last_result"]) == ("Silver", 30, None)
+            tables.append([(row["user_id"], row["xp"]) for row in board["rows"]])
+        assert tables[0] == tables[1] == tables[2]
+        log_in(client, "ananyaiyer")
+        assert client.get("/api/v1/leaderboard").json()["unlocked"] is False

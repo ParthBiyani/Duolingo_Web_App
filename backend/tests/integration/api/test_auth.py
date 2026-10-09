@@ -35,8 +35,8 @@ def test_sample_learners_are_public(anonymous_client: TestClient) -> None:
     assert summary == {
         "parthbiyani": ("PB", 1240, 12, 2, "Silver"),
         "ananyaiyer": ("AI", 0, 0, 1, "Bronze"),
-        "ishanair": ("IN", 205, 4, 1, "Bronze"),
-        "kabirmalhotra": ("KM", 4120, 64, 3, "Gold"),
+        "ishanair": ("IN", 205, 4, 1, "Silver"),
+        "kabirmalhotra": ("KM", 4120, 64, 3, "Silver"),
     }
     assert learners[0]["unit_title"] == "Around us"  # the fixture course's unit 2
     assert all(learner["avatar_color"].startswith("#") for learner in learners)
@@ -139,22 +139,3 @@ def test_learners_never_see_each_other(app: FastAPI) -> None:
         assert zoe.patch("/api/v1/me", json={"daily_goal_xp": 50}).status_code == 200
         assert parth.get("/api/v1/me").json()["settings"]["daily_goal_xp"] == 20
         assert parth.get("/api/v1/me").json()["stats"]["xp_total"] == 1240
-
-
-def test_each_learner_sees_their_own_league(app: FastAPI) -> None:
-    expected = {
-        "parthbiyani": ("Parth Biyani", "Silver"),
-        "ananyaiyer": ("Ananya Iyer", "Bronze"),
-        "ishanair": ("Isha Nair", "Bronze"),
-        "kabirmalhotra": ("Kabir Malhotra", "Gold"),
-    }
-    with TestClient(app) as client:
-        for username, (name, league) in expected.items():
-            log_in(client, username)
-            board = client.get("/api/v1/leaderboard").json()
-            assert board["name"] == league
-            me = [row for row in board["rows"] if row["is_me"]]
-            assert [row["display_name"] for row in me] == [name]
-            assert len(board["rows"]) == 30
-        log_in(client, "ananyaiyer")
-        assert client.get("/api/v1/leaderboard").json()["unlocked"] is False

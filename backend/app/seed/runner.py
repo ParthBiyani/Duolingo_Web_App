@@ -10,9 +10,9 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.models import Course, LeagueCohort, User
-from app.seed.bots import seed_league_week, seed_rivals
 from app.seed.catalog import SPANISH_COURSE_SLUG, seed_catalog
 from app.seed.course import seed_course_content
+from app.seed.leagues import seed_league_week
 from app.seed.learner import seed_learner
 from app.seed.learners import LEARNERS
 from app.seed.schema import CONTENT_DIR, load_units
@@ -57,12 +57,10 @@ def reset_people(session: Session, now: datetime) -> list[User]:
 
 
 def seed_people(session: Session, course: Course, now: datetime) -> list[User]:
-    """Seed the sample learners, the rivals and each learner's league cohort for this week.
+    """Seed the sample learners and this week's league cohorts, with the rivals that fill them.
 
-    Returns the learners in ``LEARNERS`` order.
+    Learners in the same league share a cohort. Returns the learners in ``LEARNERS`` order.
     """
     learners = [seed_learner(session, course, profile, now) for profile in LEARNERS]
-    rivals = seed_rivals(session, learners[0], now)
-    for learner, profile in zip(learners, LEARNERS, strict=True):
-        seed_league_week(session, learner, rivals, now, tier=profile.league_tier)
+    seed_league_week(session, learners, now)
     return learners
