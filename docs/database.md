@@ -1,6 +1,7 @@
 # Database schema
 
-SQLite, 23 tables, created by Alembic migration `0001_initial`. The tables fall into five groups: course
+SQLite, 23 tables, created by Alembic migration `0001_initial`; `0002_ten_hearts` then raised the heart
+limit from 5 to 10. The tables fall into five groups: course
 **content**, **learners** and their state, lesson **sessions**, append-only **ledgers**, and the
 gamification **catalogue**.
 
@@ -37,16 +38,16 @@ erDiagram
 |---|---|---|
 | Content | `courses` | One row per language course. `is_available=0` rows show as "Coming soon". |
 | | `units` | Ordered units in a section. `UNIQUE(course_id, position)`; colour enum. |
-| | `skills` | Path nodes: `lesson`, `chest`, `practice` or `unit_review`. Ordered within a unit; a chest must have `chest_gems`. |
+| | `skills` | Path nodes: `lesson`, `chest`, `practice` or `unit_review` (the seed uses all but `practice`). Ordered within a unit; a chest, and only a chest, has `chest_gems`. |
 | | `lessons` | Ordered lessons of a skill (3 for lesson skills, 1 for a unit review). |
-| | `exercises` | Ordered exercises with a type `CHECK` over the 8 supported types, the prompt, source text, TTS text and the "new word" flag. |
-| | `exercise_options` | Choices (`is_correct`), word-bank tiles (`answer_position`, NULL for distractors) and match pairs (`pair_key`). |
+| | `exercises` | Ordered exercises with a type `CHECK` over the 8 types (`multiple_choice`, `image_choice`, `translate_word_bank`, `match_pairs`, `fill_blank`, `type_answer`, `listen_type`, `speak`), the prompt, source text and language, TTS text and the "new word" flag. Word hints are not stored; the API derives them from the course vocabulary. |
+| | `exercise_options` | Choices (`is_correct`, `image_key` holding a picture card's emoji), word-bank tiles (`answer_position`, NULL for distractors) and match pairs (`pair_key`). |
 | | `exercise_answers` | Accepted typed answers; the canonical answer is flagged. |
-| Learners | `users` | The four sample learners plus league rivals (`is_bot`, `bot_pace_xp`), created as cohorts need them. Stores the time zone. |
+| Learners | `users` | The four sample learners plus league rivals (`is_bot`, `bot_pace_xp`), created as cohorts need them. Logging in looks a learner up by the unique `username`. Stores the time zone. |
 | | `user_settings` | Sound, animations, motivational messages, listening exercises, theme, daily goal (`CHECK IN (1,10,20,30,50)`). |
-| | `user_stats` | Current state: hearts (0–10) with the regeneration anchor, streak, freezes (0–2), league tier, and cached `xp_total` and `gems`. |
-| | `skill_progress` | Per learner and skill: lessons completed and crown level (0–2), with completed and legendary timestamps. |
-| Sessions | `sessions` | One per lesson attempt. Client UUID key, kind, status, frozen exercise plan (JSON), stored completion result (JSON). |
+| | `user_stats` | Current state: hearts (0–10, default 10) with the regeneration anchor (set exactly while hearts are below 10), streak, freezes (0–2), counters for lessons, perfect lessons, legendary skills and top-3 finishes, league tier, and cached `xp_total` and `gems`. |
+| | `skill_progress` | Per learner and skill: lessons completed and crown level (0–2), with completed (or chest claimed) and legendary timestamps. |
+| Sessions | `sessions` | One per lesson, practice, review, legendary or timed attempt. Client UUID key, kind, status, frozen exercise plan (JSON), mistakes and hearts lost, stored completion result (JSON). |
 | | `session_answers` | Every graded answer. `UNIQUE(session_id, answer_id)` makes submissions replay-safe. |
 | Ledgers | `xp_events` | Every XP award, with its local date. `UNIQUE(session_id)`; a partial unique index allows one rival row per day. |
 | | `gem_transactions` | Every gem change, with its reason and balance after. A partial unique index `(user_id, reason, ref)` blocks double rewards. |
@@ -54,7 +55,7 @@ erDiagram
 | Catalogue | `leagues` | 10 tiers with promotion and demotion counts and top-3 rewards. |
 | | `league_cohorts` / `league_memberships` | Weekly groups of 30 per league, shared by the learners in that league and topped up with rivals, with final rank and outcome once the week closes. |
 | | `achievements` / `user_achievements` | Achievement definitions with thresholds, and each learner's level and progress. |
-| | `shop_items` | Heart refill, streak freeze, legendary entry, unlimited hearts (unavailable). |
+| | `shop_items` | Heart refill (with a separate in-lesson price), streak freeze, legendary entry, unlimited hearts (unavailable). |
 | | `app_settings` | Key/value settings, used for the simulated clock offset. |
 
 ## Conventions

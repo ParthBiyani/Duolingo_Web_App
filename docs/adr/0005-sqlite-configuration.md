@@ -4,7 +4,7 @@
 - Date: 2026-10-08
 
 ## Context
-The assignment mandates SQLite. It runs inside a single API process on a persistent disk.
+The stack uses SQLite. It runs inside a single API process, as a file on the API host's disk.
 
 ## Decision
 - **Pragmas on every connection:**
@@ -26,7 +26,8 @@ The assignment mandates SQLite. It runs inside a single API process on a persist
   - deploys run `alembic upgrade head` before the server starts.
 
 ## Consequences
-- Zero operational overhead. The database file is backed up through the host's disk snapshots, plus a
-  `VACUUM INTO` copy before releases.
+- Zero operational overhead. On a host with a persistent disk, the database file is backed up through
+  the host's disk snapshots. The live demo's free host has no persistent disk, so its database is
+  reseeded whenever the instance is replaced (see [ADR 0007](0007-hosting.md)).
 - Horizontal scaling would need a move to Postgres. The SQLAlchemy models and migrations are written so
   that change is mechanical.

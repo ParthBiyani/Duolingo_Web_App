@@ -4,8 +4,8 @@
 - Date: 2026-10-08
 
 ## Context
-The assignment fixes the stack (Next.js with TypeScript, FastAPI, SQLite) and asks for a single public
-repository containing `frontend/` and `backend/`, deployed as a working demo.
+The project uses a fixed stack (Next.js with TypeScript, FastAPI, SQLite) and lives in a single
+public repository containing `frontend/` and `backend/`, deployed as a working demo.
 
 ## Decision
 - One repository with two independent applications:
@@ -17,4 +17,5 @@ repository containing `frontend/` and `backend/`, deployed as a working demo.
 
 ## Consequences
 - Each app can be built, tested and deployed on its own (Vercel for the frontend, Render for the API).
-- CI runs one job per app, plus a contract job that keeps the generated API types in sync.
+- CI runs one job per app. The frontend's API types (`src/lib/api/types.ts`) mirror the backend's
+  Pydantic schemas by hand, so a contract change updates both sides in the same pull request.
