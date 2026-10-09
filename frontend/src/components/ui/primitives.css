@@ -28,11 +28,12 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    /* As on the original, the raised edge is the bottom border, inside the button's height. */
     border: 2px solid var(--btn-border);
+    border-bottom: var(--btn-depth) solid var(--btn-edge);
     border-radius: var(--radius-button);
     background: var(--btn-face);
     color: var(--btn-text);
-    box-shadow: 0 var(--btn-depth) 0 var(--btn-edge);
     font-size: var(--text-button);
     font-weight: 700;
     line-height: var(--text-button--line-height);
@@ -53,8 +54,8 @@
   }
 
   .ui-btn:not(:disabled, [aria-busy="true"]):active {
-    transform: translateY(var(--btn-depth));
-    box-shadow: none;
+    transform: translateY(calc(var(--btn-depth) - 2px));
+    border-bottom-width: 2px;
   }
 
   .ui-btn-primary {
@@ -85,11 +86,10 @@
     --btn-face: var(--surface);
     --btn-border: var(--border);
     --btn-edge: var(--border);
-    --btn-depth: 2px;
   }
 
   .ui-btn-ghost {
-    --btn-depth: 0px;
+    --btn-depth: 2px;
   }
 
   /* Disabled buttons and the locked variant are flat grey. */
@@ -125,13 +125,15 @@
   }
 
   .ui-btn-md {
-    height: 2.875rem;
-    padding-inline: 1.25rem;
+    height: 3.125rem;
+    min-width: 9.375rem;
+    padding-inline: 1rem;
   }
 
   .ui-btn-lg {
     height: 3.125rem;
-    padding-inline: 1.5rem;
+    min-width: 9.375rem;
+    padding-inline: 1rem;
   }
 
   .ui-btn-full {

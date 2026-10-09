@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState, type ReactElement, type ReactNode } from "react";
 
 import { Trophy } from "@/components/icons";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui";
+import { Popover, PopoverContent, PopoverTrigger, toast } from "@/components/ui";
+import { strings } from "@/content/strings";
 import type { PathNode, UnitColor } from "@/lib/api/types";
 
 import { nextLessonNumber } from "./nodeVisual";
@@ -20,6 +21,8 @@ interface NodePopoverProps {
   onOpenChest: OpenChestHandler;
   /** The node button; Radix attaches the trigger behaviour and ref to it. */
   children: ReactElement;
+  /** First node of a locked unit: offer to jump ahead to this unit (its number). */
+  jumpToUnit?: number;
 }
 
 const ACTION_BASE =
@@ -27,7 +30,7 @@ const ACTION_BASE =
 
 const ACTION_VARIANT = {
   solid:
-    "bg-white text-(--unit-face) shadow-[0_4px_0_var(--unit-shade)] transition-[translate,box-shadow] duration-100 active:translate-y-1 active:shadow-none",
+    "border-b-4 border-(--unit-shade) bg-white text-(--unit-face) transition-[translate] duration-100 active:translate-y-0.5 active:border-b-2",
   outline:
     "border-2 border-white/60 text-white transition-colors duration-100 hover:bg-white/10 active:translate-y-0.5",
   locked: "bg-locked-face text-locked-icon",
@@ -38,9 +41,9 @@ const ACTION_VARIANT = {
  * Escape, outside clicks, collision-aware placement). It is painted in the unit colour, or grey
  * when the node is locked.
  */
-export function NodePopover({ node, color, onOpenChest, children }: NodePopoverProps) {
+export function NodePopover({ node, color, onOpenChest, jumpToUnit, children }: NodePopoverProps) {
   const [open, setOpen] = useState(false);
-  const locked = node.state === "locked";
+  const locked = node.state === "locked" && jumpToUnit === undefined;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -53,7 +56,19 @@ export function NodePopover({ node, color, onOpenChest, children }: NodePopoverP
         className={`w-[295px] ${locked ? "bg-surface-hover text-disabled" : "border-(--unit-face) bg-(--unit-face) text-white"}`}
         arrowClassName={locked ? "fill-surface-hover" : "fill-(--unit-face) stroke-(--unit-face)"}
       >
-        <PopoverBody node={node} onOpenChest={onOpenChest} onDone={() => setOpen(false)} />
+        {jumpToUnit !== undefined ? (
+          <CardText title={pathStrings.jumpTitle(jumpToUnit)} body={pathStrings.jumpBody}>
+            <button
+              type="button"
+              onClick={() => toast(strings.common.comingSoon, { id: "coming-soon" })}
+              className={`${ACTION_BASE} ${ACTION_VARIANT.solid}`}
+            >
+              {pathStrings.jumpHere}
+            </button>
+          </CardText>
+        ) : (
+          <PopoverBody node={node} onOpenChest={onOpenChest} onDone={() => setOpen(false)} />
+        )}
       </PopoverContent>
     </Popover>
   );

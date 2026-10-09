@@ -74,7 +74,7 @@ function SuperCard() {
       <button
         type="button"
         onClick={showComingSoon}
-        className="mt-6 flex h-[50px] w-full items-center justify-center rounded-button bg-super text-button text-white uppercase shadow-[0_4px_0_var(--super-shade)] transition-[translate,box-shadow,filter] duration-100 hover:brightness-110 active:translate-y-1 active:shadow-none"
+        className="mt-6 flex h-[50px] w-full items-center justify-center rounded-button border-b-4 border-(--super-shade) bg-super text-button text-white uppercase transition-[translate,filter] duration-100 hover:brightness-110 active:translate-y-0.5 active:border-b-2"
       >
         {strings.rail.super.cta}
       </button>
@@ -292,9 +292,6 @@ function RailFooter() {
           </li>
         ))}
       </ul>
-      <p className="mt-4 text-caps font-medium tracking-normal text-disabled">
-        {strings.rail.footer.disclaimer}
-      </p>
     </footer>
   );
 }
