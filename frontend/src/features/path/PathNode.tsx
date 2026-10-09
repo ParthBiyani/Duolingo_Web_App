@@ -44,11 +44,14 @@ export function PathNode({ node, highlight = false, ...buttonProps }: PathNodePr
   return (
     <div
       data-node-id={node.id}
-      className={`relative flex h-[65px] w-[70px] justify-center ${visual.isChest ? "items-center" : "items-start"} ${highlight ? styles.celebrate : ""}`}
+      className={`group/node relative flex h-[65px] w-[70px] justify-center ${visual.isChest ? "items-center" : "items-start"} ${highlight ? styles.celebrate : ""}`}
     >
       {visual.showRing ? <ProgressRing value={nodeProgress(node)} /> : null}
       {visual.showBubble ? (
-        <StartBubble label={node.type === "chest" ? pathStrings.open : pathStrings.start} />
+        <StartBubble
+          label={node.type === "chest" ? pathStrings.open : pathStrings.start}
+          className="group-has-[button[data-state=open]]/node:hidden"
+        />
       ) : null}
       <button
         type="button"

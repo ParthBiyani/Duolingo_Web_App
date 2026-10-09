@@ -2,20 +2,17 @@
 
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 
-import type { MascotPose } from "@/components/mascot";
 import type { PathResponse } from "@/lib/api/types";
 
 import { JumpBackButton, type JumpDirection } from "./JumpBackButton";
 import { ACTIVE_NODE_EXTRA_SPACE, mascotSideFor, nodeOffset } from "./layout";
 import { NodePopover, type OpenChestHandler } from "./NodePopover";
-import { PathMascot } from "./PathMascot";
+import { characterFor, PathMascot } from "./PathMascot";
 import { PathNode } from "./PathNode";
 import { pathStrings } from "./strings";
 import { UnitBanner } from "./UnitBanner";
 import { unitColorStyle } from "./unitColors";
 import { UnitDivider } from "./UnitDivider";
-
-const MASCOT_POSES: MascotPose[] = ["cheer", "idle", "celebrate"];
 
 /** Space kept between the banner and the active node when scrolling to it (fits the bubble). */
 const ACTIVE_SCROLL_GAP = 110;
@@ -74,13 +71,15 @@ export function LearningPath({
 
       <div
         ref={bannerRef}
-        className="sticky top-(--shell-top) z-20 bg-surface pt-4 md:pt-6 xl:pt-12"
+        className="sticky top-(--shell-top) z-20 bg-surface pt-4 md:pt-6 xl:mt-6"
       >
         <UnitBanner unit={currentUnit} onGuidebook={onGuidebook} />
       </div>
 
       {path.units.map((unit, unitIdx) => {
         const mirrored = unitIdx % 2 === 1;
+        const unitLocked = unit.nodes[0]?.state === "locked";
+        let mascotsInUnit = 0;
         return (
           <section
             key={unit.id}
@@ -117,7 +116,8 @@ export function LearningPath({
                     {mascotSide ? (
                       <PathMascot
                         side={mascotSide}
-                        pose={MASCOT_POSES[unitIdx % MASCOT_POSES.length]}
+                        character={characterFor(unitIdx * 2 + mascotsInUnit++)}
+                        locked={unitLocked}
                       />
                     ) : null}
                   </li>
