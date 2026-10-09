@@ -123,7 +123,7 @@ export function CoursePopover({ course }: { course: MeResponse["course"] }) {
   return (
     <StatPopover>
       <StatTrigger label={strings.stats.course.trigger(course.title)}>
-        <FlagES size={31} />
+        <FlagES size={31} className="rounded-[18%] outline-2 outline-border dark:outline-white" />
         <span className="text-[16px] leading-6 text-title">1</span>
       </StatTrigger>
       <StatContent className="w-72">

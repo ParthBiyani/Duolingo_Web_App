@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import {
   Bolt,
@@ -297,6 +297,29 @@ function RailFooter() {
 }
 
 /**
+ * Sticky offset that makes the rail behave like the original's: it scrolls with the page until
+ * its last card is in view, then stays put (a rail shorter than the window simply stays at the top).
+ */
+function useStickToBottom() {
+  const ref = useRef<HTMLElement>(null);
+  const [top, setTop] = useState(0);
+  useEffect(() => {
+    const rail = ref.current;
+    if (!rail) return;
+    const update = () => setTop(Math.min(0, window.innerHeight - rail.offsetHeight));
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(rail);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  return [ref, top] as const;
+}
+
+/**
  * Right column from 1160px: stats, promos, league and quests. It is sticky but
  * not a scroll container of its own, so the document is the only scroller.
  */
@@ -307,10 +330,13 @@ export function RightRail() {
   const page = (["profile", "quests", "shop"] as const).find((name) =>
     pathname.startsWith(`/${name}`),
   );
+  const [railRef, railTop] = useStickToBottom();
   return (
     <aside
+      ref={railRef}
       aria-label={strings.rail.label}
-      className="sticky top-0 hidden w-92 shrink-0 flex-col gap-4 self-start py-6 xl:flex"
+      style={{ top: railTop }}
+      className="sticky hidden w-92 shrink-0 flex-col gap-4 self-start py-6 xl:flex"
     >
       <StatsBar className="mb-2 justify-between px-2" />
       {page === "profile" ? (
