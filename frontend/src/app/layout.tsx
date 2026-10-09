@@ -1,15 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Nunito } from "next/font/google";
+import localFont from "next/font/local";
 
 import { themeInitScript } from "@/lib/theme";
 
 import { Providers } from "./providers";
 import "./globals.css";
 
-const nunito = Nunito({
-  subsets: ["latin"],
-  weight: ["500", "700", "800"],
-  variable: "--font-nunito",
+/** Duolingo's UI typeface: one variable file per style, weights 100-900. */
+const duolingoSans = localFont({
+  src: [
+    { path: "./fonts/duolingo-sans.woff2", weight: "100 900", style: "normal" },
+    { path: "./fonts/duolingo-sans-italic.woff2", weight: "100 900", style: "italic" },
+  ],
+  variable: "--font-duolingo-sans",
+  display: "swap",
+});
+
+/** Duolingo's display face, used for the wordmark. */
+const feather = localFont({
+  src: [{ path: "./fonts/feather-bold.woff2", weight: "700", style: "normal" }],
+  variable: "--font-feather",
   display: "swap",
 });
 
@@ -31,7 +41,11 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // data-theme is set by the inline script before React hydrates, hence the warning opt-out.
-    <html lang="en" className={nunito.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${duolingoSans.variable} ${feather.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>

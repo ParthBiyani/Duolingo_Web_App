@@ -13,8 +13,9 @@ illustrations or sounds.
   - They are defined once as CSS variables for light and dark themes, then mapped into Tailwind v4 with
     `@theme inline`.
   - Components never use raw hex values.
-- **Font:** Nunito, an open-licence rounded typeface loaded through `next/font`, stands in for the
-  proprietary one.
+- **Fonts:** Duolingo's own typefaces, so text renders exactly as on the original: Duolingo Sans
+  (a variable font, weights 100-900, upright and italic) for all UI text and Feather Bold for the
+  wordmark. They are self-hosted with `next/font/local` from `frontend/src/app/fonts`.
 - **Icons, mascot and characters:** hand-written SVG React components drawn for this project. The
   mascot is an original green owl.
 - **Picture cards:** use the platform's native emoji glyphs instead of image files.
