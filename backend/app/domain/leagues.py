@@ -9,7 +9,7 @@ from typing import Literal
 Zone = Literal["promotion", "safe", "demotion"]
 LeagueOutcome = Literal["promoted", "stayed", "demoted"]
 
-COHORT_SIZE = 30  # the learner plus 29 rivals
+COHORT_SIZE = 30  # real learners and rivals together
 
 
 @dataclass(frozen=True)

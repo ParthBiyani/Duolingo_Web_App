@@ -9,9 +9,13 @@ relative to "now", so a fresh seed or a demo reset always tells the same story:
 - Ananya Iyer (@ananyaiyer) signed up last night and has not started: no XP, no streak,
   the leaderboard still locked and a small welcome balance of gems.
 - Isha Nair (@ishanair) is a week and a half in, halfway through unit 1: 205 XP, a 4-day
-  streak, Bronze league.
+  streak, promoted to Silver league at the end of last week.
 - Kabir Malhotra (@kabirmalhotra) has practised for three months and is deep in unit 3:
-  4,120 XP, a 64-day streak, Gold league, two skills at Legendary and two streak freezes.
+  4,120 XP, a 64-day streak, two skills at Legendary and two streak freezes. He climbed to Gold
+  and was demoted back to Silver at the end of last week.
+
+Parth, Isha and Kabir are all in Silver this week, so they share one league cohort and see the
+same live table (``app.seed.leagues``). Ananya joins a league once she unlocks the leaderboard.
 """
 
 from app.seed.learner import LearnerProfile, Podium, spread_xp
@@ -51,10 +55,13 @@ ISHA = LearnerProfile(
     avatar_color="#CE82FF",
     daily_goal_xp=10,
     gems=320,
-    # A 3-day start, two days off, then a 4-day streak up to yesterday: 75 + 130 = 205 XP.
-    streaks=((25, 30, 20), (35, 30, 25, 40)),
+    # A strong 3-day start, two days off, then a gentler 4-day streak up to yesterday:
+    # 135 + 70 = 205 XP. Her tenth session, on day 3, unlocked the leaderboard.
+    streaks=((45, 50, 40), (20, 15, 15, 20)),
     gaps=(2,),
     path_lessons=7,  # the first two skills and their chest, then one lesson of the third
+    league_tier=1,  # Silver: her first league week, last week, ended in a promotion
+    promotions=(-1,),
 )
 
 # Kabir's 93 days: a 26-day streak, three days off, then 64 days in a row. The big days are
@@ -73,13 +80,12 @@ KABIR = LearnerProfile(
     path_lessons=34,  # units 1 and 2, then unit 3's first two skills, its chest and 2 lessons
     legendary=((9, 0), (60, 4)),
     streak_freezes=2,
-    league_tier=2,  # Gold: promoted out of Bronze in week 1 and out of Silver in week 4
+    # Silver: promoted out of Bronze in week 1 and out of Silver in week 4, then demoted from
+    # Gold at the end of last week.
+    league_tier=1,
     promotions=(0, 3),
-    podiums=(
-        Podium(week=0, rank=1, tier=0),
-        Podium(week=3, rank=2, tier=1),
-        Podium(week=-1, rank=3, tier=2),
-    ),
+    demotions=(-1,),
+    podiums=(Podium(week=0, rank=1, tier=0), Podium(week=3, rank=2, tier=1)),
 )
 
 LEARNERS: tuple[LearnerProfile, ...] = (PARTH, ZOE, ISHA, KABIR)

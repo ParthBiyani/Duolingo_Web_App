@@ -90,7 +90,9 @@ class LearnerProfile:
     legendary: tuple[tuple[int, int], ...] = ()
     streak_freezes: int = 0  # each was bought on the morning the current streak started
     league_tier: int = 0
-    promotions: tuple[int, ...] = ()  # the weeks (from joining) that ended in a promotion
+    # The league weeks that ended in a promotion or a demotion, counted like ``Podium.week``.
+    promotions: tuple[int, ...] = ()
+    demotions: tuple[int, ...] = ()
     podiums: tuple[Podium, ...] = ()
     timezone: str = "Asia/Kolkata"
     hearts: int = MAX_HEARTS  # every learner starts with full hearts
@@ -98,7 +100,8 @@ class LearnerProfile:
     def __post_init__(self) -> None:
         if len(self.gaps) != max(0, len(self.streaks) - 1) or any(gap < 1 for gap in self.gaps):
             raise ValueError(f"{self.username}: one gap of at least a day between streaks")
-        if len(self.promotions) != self.league_tier or not 0 <= self.league_tier < len(TIERS):
+        moves = len(self.promotions) - len(self.demotions)
+        if moves != self.league_tier or not 0 <= self.league_tier < len(TIERS):
             raise ValueError(f"{self.username}: the promotions must lead to the league tier")
         if self.streak_freezes and not self.streaks:
             raise ValueError(f"{self.username}: freezes are bought when a streak starts")
@@ -152,7 +155,7 @@ def seed_learner(session: Session, course: Course, profile: LearnerProfile, now:
     session.flush()  # assigns user.id
 
     first_week = week_start(local_date(joined_at, profile.timezone))
-    promoted_at = [_week_end(first_week + timedelta(weeks=w), profile) for w in profile.promotions]
+    league_moves = _league_moves(profile, first_week, today)
     podiums = _league_rewards(profile, first_week, today)
     freezes = [
         _Gems(_at(streaks[-1][0], MORNING, profile), -STREAK_FREEZE_PRICE, "streak_freeze")
@@ -161,7 +164,7 @@ def seed_learner(session: Session, course: Course, profile: LearnerProfile, now:
     gems = [
         *_record_activity(session, user, profile, history),
         *_record_path_progress(session, user, course, history),
-        *_record_achievements(session, user, history, streaks, promoted_at),
+        *_record_achievements(session, user, history, streaks, league_moves),
         *podiums,
         *freezes,
     ]
@@ -379,7 +382,7 @@ def _record_achievements(
     user: User,
     history: Sequence[_Session],
     streaks: Sequence[Sequence[date]],
-    promoted_at: Sequence[datetime],
+    league_moves: Sequence[tuple[datetime, int]],
 ) -> list[_Gems]:
     """Give each achievement the level its statistic has reached, as the app computes it.
 
@@ -402,7 +405,7 @@ def _record_achievements(
         "perfect_lessons": list(
             zip(times, accumulate(int(_is_perfect(s)) for s in history), strict=True)
         ),
-        "league_tier": _league_series(times, promoted_at),
+        "league_tier": _league_series(times, league_moves),
         "daily_xp": daily_xp,
         "legendary_skills": list(
             zip(
@@ -439,28 +442,56 @@ def _record_achievements(
 
 
 def _league_series(
-    times: Sequence[datetime], promoted_at: Sequence[datetime]
+    times: Sequence[datetime], league_moves: Sequence[tuple[datetime, int]]
 ) -> list[tuple[datetime, int]]:
     """The highest league reached, as tier + 1, from the session that unlocked the leaderboard."""
     if len(times) < LEADERBOARD_UNLOCK_LESSONS:
         return []  # leagues are still locked
     unlocked_at = times[LEADERBOARD_UNLOCK_LESSONS - 1]
-    tier_then = sum(1 for at in promoted_at if at <= unlocked_at)
-    later = [at for at in promoted_at if at > unlocked_at]
-    return [(unlocked_at, tier_then + 1)] + [
-        (at, tier_then + step + 1) for step, at in enumerate(later, start=1)
-    ]
+    tier = sum(step for at, step in league_moves if at <= unlocked_at)
+    series = [(unlocked_at, tier + 1)]
+    for at, step in league_moves:
+        if at <= unlocked_at:
+            continue
+        tier += step
+        if tier + 1 > series[-1][1]:  # only a new highest league counts
+            series.append((at, tier + 1))
+    return series
+
+
+def _league_moves(
+    profile: LearnerProfile, first_week: date, today: date
+) -> list[tuple[datetime, int]]:
+    """When each promotion (+1) and demotion (-1) happened, in time order.
+
+    Rejects a history whose tier would leave Bronze to Diamond along the way.
+    """
+    moves = sorted(
+        [(_week_end(_league_week(w, first_week, today), profile), 1) for w in profile.promotions]
+        + [(_week_end(_league_week(w, first_week, today), profile), -1) for w in profile.demotions]
+    )
+    tier = 0
+    for _at_time, step in moves:
+        tier += step
+        if not 0 <= tier < len(TIERS):
+            raise ValueError(f"{profile.username}: the league moves leave the league tiers")
+    return moves
 
 
 def _league_rewards(profile: LearnerProfile, first_week: date, today: date) -> list[_Gems]:
     """The prizes for the profile's podium finishes, each paid when its week ended."""
     rewards = []
     for podium in profile.podiums:
-        anchor = first_week if podium.week >= 0 else week_start(today)
-        week = anchor + timedelta(weeks=podium.week)
+        week = _league_week(podium.week, first_week, today)
         prize = reward_gems(podium.rank, podium.tier)
         rewards.append(_Gems(_week_end(week, profile), prize, "league_reward", f"league:{week}"))
     return rewards
+
+
+def _league_week(number: int, first_week: date, today: date) -> date:
+    """The Monday of league week ``number``: from joining (0 up) or back from this week (-1)."""
+    anchor = first_week if number >= 0 else week_start(today)
+    return anchor + timedelta(weeks=number)
 
 
 def _record_gems(

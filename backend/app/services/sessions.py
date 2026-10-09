@@ -530,9 +530,10 @@ def complete_session(db: Session, now: datetime, user: User, session_id: str) ->
     if kind == "lesson" and session.mistakes == 0:
         stats.perfect_lessons += 1
 
+    # The league first: finalising last week can change the tier that Champion measures.
+    league_tier, rank = leagues.learner_rank(db, user, now)
     unlocks = achievements.evaluate(db, user, now)
-    cohort, rank = leagues.learner_rank(db, user, now)
-    tier = get_tier(cohort.tier)
+    tier = get_tier(league_tier)
     result = CompletionResult(
         session_id=session.id,
         kind=kind,
