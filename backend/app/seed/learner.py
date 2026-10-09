@@ -304,7 +304,8 @@ def _record_achievements(
     """Give each achievement the level its statistic has reached, as the app computes it.
 
     Each level's gems are dated when the statistic first reached that level's threshold.
-    Wildfire follows the current streak, so it stands at 12 of 14 days towards level 3.
+    Wildfire follows the best streak, as the app does: the old 21-day streak earned level 3,
+    and it stands at 21 of 30 days towards level 4.
     """
     first_session: dict[date, datetime] = {}
     xp_today: dict[date, int] = {}
@@ -314,9 +315,11 @@ def _record_achievements(
         xp_today[s.day] = xp_today.get(s.day, 0) + s.amount
         daily_xp.append((s.at, xp_today[s.day]))
     times = [s.at for s in history]
-    current_streak = days[-len(CURRENT_STREAK_XP) :]
+    streaks = (days[: len(PAST_STREAK_XP)], days[-len(CURRENT_STREAK_XP) :])
     series: dict[str, list[tuple[datetime, int]]] = {
-        "streak": [(first_session[day], n) for n, day in enumerate(current_streak, start=1)],
+        "streak": [
+            (first_session[day], n) for streak in streaks for n, day in enumerate(streak, start=1)
+        ],
         "xp_total": list(zip(times, accumulate(s.amount for s in history), strict=True)),
         "perfect_lessons": list(
             zip(times, accumulate(int(_is_perfect(s)) for s in history), strict=True)
