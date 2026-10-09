@@ -1,6 +1,6 @@
 import { expect, test } from "./support/fixtures";
 import { startActiveLesson } from "./support/lesson";
-import { expectComingSoon } from "./support/ui";
+import { expectComingSoon, expectStat, onLearnPage } from "./support/ui";
 
 test.describe("profile", () => {
   test("shows the learner's statistics and achievements", async ({
@@ -111,8 +111,10 @@ test.describe("settings", () => {
 
     await page.getByLabel("Daily goal").selectOption("30");
     await expect(page.getByText("Changes saved")).toBeVisible();
-    const rail = page.getByRole("complementary", { name: "Progress and offers" });
-    await expect(rail.getByRole("progressbar", { name: "Earn 30 XP" })).toBeVisible();
+    await onLearnPage(page, async (learn) => {
+      const rail = learn.getByRole("complementary", { name: "Progress and offers" });
+      await expect(rail.getByRole("progressbar", { name: "Earn 30 XP" })).toBeVisible();
+    });
 
     await page.getByRole("link", { name: "Quests", exact: true }).click();
     await expect(page).toHaveURL(/\/quests$/);
@@ -175,7 +177,7 @@ test.describe("settings", () => {
     const demo = page.getByRole("region", { name: "Demo tools" });
     await expect(demo.getByText("+2 days", { exact: true })).toBeVisible();
     await expect(page.getByLabel("Daily goal")).toHaveValue("50");
-    await expect(page.getByRole("button", { name: "Streak: 0 days" })).toBeVisible();
+    await expectStat(page, "Streak: 0 days");
 
     await demo.getByRole("button", { name: "Reset demo data" }).click();
     const dialog = page.getByRole("dialog", { name: "Reset demo data?" });
@@ -184,7 +186,7 @@ test.describe("settings", () => {
     await expect(page.getByText("Demo data reset")).toBeVisible();
     await expect(demo.getByText("Real time", { exact: true })).toBeVisible();
     await expect(page.getByLabel("Daily goal")).toHaveValue("20");
-    await expect(page.getByRole("button", { name: "Streak: 12 days" })).toBeVisible();
+    await expectStat(page, "Streak: 12 days");
     expect((await api.me()).settings.daily_goal_xp).toBe(20);
   });
 });

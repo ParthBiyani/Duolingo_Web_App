@@ -2,6 +2,7 @@ import type { Locator, Page } from "@playwright/test";
 
 import { expect, test } from "./support/fixtures";
 import { startActiveLesson } from "./support/lesson";
+import { expectStat } from "./support/ui";
 
 /** The panel's "Clock offset" value ("Real time", "+1 day", ...). */
 function clockOffset(demo: Locator): Locator {
@@ -23,12 +24,12 @@ test.describe("demo tools", () => {
     await api.completeLesson(node.next_lesson_id ?? 0);
 
     const demo = await openDemoTools(page);
-    await expect(page.getByRole("button", { name: "Streak: 13 days" })).toBeVisible();
+    await expectStat(page, "Streak: 13 days");
     // ... and tomorrow it still stands, waiting for the day's lesson.
     await demo.getByRole("button", { name: "+1 day" }).click();
     await expect(page.getByText("Clock moved: +1 day")).toBeVisible();
     await expect(clockOffset(demo)).toHaveText("+1 day");
-    await expect(page.getByRole("button", { name: "Streak: 13 days" })).toBeVisible();
+    await expectStat(page, "Streak: 13 days");
     expect((await api.me()).stats.streak).toMatchObject({ current: 13, extended_today: false });
 
     const lesson = await startActiveLesson(page);
