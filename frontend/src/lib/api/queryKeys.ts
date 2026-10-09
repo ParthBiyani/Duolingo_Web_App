@@ -1,5 +1,6 @@
 /** One cache key per endpoint, so mutations can patch or invalidate precisely. */
 export const queryKeys = {
+  sampleLearners: ["auth", "learners"] as const,
   me: ["me"] as const,
   path: ["path"] as const,
   quests: ["quests"] as const,

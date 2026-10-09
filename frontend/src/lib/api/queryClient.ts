@@ -1,6 +1,6 @@
 import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
 
-import { ApiError } from "./client";
+import { ApiError, isApiError } from "./client";
 
 export const STALE_TIME_MS = 30_000;
 export const MAX_RETRIES = 2;
@@ -25,9 +25,19 @@ export interface QueryClientHandlers {
    * mutation fails unexpectedly. `retry` is set for queries.
    */
   onUnexpectedError?: (error: unknown, key: string, retry?: () => void) => void;
+  /** Called when any request answers 401 `not_authenticated`: the session is gone. */
+  onUnauthenticated?: () => void;
 }
 
-export function createQueryClient({ onUnexpectedError }: QueryClientHandlers = {}): QueryClient {
+/** The API's answer to a request without a valid session cookie. */
+export function isUnauthenticated(error: unknown): boolean {
+  return isApiError(error, "not_authenticated");
+}
+
+export function createQueryClient({
+  onUnexpectedError,
+  onUnauthenticated,
+}: QueryClientHandlers = {}): QueryClient {
   const client: QueryClient = new QueryClient({
     defaultOptions: {
       queries: { staleTime: STALE_TIME_MS, retry: shouldRetry },
@@ -35,6 +45,10 @@ export function createQueryClient({ onUnexpectedError }: QueryClientHandlers = {
     },
     queryCache: new QueryCache({
       onError: (error, query) => {
+        if (isUnauthenticated(error)) {
+          onUnauthenticated?.();
+          return;
+        }
         // First loads render their own skeleton or error state; only refreshes of data
         // already on screen are reported, so a down API does not stack up toasts.
         if (query.state.data === undefined || query.meta?.silent === true) return;
@@ -46,6 +60,10 @@ export function createQueryClient({ onUnexpectedError }: QueryClientHandlers = {
     }),
     mutationCache: new MutationCache({
       onError: (error, _variables, _onMutateResult, mutation) => {
+        if (isUnauthenticated(error)) {
+          onUnauthenticated?.();
+          return;
+        }
         if (mutation.meta?.silent === true || !isUnexpectedError(error)) return;
         onUnexpectedError?.(error, `mutation:${mutation.mutationId}`);
       },

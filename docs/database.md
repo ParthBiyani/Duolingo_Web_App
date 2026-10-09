@@ -42,7 +42,7 @@ erDiagram
 | | `exercises` | Ordered exercises with a type `CHECK` over the 8 supported types, the prompt, source text, TTS text and the "new word" flag. |
 | | `exercise_options` | Choices (`is_correct`), word-bank tiles (`answer_position`, NULL for distractors) and match pairs (`pair_key`). |
 | | `exercise_answers` | Accepted typed answers; the canonical answer is flagged. |
-| Learners | `users` | The default learner plus seeded league rivals (`is_bot`, `bot_pace_xp`). Stores the time zone. |
+| Learners | `users` | The four sample learners plus seeded league rivals (`is_bot`, `bot_pace_xp`). Stores the time zone. |
 | | `user_settings` | Sound, animations, motivational messages, listening exercises, theme, daily goal (`CHECK IN (1,10,20,30,50)`). |
 | | `user_stats` | Current state: hearts (0–10) with the regeneration anchor, streak, freezes (0–2), league tier, and cached `xp_total` and `gems`. |
 | | `skill_progress` | Per learner and skill: lessons completed and crown level (0–2), with completed and legendary timestamps. |

@@ -66,7 +66,8 @@ longest streak of first-try correct answers in the session.
 ## Leagues
 
 - **10 tiers:** Bronze, Silver, Gold, Sapphire, Ruby, Emerald, Amethyst, Pearl, Obsidian and Diamond.
-- **Cohorts:** 30 learners, the default learner and 29 seeded rivals.
+- **Cohorts:** 30 learners: one sample learner and 29 seeded rivals. Each sample learner has a cohort of
+  their own, with the same rivals.
 - **The week** runs from Monday 00:00 to Monday 00:00 in the learner's time zone.
 - **Ranking:** weekly XP, highest first. A tie goes to whoever reached that total first.
 - **Promotion slots:** 20, 15, 10, 7, 7, 7, 7, 7, 5 and 0 (Bronze to Diamond).

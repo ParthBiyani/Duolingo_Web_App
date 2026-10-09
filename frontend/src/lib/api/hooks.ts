@@ -22,6 +22,7 @@ import type {
   CompletionResult,
   DemoClock,
   LeaderboardResponse,
+  LoginRequest,
   MeResponse,
   PathResponse,
   ProfileResponse,
@@ -31,6 +32,7 @@ import type {
   RefillContext,
   RefillHeartsRequest,
   RefillHeartsResponse,
+  SampleLearner,
   SessionResponse,
   Settings,
   SettingsUpdate,
@@ -68,6 +70,45 @@ function invalidate(client: QueryClient, keys: ReadonlyArray<readonly unknown[]>
 }
 
 const sessionPath = (sessionId: string) => `/sessions/${encodeURIComponent(sessionId)}`;
+
+// Auth ---------------------------------------------------------------------
+
+/** The sample learners for the login page; works without a session. */
+export function useSampleLearners(options?: QueryOptions<SampleLearner[]>) {
+  return useQuery({
+    queryKey: queryKeys.sampleLearners,
+    queryFn: ({ signal }) => api.get<SampleLearner[]>("/auth/learners", { signal }),
+    ...options,
+  });
+}
+
+/**
+ * POST /auth/login: the response sets the session cookie. Learner data cached so far belonged
+ * to nobody (or to the previous learner), so it is dropped on success; the login page keeps
+ * its list of learners on screen while the app navigates away.
+ */
+export function useLogin() {
+  return useMutation({
+    mutationFn: (body: LoginRequest) => api.post<SampleLearner>("/auth/login", body),
+    meta: { silent: true }, // the login page reports failures itself
+    onSuccess: (_learner, _body, _onMutateResult, { client }) =>
+      client.removeQueries({
+        predicate: (query) => query.queryKey[0] !== queryKeys.sampleLearners[0],
+      }),
+  });
+}
+
+/**
+ * POST /auth/logout: clears the session cookie, then the learner's cached data. Failures are
+ * left to the caller (meta.silent), which reports them itself.
+ */
+export function useLogout() {
+  return useMutation({
+    mutationFn: () => api.post<void>("/auth/logout"),
+    meta: { silent: true },
+    onSuccess: (_result, _variables, _onMutateResult, { client }) => client.removeQueries(),
+  });
+}
 
 // Queries ------------------------------------------------------------------
 
@@ -302,7 +343,7 @@ export function useAdvanceClock() {
   });
 }
 
-/** POST /demo/reset: restores the seeded learner and clock. */
+/** POST /demo/reset: restores the sample learners and the clock; the session is kept. */
 export function useResetDemo() {
   return useMutation({
     mutationFn: () => api.post<void>("/demo/reset"),
