@@ -5,6 +5,11 @@ export const shopStrings = {
   superTitle: "Try Super for free",
   superBody: "No ads, unlimited hearts and personalised practice to learn faster.",
   superCta: "Try 2 weeks free",
+  familyTitle: "Start a family plan!",
+  familyBodyBefore: "Save on ",
+  familyBodyBrand: "Super Duolingo",
+  familyBodyAfter: " when you learn with friends",
+  familyCta: "Learn more",
 
   hearts: "Hearts",
   powerUps: "Power-Ups",
