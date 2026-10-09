@@ -39,7 +39,10 @@ interface MatchTileProps {
   onPress: () => void;
 }
 
-/** One 255x51 tile; matched tiles flash green, then grey out and stop responding. */
+/**
+ * One 255x51 tile; matched tiles flash green, then grey out and stop responding. Phones hide the
+ * key badge, so the text gets the full width and wraps to a second line instead of truncating.
+ */
 function MatchTile({ tile, index, state, locked, onPress }: MatchTileProps) {
   const matched = state === "matched";
   return (
@@ -51,7 +54,7 @@ function MatchTile({ tile, index, state, locked, onPress }: MatchTileProps) {
       disabled={matched}
       onClick={locked || matched ? undefined : onPress}
       className={cx(
-        "relative flex h-[51px] w-full items-center justify-center rounded-tile border-2 px-12 text-base leading-tight font-medium transition-[background-color,border-color,color,translate,box-shadow] duration-100",
+        "relative flex h-[51px] w-full items-center justify-center rounded-tile border-2 px-3 text-base leading-tight font-medium transition-[background-color,border-color,color,translate,box-shadow] duration-100 md:px-12",
         TILE_STYLE[state],
         locked && state === "idle" && "pointer-events-none",
         state === "wrong" && "animate-shake",
@@ -61,7 +64,7 @@ function MatchTile({ tile, index, state, locked, onPress }: MatchTileProps) {
       <span className="absolute top-1/2 left-[9px] -translate-y-1/2">
         <NumberBadge index={index} selected={state === "selected"} />
       </span>
-      <span className="truncate">{tile.text}</span>
+      <span className="line-clamp-2 text-center break-words">{tile.text}</span>
     </button>
   );
 }
