@@ -14,9 +14,15 @@ import { leaderboardStrings } from "./strings";
 import { ZoneDivider } from "./ZoneDivider";
 import { withZoneDividers } from "./zones";
 
+/**
+ * How often the open table refreshes. Learners in the same league share one table, so this
+ * brings in the XP other learners earn and the rivals' progress through the day.
+ */
+const LIVE_REFRESH_MS = 30_000;
+
 /** Leaderboards page: this week's league table, or the locked state for new learners. */
 export function LeaderboardScreen() {
-  const board = useLeaderboard();
+  const board = useLeaderboard({ refetchInterval: LIVE_REFRESH_MS });
 
   if (board.isPending) return <LeaderboardSkeleton />;
 

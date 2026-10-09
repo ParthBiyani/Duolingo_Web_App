@@ -17,17 +17,23 @@ function subscribe(onChange: () => void) {
   return () => window.removeEventListener("storage", onChange);
 }
 
-function readSeenWeek(): string | null {
+/** One key per learner: learners in the same league finish the same week on one device. */
+function seenKey(board: LeaderboardResponse): string {
+  const me = board.rows.find((row) => row.is_me);
+  return me ? `${SEEN_KEY}:${me.user_id}` : SEEN_KEY;
+}
+
+function readSeenWeek(key: string): string | null {
   try {
-    return window.localStorage.getItem(SEEN_KEY);
+    return window.localStorage.getItem(key);
   } catch {
     return null;
   }
 }
 
-function markSeen(week: string) {
+function markSeen(key: string, week: string) {
   try {
-    window.localStorage.setItem(SEEN_KEY, week);
+    window.localStorage.setItem(key, week);
   } catch {
     // Storage blocked: the modal may show again next visit, which is harmless.
   }
@@ -38,9 +44,16 @@ function markSeen(week: string) {
  * learner dismissed it is remembered in localStorage.
  */
 export function LeagueResultModal({ board }: { board: LeaderboardResponse }) {
-  const seenWeek = useSyncExternalStore(subscribe, readSeenWeek, () => UNKNOWN);
+  const key = seenKey(board);
+  const seenWeek = useSyncExternalStore(
+    subscribe,
+    () => readSeenWeek(key),
+    () => UNKNOWN,
+  );
   const [dismissed, setDismissed] = useState(false);
-  const result = board.last_result;
+  // The API reports a result once, so the live refresh of the table clears it; keep the first.
+  const [firstResult] = useState(board.last_result);
+  const result = board.last_result ?? firstResult;
 
   if (!result || dismissed || seenWeek === UNKNOWN || seenWeek === board.week_start) return null;
 
@@ -49,7 +62,7 @@ export function LeagueResultModal({ board }: { board: LeaderboardResponse }) {
   const title = leaderboardStrings.result[result.outcome](leagueName);
 
   const close = () => {
-    markSeen(board.week_start);
+    markSeen(key, board.week_start);
     setDismissed(true);
   };
 
