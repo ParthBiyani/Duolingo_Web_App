@@ -23,6 +23,14 @@ class Pairs(ApiModel):
     right: list[Tile]
 
 
+class SourceToken(ApiModel):
+    """A slice of a Spanish source sentence with the word's meaning (hover hint), if known."""
+
+    text: str
+    hint: str | None
+    is_new: bool
+
+
 class Exercise(ApiModel):
     """An exercise as sent to the browser. It never contains the answer."""
 
@@ -31,6 +39,8 @@ class Exercise(ApiModel):
     prompt: str
     source_text: str | None
     source_lang: Literal["es", "en"] | None
+    # Spanish source_text split into hinted words; joined, the texts give source_text back.
+    source_tokens: list[SourceToken]
     tts_text: str | None
     is_new_word: bool
     options: list[Option]
