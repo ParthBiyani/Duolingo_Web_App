@@ -1,31 +1,6 @@
 import type { ReactNode } from "react";
 
 import { Mascot, type MascotPose } from "@/components/mascot";
-import { Skeleton } from "@/components/ui";
-
-import { lessonStrings } from "./strings";
-
-/** Placeholder shaped like a choice exercise while the session starts. */
-export function LessonSkeleton() {
-  return (
-    <div
-      role="status"
-      aria-label={lessonStrings.loading}
-      className="mx-auto flex w-full max-w-[600px] flex-1 flex-col justify-center gap-6 px-4 py-6 md:gap-8 md:px-0"
-    >
-      <Skeleton className="h-9 w-3/4 rounded-tile md:h-10" />
-      <div className="flex items-end gap-3">
-        <Skeleton className="h-[120px] w-[88px] rounded-panel md:w-[136px]" />
-        <Skeleton className="mb-10 h-14 w-56 rounded-panel" />
-      </div>
-      <div className="flex flex-col gap-3">
-        <Skeleton className="h-[60px] w-full rounded-tile" />
-        <Skeleton className="h-[60px] w-full rounded-tile" />
-        <Skeleton className="h-[60px] w-full rounded-tile" />
-      </div>
-    </div>
-  );
-}
 
 interface StatusMessageProps {
   pose: MascotPose;

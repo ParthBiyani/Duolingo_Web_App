@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type ReactNode } from "react";
 
+import { DuoLoading } from "@/components/mascot";
 import { Button, toast } from "@/components/ui";
 import {
   isApiError,
@@ -29,7 +30,7 @@ import { Interstitial } from "./Interstitial";
 import { isOwnEnterTarget, isTypingTarget, useWindowKeyDown } from "./keyboard";
 import { LessonFooter, type FooterMode } from "./LessonFooter";
 import { LessonHeader } from "./LessonHeader";
-import { LessonSkeleton, StatusMessage } from "./LessonStatus";
+import { StatusMessage } from "./LessonStatus";
 import { OutOfHeartsModal } from "./OutOfHeartsModal";
 import { isCorrectOutcome } from "./queue";
 import { QuitModal } from "./QuitModal";
@@ -324,7 +325,11 @@ export function LessonPlayer({ kind, lessonId, skillId }: LessonPlayerProps) {
           </div>
         </StatusMessage>
       ) : (
-        <LessonSkeleton />
+        <DuoLoading
+          caption={lessonStrings.loadingCaption}
+          facts={lessonStrings.loadingFacts}
+          label={lessonStrings.loading}
+        />
       );
   } else if (state.phase === "interstitial" && state.interstitial !== null) {
     content = <Interstitial interstitial={state.interstitial} />;
@@ -391,32 +396,39 @@ export function LessonPlayer({ kind, lessonId, skillId }: LessonPlayerProps) {
     if (state.phase === "feedback") footerMode = "feedback";
   }
 
+  // While the session starts the owl has the whole screen to itself, as on the original.
+  const splash = state.phase === "loading" && state.error === null;
+
   return (
     <div className="flex h-dvh flex-col bg-surface">
-      <LessonHeader
-        kind={state.kind}
-        progress={lessonProgress(state)}
-        combo={comboLabel(state)}
-        hearts={state.hearts}
-        heartLosses={state.heartLosses}
-        mistakesLeft={state.mistakesLeft}
-        timeLeftMs={state.timeLeftMs}
-        timerTotalMs={(state.session?.rules.timer_seconds ?? 30) * 1000}
-        ready={state.session !== null}
-        onQuit={() => dispatch({ type: "QUIT_OPEN" })}
-      />
+      {!splash && (
+        <LessonHeader
+          kind={state.kind}
+          progress={lessonProgress(state)}
+          combo={comboLabel(state)}
+          hearts={state.hearts}
+          heartLosses={state.heartLosses}
+          mistakesLeft={state.mistakesLeft}
+          timeLeftMs={state.timeLeftMs}
+          timerTotalMs={(state.session?.rules.timer_seconds ?? 30) * 1000}
+          ready={state.session !== null}
+          onQuit={() => dispatch({ type: "QUIT_OPEN" })}
+        />
+      )}
       <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">{content}</main>
-      <LessonFooter
-        mode={footerMode}
-        checking={state.phase === "checking"}
-        canCheck={canCheck(state)}
-        canSkip={canSkip(state)}
-        feedback={state.feedback}
-        continueLabel={continueLabel}
-        onCheck={check}
-        onSkip={skip}
-        onContinue={onFooterContinue}
-      />
+      {!splash && (
+        <LessonFooter
+          mode={footerMode}
+          checking={state.phase === "checking"}
+          canCheck={canCheck(state)}
+          canSkip={canSkip(state)}
+          feedback={state.feedback}
+          continueLabel={continueLabel}
+          onCheck={check}
+          onSkip={skip}
+          onContinue={onFooterContinue}
+        />
+      )}
       <QuitModal
         open={state.modal === "quit"}
         onKeepLearning={() => dispatch({ type: "QUIT_CLOSE" })}
