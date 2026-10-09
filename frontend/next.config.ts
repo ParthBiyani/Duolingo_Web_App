@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
-const API_ORIGIN = process.env.API_ORIGIN ?? "http://127.0.0.1:8000";
+// Tolerates spaces, quotes and trailing slashes pasted into the setting: "https://api.example.com/"
+// would otherwise rewrite to "//api/..." and the API would answer 404.
+const API_ORIGIN = (process.env.API_ORIGIN ?? "http://127.0.0.1:8000")
+  .trim()
+  .replace(/^["']|["']$/g, "")
+  .replace(/\/+$/, "");
 
 if (process.env.VERCEL_ENV === "production" && !process.env.API_ORIGIN) {
   throw new Error("API_ORIGIN must be set for production builds");
