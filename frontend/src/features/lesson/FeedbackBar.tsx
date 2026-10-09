@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, type ReactNode } from "react";
 
-import { Check, Close } from "@/components/icons";
+import { Close } from "@/components/icons";
 import { Button, toast } from "@/components/ui";
 
 import { cx } from "./cx";
@@ -10,13 +11,51 @@ import { isCorrectOutcome, pickVariant } from "./queue";
 import type { Feedback } from "./reducer";
 import { lessonStrings } from "./strings";
 
-function FeedbackLink({ children }: { children: ReactNode }) {
+/** Footer buttons use a 17px label (the shared buttons use 15px). */
+export const FOOTER_LABEL = "text-base leading-[1.2]";
+
+/** Double chevron pointing up (harder) or down (easier), drawn for the rating links. */
+function ChevronsGlyph({ up }: { up: boolean }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d={
+          up
+            ? "M3.5 8 8 3.5 12.5 8M3.5 12.5 8 8l4.5 4.5"
+            : "M3.5 3.5 8 8l4.5-4.5M3.5 8 8 12.5 12.5 8"
+        }
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** A small flag, drawn for the REPORT link. */
+function FlagGlyph() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d="M3.5 14.5V2.5M3.5 2.5h8.2l-1.9 3.2 1.9 3.2H3.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function FeedbackLink({ icon, children }: { icon: ReactNode; children: ReactNode }) {
   return (
     <button
       type="button"
       onClick={() => toast(lessonStrings.feedbackThanks, { id: "lesson-feedback-thanks" })}
-      className="cursor-pointer rounded text-caps uppercase opacity-90 transition-opacity hover:opacity-100"
+      className="flex cursor-pointer items-center gap-2 rounded text-button uppercase opacity-90 transition-opacity hover:opacity-100"
     >
+      {icon}
       {children}
     </button>
   );
@@ -55,12 +94,12 @@ export function FeedbackBar({
         <div role="status" className="flex min-w-0 items-center gap-4">
           <span
             aria-hidden="true"
-            className="hidden size-20 shrink-0 place-items-center rounded-full bg-surface md:grid"
+            className="hidden size-20 shrink-0 place-items-center rounded-full bg-surface md:grid md:short:size-16"
           >
             {correct ? (
-              <Check size={44} />
+              <Image src="/duo/lesson/check.svg" alt="" width={41} height={31} />
             ) : (
-              <Close size={44} className="text-feedback-wrong-text" />
+              <Close size={40} className="text-feedback-wrong-text" />
             )}
           </span>
           <div className="min-w-0">
@@ -80,10 +119,16 @@ export function FeedbackBar({
             {!correct && result.solution_display ? (
               <p className="mt-1 text-base">{result.solution_display}</p>
             ) : null}
-            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-              {correct ? <FeedbackLink>{lessonStrings.tooEasy}</FeedbackLink> : null}
-              {correct ? <FeedbackLink>{lessonStrings.tooHard}</FeedbackLink> : null}
-              <FeedbackLink>{lessonStrings.report}</FeedbackLink>
+            <div className="mt-2.5 flex flex-wrap gap-x-6 gap-y-1">
+              {correct ? (
+                <FeedbackLink icon={<ChevronsGlyph up />}>{lessonStrings.tooEasy}</FeedbackLink>
+              ) : null}
+              {correct ? (
+                <FeedbackLink icon={<ChevronsGlyph up={false} />}>
+                  {lessonStrings.tooHard}
+                </FeedbackLink>
+              ) : null}
+              <FeedbackLink icon={<FlagGlyph />}>{lessonStrings.report}</FeedbackLink>
             </div>
           </div>
         </div>
@@ -91,7 +136,7 @@ export function FeedbackBar({
           ref={continueRef}
           variant={correct ? "primary" : "danger"}
           size="lg"
-          className="w-full md:w-[150px]"
+          className={cx(FOOTER_LABEL, "w-full md:w-[150px]")}
           onClick={onContinue}
         >
           {lessonStrings.continue}

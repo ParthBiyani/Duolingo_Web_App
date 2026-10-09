@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui";
 
-import { FeedbackBar } from "./FeedbackBar";
+import { cx } from "./cx";
+import { FOOTER_LABEL, FeedbackBar } from "./FeedbackBar";
 import type { Feedback } from "./reducer";
 import { lessonStrings } from "./strings";
 
@@ -48,13 +49,13 @@ export function LessonFooter({
 
   return (
     <footer className="shrink-0 border-t-2 border-border">
-      <div className="mx-auto flex w-full max-w-[1000px] items-center justify-between gap-4 px-4 py-4 md:h-[140px] md:px-10 md:py-0 short:py-3 md:short:h-[100px]">
+      <div className="mx-auto flex w-full max-w-[1000px] items-center justify-between gap-4 px-4 py-4 md:h-[138px] md:px-10 md:py-0 short:py-3 md:short:h-[98px]">
         {mode === "answer" ? (
           <>
             <Button
               variant="outline"
               size="lg"
-              className="hidden text-disabled md:inline-flex md:w-[150px]"
+              className={cx(FOOTER_LABEL, "hidden text-disabled md:inline-flex md:w-[150px]")}
               disabled={!canSkip}
               onClick={onSkip}
             >
@@ -63,7 +64,7 @@ export function LessonFooter({
             <Button
               variant="primary"
               size="lg"
-              className="w-full md:w-[150px]"
+              className={cx(FOOTER_LABEL, "w-full md:w-[150px]")}
               disabled={!canCheck && !checking}
               loading={checking}
               onClick={onCheck}
@@ -75,7 +76,7 @@ export function LessonFooter({
           <Button
             variant="primary"
             size="lg"
-            className="w-full md:ml-auto md:w-[150px]"
+            className={cx(FOOTER_LABEL, "w-full md:ml-auto md:w-[150px]")}
             loading={mode === "busy"}
             onClick={onContinue}
           >

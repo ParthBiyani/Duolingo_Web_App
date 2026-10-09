@@ -22,6 +22,8 @@ export const lessonStrings = {
 
   // Feedback bar
   praise: [
+    "Nice!",
+    "Great job!",
     "Nicely done!",
     "You nailed it!",
     "Spot on!",

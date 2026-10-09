@@ -2,11 +2,11 @@
 
 import { cx } from "../cx";
 import { useNumberKeys } from "../keyboard";
-import { NumberBadge } from "./parts";
+import { CHOICE_TONE_CLASSES, NumberBadge, choiceTone } from "./parts";
 import type { ExerciseProps } from "./types";
 
-/** "Which one of these is ...?": picture cards (195x254 on desktop) with a label each. */
-export function ImageChoice({ exercise, draft, onDraft, locked }: ExerciseProps) {
+/** "Which one of these is ...?": picture cards (195x253 on desktop) with a label each. */
+export function ImageChoice({ exercise, draft, onDraft, locked, result }: ExerciseProps) {
   const selected = draft !== null && "option_id" in draft ? draft.option_id : null;
   const { options } = exercise;
 
@@ -22,24 +22,22 @@ export function ImageChoice({ exercise, draft, onDraft, locked }: ExerciseProps)
       )}
     >
       {options.map((option, index) => {
-        const isSelected = selected === option.id;
+        const tone = choiceTone(selected === option.id, result);
         return (
           <button
             key={option.id}
             type="button"
             data-lesson-option=""
-            aria-pressed={isSelected}
+            aria-pressed={tone !== "idle"}
             aria-disabled={locked}
             onClick={locked ? undefined : () => onDraft({ option_id: option.id })}
             className={cx(
-              "flex min-h-[170px] flex-col rounded-tile border-2 p-3 transition-[background-color,border-color,translate,box-shadow] duration-100 md:h-[254px] md:short:h-[196px]",
-              isSelected
-                ? "border-selected-border bg-selected-bg text-selected-text shadow-edge-selected"
-                : "border-border bg-surface text-body shadow-edge-border",
+              "flex min-h-[170px] flex-col rounded-tile border-2 p-3 transition-[background-color,border-color,color,translate,box-shadow] duration-100 md:h-[253px] md:shorter:h-[220px]",
+              CHOICE_TONE_CLASSES[tone],
               locked
                 ? "cursor-default"
                 : "cursor-pointer active:translate-y-[2px] active:shadow-none",
-              !locked && !isSelected && "hover:bg-surface-hover",
+              !locked && tone === "idle" && "hover:bg-surface-hover",
             )}
           >
             <span
@@ -49,8 +47,10 @@ export function ImageChoice({ exercise, draft, onDraft, locked }: ExerciseProps)
               {option.image}
             </span>
             <span className="flex items-center justify-center gap-2 md:justify-between">
-              <span className="text-base leading-6 font-medium md:text-lead">{option.text}</span>
-              <NumberBadge index={index} selected={isSelected} />
+              <span className={cx("text-base font-medium", tone === "idle" && "text-title")}>
+                {option.text}
+              </span>
+              <NumberBadge index={index} tone={tone} />
             </span>
           </button>
         );

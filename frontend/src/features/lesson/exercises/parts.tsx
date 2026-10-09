@@ -4,12 +4,14 @@ import { useEffect, useRef, type ReactNode } from "react";
 
 import { Speaker } from "@/components/icons";
 import { Character } from "@/components/mascot";
-import type { Exercise } from "@/lib/api";
+import type { AnswerResult, Exercise } from "@/lib/api";
 import { cancelSpeech, speak } from "@/lib/tts";
 
 import { cx } from "../cx";
 import { digitLabel, isTypingTarget, useWindowKeyDown } from "../keyboard";
+import { isCorrectOutcome } from "../queue";
 import { lessonStrings } from "../strings";
+import { HintedTokens, sourceTokens } from "./WordHints";
 
 /** Spanish text to read aloud for an exercise (dedicated TTS text first). */
 export function audioText(exercise: Exercise): string | null {
@@ -33,14 +35,43 @@ export function useAutoplay(text: string | null, enabled: boolean) {
   }, [text, enabled]);
 }
 
+/**
+ * How a choice looks: idle, picked (blue), or, once graded, the pick turned green (correct) or
+ * red (wrong).
+ */
+export type ChoiceTone = "idle" | "selected" | "correct" | "wrong";
+
+export function choiceTone(selected: boolean, result: AnswerResult | null): ChoiceTone {
+  if (!selected) return "idle";
+  if (result === null || result.outcome === "skipped") return "selected";
+  return isCorrectOutcome(result) ? "correct" : "wrong";
+}
+
+/** Border, face, text and bottom edge of a choice card in each tone. */
+export const CHOICE_TONE_CLASSES: Record<ChoiceTone, string> = {
+  idle: "border-border bg-surface text-body shadow-edge-border",
+  selected: "border-selected-border bg-selected-bg text-selected-text shadow-edge-selected",
+  correct:
+    "border-feedback-correct-text bg-feedback-correct-bg text-feedback-correct-text shadow-edge-correct",
+  wrong:
+    "border-feedback-wrong-text bg-feedback-wrong-bg text-feedback-wrong-text shadow-edge-wrong",
+};
+
+const BADGE_TONE_CLASSES: Record<ChoiceTone, string> = {
+  idle: "border-border text-disabled",
+  selected: "border-selected-border text-selected-text",
+  correct: "border-feedback-correct-text text-feedback-correct-text",
+  wrong: "border-feedback-wrong-text text-feedback-wrong-text",
+};
+
 /** Keyboard hint (1-9, 0) shown on choices; hidden on touch-sized screens. */
-export function NumberBadge({ index, selected = false }: { index: number; selected?: boolean }) {
+export function NumberBadge({ index, tone = "idle" }: { index: number; tone?: ChoiceTone }) {
   return (
     <span
       aria-hidden="true"
       className={cx(
         "hidden size-[30px] shrink-0 place-items-center rounded-lg border-2 text-button leading-none md:grid",
-        selected ? "border-selected-border text-selected-text" : "border-border text-disabled",
+        BADGE_TONE_CLASSES[tone],
       )}
     >
       {digitLabel(index)}
@@ -85,13 +116,16 @@ export function SpeechBubble({ variant, children }: { variant: 1 | 2 | 3; childr
   );
 }
 
-/** The bubble line for an exercise's source sentence, with audio for Spanish. */
+/** The bubble line for an exercise's source sentence, with audio and word hints for Spanish. */
 export function SourceLine({ exercise }: { exercise: Exercise }) {
   const audio = exercise.source_lang === "es" ? audioText(exercise) : null;
+  const tokens = sourceTokens(exercise);
   return (
     <span className="flex items-center gap-3">
       {audio ? <SpeakerButton text={audio} /> : null}
-      <span lang={exercise.source_lang ?? undefined}>{exercise.source_text}</span>
+      <span lang={exercise.source_lang ?? undefined}>
+        {tokens ? <HintedTokens tokens={tokens} /> : exercise.source_text}
+      </span>
     </span>
   );
 }

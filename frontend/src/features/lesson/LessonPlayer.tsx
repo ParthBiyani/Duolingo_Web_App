@@ -20,6 +20,7 @@ import {
 import { playComplete, playCorrect, playHeartLost, playIncorrect, playMatch } from "@/lib/sound";
 
 import { Celebration } from "./celebrate/Celebration";
+import { cx } from "./cx";
 import { isRetryable, toLessonError } from "./errors";
 import { ExerciseBadge } from "./ExerciseBadge";
 import { exerciseRegistry, type ExerciseProps } from "./exercises/registry";
@@ -369,9 +370,16 @@ export function LessonPlayer({ kind, lessonId, skillId }: LessonPlayerProps) {
       <div
         key={item.key}
         data-exercise-id={exercise.id}
-        className="mx-auto flex w-full max-w-[600px] flex-1 flex-col justify-center gap-6 px-4 py-6 md:gap-8 md:px-0 short:gap-3 short:py-3 md:short:gap-4"
+        className={cx(
+          // Top-aligned under the header, like the original (not centred in the window).
+          "mx-auto flex w-full max-w-[600px] flex-col px-4 pt-4 pb-6 md:px-0 md:pt-3.5 short:pb-3",
+          exercise.type === "image_choice"
+            ? // Picture cards sit 69px under the title, closing up on short windows.
+              "gap-6 md:gap-[clamp(16px,calc(100dvh-570px),69px)]"
+            : "gap-6 md:gap-8 short:gap-3 md:short:gap-4",
+        )}
       >
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 md:gap-[21px] short:gap-2 md:short:gap-3">
           <ExerciseBadge previousMistake={item.previousMistake} newWord={exercise.is_new_word} />
           <h1 className="text-heading text-title md:text-display md:font-bold md:short:text-heading">
             {exercise.prompt}
