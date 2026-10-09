@@ -14,7 +14,7 @@ import { authStrings } from "./strings";
 const comingSoon = () => toast(authStrings.comingSoon, { id: "coming-soon" });
 
 const INPUT =
-  "h-[3.25rem] w-full rounded-button border-2 border-border bg-raised px-4 text-base text-body outline-none placeholder:text-disabled focus:border-selected-border";
+  "h-[3.25rem] short:h-12 shorter:h-11 w-full rounded-button border-2 border-border bg-raised px-4 text-base text-body outline-none placeholder:text-disabled focus:border-selected-border";
 
 /**
  * The login page, laid out like Duolingo's: a close button and SIGN UP at the top, the
@@ -24,7 +24,7 @@ const INPUT =
 export function LoginScreen() {
   return (
     <div className="min-h-dvh bg-surface">
-      <header className="flex items-center justify-between px-4 py-4 md:px-6 md:py-5">
+      <header className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 short:py-2 shorter:py-1">
         <Link
           href="/"
           aria-label={authStrings.close}
@@ -37,11 +37,13 @@ export function LoginScreen() {
         </Button>
       </header>
 
-      <main className="mx-auto w-full max-w-[23.5rem] px-4 pt-2 pb-16 md:pt-8">
-        <h1 className="text-center text-heading text-title">{authStrings.title}</h1>
+      <main className="mx-auto w-full max-w-[23.5rem] px-4 pb-4 md:pt-4 short:md:pt-0">
+        <h1 className="text-center text-heading text-title shorter:text-[1.375rem]">
+          {authStrings.title}
+        </h1>
         <CredentialsForm />
 
-        <div className="my-6 flex items-center gap-4" aria-hidden="true">
+        <div className="my-4 flex items-center gap-4 short:my-2.5 shorter:my-2" aria-hidden="true">
           <span className="h-0.5 flex-1 bg-border" />
           <span className="text-caps text-disabled uppercase">{authStrings.or}</span>
           <span className="h-0.5 flex-1 bg-border" />
@@ -49,7 +51,7 @@ export function LoginScreen() {
 
         <SampleLearners />
 
-        <p className="mt-8 text-center text-sm text-muted">{authStrings.terms}</p>
+        <p className="mt-4 text-center text-xs text-muted short:mt-2">{authStrings.terms}</p>
       </main>
     </div>
   );
@@ -67,7 +69,7 @@ function CredentialsForm() {
   };
 
   return (
-    <form onSubmit={submit} className="mt-6 flex flex-col gap-3" noValidate>
+    <form onSubmit={submit} className="mt-5 flex flex-col gap-3 short:mt-2 short:gap-2" noValidate>
       <input
         type="text"
         name="identifier"
@@ -128,13 +130,15 @@ function SampleLearners() {
       <h2 id="sample-learners" className="text-center text-lead font-bold text-title">
         {authStrings.samples.title}
       </h2>
-      <p className="mt-1 text-center text-body">{authStrings.samples.intro}</p>
+      <p className="mt-0.5 text-center text-sm text-body shorter:hidden">
+        {authStrings.samples.intro}
+      </p>
 
       {learners.isPending ? (
-        <ul className="mt-4 flex flex-col gap-3" aria-label={authStrings.samples.loading}>
+        <ul className="mt-3 grid grid-cols-2 gap-3" aria-label={authStrings.samples.loading}>
           {Array.from({ length: 4 }, (_, index) => (
             <li key={index}>
-              <Skeleton className="block h-[4.75rem] w-full rounded-rail" />
+              <Skeleton className="block h-[6.5rem] w-full rounded-rail" />
             </li>
           ))}
         </ul>
@@ -146,7 +150,7 @@ function SampleLearners() {
           </Button>
         </div>
       ) : (
-        <ul className="mt-4 flex flex-col gap-3">
+        <ul className="mt-3 grid grid-cols-2 gap-3 shorter:mt-2 shorter:gap-2">
           {learners.data.map((learner) => (
             <li key={learner.username}>
               <LearnerCard
@@ -180,23 +184,33 @@ function LearnerCard({
       onClick={onSelect}
       disabled={disabled}
       aria-busy={busy || undefined}
-      className="flex w-full items-center gap-4 rounded-rail border-2 border-b-4 border-border px-4 py-3 text-left transition-colors not-disabled:hover:bg-surface-hover not-disabled:active:translate-y-0.5 not-disabled:active:border-b-2 disabled:cursor-default aria-busy:border-selected-border aria-busy:bg-selected-bg [&:disabled:not([aria-busy])]:opacity-50"
+      className="flex h-full w-full flex-col gap-2 rounded-rail border-2 border-b-4 border-border p-3 text-left transition-colors not-disabled:hover:bg-surface-hover not-disabled:active:translate-y-0.5 not-disabled:active:border-b-2 disabled:cursor-default aria-busy:border-selected-border aria-busy:bg-selected-bg short:py-2 [&:disabled:not([aria-busy])]:opacity-50"
     >
-      <span
-        aria-hidden="true"
-        className="grid size-12 shrink-0 place-items-center rounded-full text-lg font-bold text-white"
-        style={{ backgroundColor: learner.avatar_color }}
-      >
-        {learner.initials}
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block truncate font-bold text-title">
+      <span className="flex min-w-0 items-center gap-2.5">
+        <span
+          aria-hidden="true"
+          className="grid size-9 shrink-0 place-items-center rounded-full text-sm font-bold text-white"
+          style={{ backgroundColor: learner.avatar_color }}
+        >
+          {learner.initials}
+        </span>
+        <span className="min-w-0 flex-1 text-[15px] leading-tight font-bold text-title">
           <span className="sr-only">{authStrings.samples.logInAs}</span> {learner.display_name}
         </span>
-        <span className="mt-0.5 block truncate text-body">
-          {authStrings.samples.summary(learner)}
-        </span>
       </span>
+      <SummaryLines summary={authStrings.samples.summary(learner)} />
     </button>
+  );
+}
+
+/** The unit on its own line, then XP and streak; the separator stays for screen readers. */
+function SummaryLines({ summary }: { summary: string }) {
+  const [unit, ...rest] = summary.split(" · ");
+  return (
+    <span className="text-[13px] leading-snug text-body">
+      <span className="block font-bold text-muted">{unit}</span>
+      <span className="sr-only"> · </span>
+      <span className="block">{rest.join(" · ")}</span>
+    </span>
   );
 }
