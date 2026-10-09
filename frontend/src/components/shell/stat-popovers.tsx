@@ -15,16 +15,12 @@ import {
 import {
   Bolt,
   DuoImage,
-  Dumbbell,
   FlagES,
   Flame,
   Gem,
-  Heart,
-  HeartEmpty,
   Snowflake,
 } from "@/components/icons";
 import {
-  Button,
   buttonClassName,
   cn,
   Popover,
@@ -358,26 +354,26 @@ export function GemsPopover({ gems }: { gems: number }) {
         <Gem size={22} />
         {formatNumber(gems)}
       </StatTrigger>
-      <StatContent className="w-80 p-5">
-        <div className="flex items-center gap-4">
-          <Gem size={56} />
+      <StatContent className="w-[383px] py-5 pr-6 pl-3">
+        <div className="flex items-center gap-3">
+          <DuoImage name="gems-chest" size={100} className="shrink-0" />
           <div className="min-w-0">
-            <h2 className="text-heading text-title">{strings.stats.gems.title}</h2>
-            <p className="mt-1 text-muted">{strings.stats.gems.balance(gems)}</p>
+            <h2 className="text-[24px] leading-[26px] font-bold text-title">
+              {strings.stats.gems.title}
+            </h2>
+            <p className="mt-2.5 leading-5 text-muted dark:text-body">
+              {strings.stats.gems.balance(gems)}
+            </p>
+            <PopoverClose asChild>
+              <Link
+                href="/shop"
+                className="mt-3 inline-block rounded-md text-button leading-[18px] text-blue uppercase hover:brightness-110"
+              >
+                {strings.stats.gems.shop}
+              </Link>
+            </PopoverClose>
           </div>
         </div>
-        <PopoverClose asChild>
-          <Link
-            href="/shop"
-            className={buttonClassName({
-              variant: "secondary",
-              fullWidth: true,
-              className: "mt-5",
-            })}
-          >
-            {strings.stats.gems.shop}
-          </Link>
-        </PopoverClose>
       </StatContent>
     </StatPopover>
   );
@@ -387,14 +383,12 @@ export function GemsPopover({ gems }: { gems: number }) {
 
 function NextHeartCountdown({ at }: { at: string }) {
   const now = useServerNow();
-  return (
-    <span className="font-bold text-title tabular-nums">
-      {formatCountdown(Date.parse(at) - now)}
-    </span>
-  );
+  return <span className="text-red tabular-nums">{formatCountdown(Date.parse(at) - now)}</span>;
 }
 
-const rowButton = "justify-between gap-3 px-4";
+/** One action row of the hearts panel: a bordered, pressable bar with caps label. */
+const heartRow =
+  "flex h-[56px] w-full items-center justify-between gap-3 rounded-2xl border-2 border-border px-3 text-button leading-[18px] text-title uppercase shadow-edge-border transition-[translate,box-shadow,background-color] duration-100 hover:bg-surface-hover active:translate-y-0.5 active:shadow-none disabled:cursor-default disabled:opacity-60 disabled:active:translate-y-0";
 
 function HeartsPanel({ stats }: { stats: Stats }) {
   const refill = useRefillHearts();
@@ -416,70 +410,60 @@ function HeartsPanel({ stats }: { stats: Stats }) {
 
   return (
     <>
-      <h2 className="text-center text-heading text-title">{strings.stats.hearts.title}</h2>
-      <div className="mt-4 flex justify-center gap-1.5">
-        {Array.from({ length: stats.hearts_max }, (_, index) =>
-          index < stats.hearts ? (
-            <Heart key={index} size={36} />
-          ) : (
-            <HeartEmpty key={index} size={36} />
-          ),
-        )}
+      <h2 className="text-center text-[25px] leading-7 font-bold text-title">
+        {strings.stats.hearts.title}
+      </h2>
+      <div className="mt-[18px] flex justify-center gap-1.5">
+        {Array.from({ length: stats.hearts_max }, (_, index) => (
+          <DuoImage key={index} name={index < stats.hearts ? "heart" : "heart-empty"} size={28} />
+        ))}
       </div>
-      <p className="mt-3 text-center text-muted" aria-live="polite">
+      <div className="mt-[18px] text-center" aria-live="polite">
         {full ? (
-          <>
-            <span className="font-bold text-title">{strings.stats.hearts.full}</span>
-            <br />
-            {strings.stats.hearts.fullHint}
-          </>
+          <p className="text-[19px] leading-5 font-bold text-title">{strings.stats.hearts.full}</p>
         ) : stats.next_heart_at ? (
-          <>
+          <p className="text-[19px] leading-5 font-bold text-title">
             {strings.stats.hearts.nextHeart} <NextHeartCountdown at={stats.next_heart_at} />
-          </>
+          </p>
         ) : (
-          strings.stats.hearts.empty
+          <p className="text-[19px] leading-5 font-bold text-title">{strings.stats.hearts.empty}</p>
         )}
-      </p>
+        <p className="mt-3 leading-6 text-muted dark:text-body">
+          {full
+            ? strings.stats.hearts.fullHint
+            : stats.hearts > 0
+              ? strings.stats.hearts.partialHint
+              : strings.stats.hearts.emptyHint}
+        </p>
+      </div>
 
-      <div className="mt-5 flex flex-col gap-3">
-        <Button variant="outline" fullWidth className={rowButton} onClick={showComingSoon}>
-          <span className="flex items-center gap-3">
-            <Heart size={24} />
+      <div className="mt-6 flex flex-col gap-2.5">
+        <button type="button" className={heartRow} onClick={showComingSoon}>
+          <span className="flex items-center gap-2">
+            <DuoImage name="heart-unlimited" size={36} />
             {strings.stats.hearts.unlimited}
           </span>
-          <span className="rounded-md bg-purple px-2 py-0.5 text-caps text-white">
-            {strings.rail.super.badge}
-          </span>
-        </Button>
-        <Button
-          variant="outline"
-          fullWidth
-          className={rowButton}
-          disabled={full || !affordable}
-          loading={refill.isPending}
+          <span className="text-magenta">{strings.stats.hearts.freeTrial}</span>
+        </button>
+        <button
+          type="button"
+          className={heartRow}
+          disabled={full || !affordable || refill.isPending}
           onClick={handleRefill}
         >
-          <span className="flex items-center gap-3">
-            <Heart size={24} />
+          <span className="flex items-center gap-2">
+            <DuoImage name="heart-refill" size={36} />
             {strings.stats.hearts.refill}
           </span>
-          <span className="flex items-center gap-1.5">
-            <Gem size={20} />
+          <span className="flex items-center text-blue">
+            <DuoImage name="gem-small" size={24} />
             {formatNumber(price)}
           </span>
-        </Button>
+        </button>
         <PopoverClose asChild>
-          <Link
-            href="/practice"
-            className={buttonClassName({
-              variant: "outline",
-              fullWidth: true,
-              className: rowButton,
-            })}
-          >
-            <span className="flex items-center gap-3">
-              <Dumbbell size={24} />
+          <Link href="/practice" className={heartRow}>
+            <span className="flex items-center gap-2">
+              <DuoImage name="heart" size={36} />
               {strings.stats.hearts.practice}
             </span>
           </Link>
@@ -497,10 +481,10 @@ export function HeartsPopover({ stats }: { stats: Stats }) {
         label={strings.stats.hearts.trigger(stats.hearts)}
         className={empty ? "text-disabled" : "text-red"}
       >
-        {empty ? <HeartEmpty size={28} /> : <Heart size={28} />}
+        <DuoImage name={empty ? "heart-empty" : "heart-bar"} size={28} />
         {stats.hearts}
       </StatTrigger>
-      <StatContent align="end" className="w-90 p-5">
+      <StatContent align="end" className="w-[402px] px-7 pt-7 pb-6">
         <HeartsPanel stats={stats} />
       </StatContent>
     </StatPopover>
