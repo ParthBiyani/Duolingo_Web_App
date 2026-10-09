@@ -14,7 +14,7 @@ import {
 
 import {
   Bolt,
-  Check,
+  DuoImage,
   Dumbbell,
   FlagES,
   Flame,
@@ -164,11 +164,11 @@ export function CoursePopover({ course }: { course: MeResponse["course"] }) {
 // Streak -----------------------------------------------------------------------
 
 const DAY_CIRCLE: Record<StreakDay["status"], string> = {
-  extended: "bg-orange text-white",
+  extended: "bg-streak-day",
   frozen: "border-2 border-selected-border bg-selected-bg",
   missed: "bg-locked-face",
-  pending: "border-2 border-dashed border-orange",
-  future: "bg-raised",
+  pending: "bg-locked-face",
+  future: "bg-locked-face",
 };
 
 function weekdayName(date: string): string {
@@ -181,13 +181,22 @@ function WeekStrip({ week }: { week: StreakDay[] }) {
     <ol className="grid grid-cols-7 gap-1 text-center">
       {week.map((day) => (
         <li key={day.date} className="flex flex-col items-center gap-1.5">
-          <span aria-hidden="true" className="text-caps text-muted">
+          <span
+            aria-hidden="true"
+            className={cn(
+              "text-[17px] leading-[25px] font-bold text-disabled",
+              day.status === "pending" && "text-streak-day",
+            )}
+          >
             {day.label}
           </span>
           <span
-            className={cn("grid size-8 place-items-center rounded-full", DAY_CIRCLE[day.status])}
+            className={cn(
+              "grid size-[34px] place-items-center rounded-full",
+              DAY_CIRCLE[day.status],
+            )}
           >
-            {day.status === "extended" ? <Check size={16} /> : null}
+            {day.status === "extended" ? <DuoImage name="streak-day-check" size={17} /> : null}
             {day.status === "frozen" ? <Snowflake size={16} /> : null}
           </span>
           <span className="sr-only">
@@ -216,27 +225,74 @@ export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
         <Flame size={23} muted={!extended} />
         {formatNumber(streak.current)}
       </StatTrigger>
-      <StatContent className="w-90 p-5">
-        <div className="flex items-center gap-4">
-          <div className="min-w-0 flex-1">
-            <h2 className={cn("text-heading", extended ? "text-orange" : "text-title")}>
-              {strings.stats.streak.title(streak.current)}
-            </h2>
-            <p className="mt-1 text-muted">{message}</p>
+      <StatContent className="w-[387px] overflow-hidden p-0">
+        <div className={cn("px-[22px] pt-6 pb-5", extended ? "bg-streak-header" : "bg-raised")}>
+          <div className="flex items-start gap-4">
+            <div className="min-w-0 flex-1">
+              <h2
+                className={cn(
+                  "text-[25px] leading-[34px] font-bold",
+                  extended ? "text-white" : "text-title",
+                )}
+              >
+                {strings.stats.streak.title(streak.current)}
+              </h2>
+              <p className={cn("mt-2 leading-6", extended ? "text-white" : "text-muted")}>
+                {message}
+              </p>
+            </div>
+            <DuoImage
+              name="streak-calendar-flame"
+              size={64}
+              className={cn("mt-4 shrink-0", !extended && "grayscale")}
+            />
           </div>
-          <Flame size={56} muted={!extended} />
+          {streak.week.length > 0 ? (
+            <div className="mt-6 rounded-xl bg-surface px-4 pt-3 pb-4">
+              <WeekStrip week={streak.week} />
+            </div>
+          ) : null}
+          {streak.freezes > 0 ? (
+            <p
+              className={cn(
+                "mt-3 flex items-center gap-2 font-bold",
+                extended ? "text-white" : "text-muted",
+              )}
+            >
+              <Snowflake size={20} />
+              {strings.stats.streak.freezes(streak.freezes)}
+            </p>
+          ) : null}
         </div>
-        {streak.week.length > 0 ? (
-          <div className="mt-4 rounded-xl border-2 p-3">
-            <WeekStrip week={streak.week} />
+        <div className="flex flex-col gap-5 p-5">
+          <div className="flex h-[136px] items-center overflow-hidden rounded-2xl bg-friend-streak">
+            <DuoImage name="friend-streaks" size={142} className="shrink-0 self-end" />
+            <div className="min-w-0 flex-1 pr-5 text-white">
+              <p className="leading-5 font-bold">{strings.stats.streak.friendTitle}</p>
+              <p className="mt-1 leading-6">{strings.stats.streak.friendBody}</p>
+              <button
+                type="button"
+                onClick={showComingSoon}
+                className="mt-3 h-10 w-full rounded-xl bg-white text-button text-friend-streak uppercase shadow-[0_3px_0_rgb(0_0_0/0.15)] active:translate-y-0.5 active:shadow-none"
+              >
+                {strings.stats.streak.viewList}
+              </button>
+            </div>
           </div>
-        ) : null}
-        {streak.freezes > 0 ? (
-          <p className="mt-4 flex items-center gap-2 font-bold text-muted">
-            <Snowflake size={20} />
-            {strings.stats.streak.freezes(streak.freezes)}
-          </p>
-        ) : null}
+          <div className="rounded-2xl border-2 border-border p-5">
+            <div className="flex gap-6">
+              <DuoImage name="streak-society-locked" size={58} className="shrink-0 self-start" />
+              <div className="min-w-0">
+                <p className="leading-6 font-bold text-title">
+                  {strings.stats.streak.societyTitle}
+                </p>
+                <p className="mt-2 leading-6 text-muted dark:text-body">
+                  {strings.stats.streak.societyBody}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </StatContent>
     </StatPopover>
   );
