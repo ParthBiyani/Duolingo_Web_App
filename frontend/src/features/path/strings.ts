@@ -6,6 +6,9 @@ export const pathStrings = {
   guidebook: "Guidebook",
 
   start: "Start",
+  jumpHere: "Jump here?",
+  jumpTitle: (unit: number) => `Jump to Unit ${unit}?`,
+  jumpBody: "Pass a short test to skip ahead to this unit.",
   open: "Open",
   lessonOf: (current: number, total: number) => `Lesson ${current} of ${total}`,
   startXp: "Start +10 XP",

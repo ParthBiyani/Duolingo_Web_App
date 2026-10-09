@@ -1,7 +1,8 @@
 import type { PathNode } from "@/lib/api/types";
 
 /** Which glyph is drawn on (or as) the node. */
-export type NodeGlyph = "star" | "check" | "crown" | "trophy" | "dumbbell" | "chest" | "chest-open";
+export type NodeGlyph =
+  "star" | "check" | "crown" | "trophy" | "dumbbell" | "chest" | "chest-open" | "jump";
 
 /** Colour family of the node face: the unit's colour, legendary gold, or locked grey. */
 export type NodeTone = "unit" | "gold" | "locked";

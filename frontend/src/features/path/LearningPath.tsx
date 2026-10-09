@@ -109,8 +109,17 @@ export function LearningPath({
                         transform: `translateX(calc(${nodeOffset(index, mirrored)}px * var(--zigzag)))`,
                       }}
                     >
-                      <NodePopover node={node} color={unit.color} onOpenChest={onOpenChest}>
-                        <PathNode node={node} highlight={node.id === highlightNodeId} />
+                      <NodePopover
+                        node={node}
+                        color={unit.color}
+                        onOpenChest={onOpenChest}
+                        jumpToUnit={unitLocked && index === 0 ? unit.position : undefined}
+                      >
+                        <PathNode
+                          node={node}
+                          highlight={node.id === highlightNodeId}
+                          jump={unitLocked && index === 0}
+                        />
                       </NodePopover>
                     </div>
                     {mascotSide ? (
