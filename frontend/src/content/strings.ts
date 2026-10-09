@@ -56,6 +56,11 @@ export const strings = {
       pending: "Do a lesson today to extend your streak!",
       start: "Do a lesson today to start a new streak!",
       freezes: (count: number) => `${plural(count, "streak freeze", "streak freezes")} equipped`,
+      friendTitle: "Friend Streaks",
+      friendBody: "0 active Friend Streaks",
+      viewList: "View list",
+      societyTitle: "Streak Society",
+      societyBody: "Reach a 7 day streak to join the Streak Society and earn exclusive rewards.",
       dayStatus: {
         extended: "streak extended",
         frozen: "streak frozen",

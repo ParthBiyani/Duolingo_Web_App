@@ -42,6 +42,10 @@ export type DuoAsset =
   | "league-locked"
   | "leagues-unlock"
   | "leagues-locked-hero"
+  | "streak-calendar-flame"
+  | "streak-day-check"
+  | "friend-streaks"
+  | "streak-society-locked"
   | `league-${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`;
 
 interface DuoImageProps extends IconProps {

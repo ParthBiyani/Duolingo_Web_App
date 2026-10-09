@@ -41,6 +41,8 @@
 :root {
   color-scheme: light;
 
+  --streak-header: #ff9600;
+
   --surface: #ffffff;
   --surface-hover: #f7f7f7;
   --raised: #f7f7f7;
@@ -101,6 +103,8 @@
 /* Dark theme -------------------------------------------------------------- */
 [data-theme="dark"] {
   color-scheme: dark;
+
+  --streak-header: #cd7900;
 
   --surface: #131f24;
   --surface-hover: #202f36;
@@ -171,6 +175,9 @@
   --color-red-shade: var(--red-shade);
   --color-on-red: var(--on-red);
   --color-super: #3c4dff;
+  --color-friend-streak: #ff5f00;
+  --color-streak-day: #ffab33;
+  --color-streak-header: var(--streak-header);
   --super-shade: #3f22ec;
   --color-gold: var(--gold);
   --color-gold-shade: var(--gold-shade);
