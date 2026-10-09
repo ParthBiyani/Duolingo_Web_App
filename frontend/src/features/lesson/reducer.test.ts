@@ -10,6 +10,7 @@ import {
   createInitialState,
   currentExercise,
   currentItem,
+  exitPath,
   isFatal,
   isInteractive,
   lessonProgress,
@@ -865,5 +866,22 @@ describe("completion and celebration", () => {
   it("ignores CONTINUE where there is nothing to continue", () => {
     const state = start(exercises(1));
     expect(cont(state)).toBe(state);
+  });
+});
+
+describe("exitPath", () => {
+  it("returns a finished skill session to the path with that skill popping", () => {
+    expect(exitPath("complete", 7)).toBe("/learn?done=7");
+  });
+
+  it("returns sessions without a skill, and every other exit, to the plain path", () => {
+    expect(exitPath("complete", null)).toBe("/learn");
+    expect(exitPath("quit", 7)).toBe("/learn");
+    expect(exitPath("no-thanks", 7)).toBe("/learn");
+    expect(exitPath("failed", 7)).toBe("/learn");
+  });
+
+  it("sends a learner who chose to practise for hearts to practice", () => {
+    expect(exitPath("practice", 7)).toBe("/practice");
   });
 });
