@@ -10,6 +10,8 @@ export const shopStrings = {
   familyBodyBrand: "Super Duolingo",
   familyBodyAfter: " when you learn with friends",
   familyCta: "Learn more",
+  superTrialTitle: "Start a 1 week free trial to enjoy exclusive Super benefits",
+  superTrialCta: "Start my free 7 days",
 
   hearts: "Hearts",
   powerUps: "Power-Ups",
