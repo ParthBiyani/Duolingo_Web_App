@@ -12,14 +12,7 @@ import {
   type ReactNode,
 } from "react";
 
-import {
-  Bolt,
-  DuoImage,
-  FlagES,
-  Flame,
-  Gem,
-  Snowflake,
-} from "@/components/icons";
+import { Bolt, DuoImage, FlagES, Flame, Gem, Snowflake } from "@/components/icons";
 import {
   buttonClassName,
   cn,
