@@ -54,6 +54,50 @@ test.describe("top bar popovers", () => {
     await expectComingSoon(page);
   });
 
+  test("the streak's View more opens the calendar, the goal and the society", async ({
+    page,
+    expectNoA11yViolations,
+  }) => {
+    await page.goto("/learn");
+    const panel = await openStat(page, "Streak: 12 days");
+    await panel.getByRole("button", { name: /^view more$/i }).click();
+
+    const modal = page.getByRole("dialog", { name: "Streak" });
+    await expect(modal).toBeVisible();
+    await expect(modal.getByRole("tab", { name: "Personal" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await expect(modal.getByText("12 day streak").first()).toBeVisible();
+    // A month calendar that can go back to when the learner started, but not into the future.
+    await expect(modal.getByRole("heading", { name: "Calendar" })).toBeVisible();
+    // The disabled arrow is also hidden, as on the original.
+    await expect(
+      modal.getByRole("button", { name: "Next month", includeHidden: true }),
+    ).toBeDisabled();
+    await expect(modal.getByRole("button", { name: "Previous month" })).toBeEnabled();
+    const goal = modal.getByRole("progressbar", { name: "Streak Goal" });
+    await expect(goal).toHaveAttribute("aria-valuetext", /^12 of \d+ days$/);
+    // Twelve days in a row: a member of the Streak Society.
+    await expect(modal).toContainText(
+      "You're a member of the Streak Society! Exclusive rewards are coming soon.",
+    );
+    await expectNoA11yViolations();
+
+    await modal.getByRole("button", { name: "Previous month" }).click();
+    await expect(modal.getByRole("button", { name: "Next month" })).toBeEnabled();
+
+    await modal.getByRole("tab", { name: "Friends" }).click();
+    await expect(modal.getByRole("tab", { name: "Friends" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await expect(modal).toContainText("Friend Streaks");
+
+    await modal.getByRole("button", { name: "Close" }).click();
+    await expect(modal).toBeHidden();
+  });
+
   test("the streak flame lights up once today's lesson is done", async ({ page, api }) => {
     const node = await api.activeNode();
     await api.completeLesson(node.next_lesson_id ?? 0);
