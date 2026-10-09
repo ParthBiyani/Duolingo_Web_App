@@ -22,7 +22,7 @@ export function ListenType({
   useAutoplay(audio, autoplayAudio);
 
   return (
-    <div className="flex flex-col gap-6 md:gap-8">
+    <div className="flex flex-col gap-6 md:gap-8 short:gap-3 md:short:gap-4">
       <div className="flex justify-center py-2">
         <button
           type="button"
@@ -30,7 +30,7 @@ export function ListenType({
             if (audio) speak(audio, "es-ES");
           }}
           aria-label={lessonStrings.playAudio}
-          className="grid size-[120px] cursor-pointer place-items-center rounded-panel bg-blue text-on-blue shadow-edge-blue transition-[translate,box-shadow,filter] duration-100 hover:brightness-105 active:translate-y-[4px] active:shadow-none md:size-[140px]"
+          className="grid size-[120px] cursor-pointer place-items-center rounded-panel bg-blue text-on-blue shadow-edge-blue transition-[translate,box-shadow,filter] duration-100 hover:brightness-105 active:translate-y-[4px] active:shadow-none md:size-[140px] short:size-[96px] md:short:size-[104px]"
         >
           <Speaker size={60} className="text-on-blue" />
         </button>

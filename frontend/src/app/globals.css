@@ -33,6 +33,9 @@
 @import "../components/ui/primitives.css";
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+/* Short windows (e.g. a 1366x768 laptop): the lesson player compacts so exercises still fit. */
+@custom-variant short (@media (max-height: 760px));
+@custom-variant shorter (@media (max-height: 640px));
 
 /* Light theme (default) --------------------------------------------------- */
 :root {

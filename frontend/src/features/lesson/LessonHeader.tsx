@@ -75,7 +75,7 @@ export function LessonHeader({
   const timed = kind === "timed" && timeLeftMs !== null;
 
   return (
-    <header className="mx-auto flex w-full max-w-[1080px] shrink-0 items-center gap-4 px-4 pt-6 md:gap-6 md:px-10 md:pt-[50px]">
+    <header className="mx-auto flex w-full max-w-[1080px] shrink-0 items-center gap-4 px-4 pt-6 md:gap-6 md:px-10 md:pt-[50px] short:pt-4 md:short:pt-6">
       <button
         type="button"
         onClick={onQuit}

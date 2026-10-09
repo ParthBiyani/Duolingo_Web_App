@@ -14,13 +14,17 @@ export function MultipleChoice({ exercise, draft, onDraft, locked, autoplayAudio
   useAutoplay(exercise.source_lang === "es" ? audioText(exercise) : null, autoplayAudio);
 
   return (
-    <div className="flex flex-col gap-6 md:gap-8">
+    <div className="flex flex-col gap-6 md:gap-8 short:gap-3 md:short:gap-4">
       {exercise.source_text ? (
         <SpeechBubble variant={characterFor(exercise)}>
           <SourceLine exercise={exercise} />
         </SpeechBubble>
       ) : null}
-      <div role="group" aria-label={exercise.prompt} className="flex flex-col gap-2 md:gap-3">
+      <div
+        role="group"
+        aria-label={exercise.prompt}
+        className="flex flex-col gap-2 md:gap-3 md:shorter:gap-2"
+      >
         {options.map((option, index) => (
           <ChoiceRow
             key={option.id}

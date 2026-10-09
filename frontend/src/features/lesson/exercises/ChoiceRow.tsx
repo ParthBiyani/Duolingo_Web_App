@@ -23,7 +23,7 @@ export function ChoiceRow({ index, selected, locked, onSelect, children }: Choic
       aria-disabled={locked}
       onClick={locked ? undefined : onSelect}
       className={cx(
-        "flex min-h-[60px] w-full items-center gap-4 rounded-tile border-2 px-4 py-[11px] text-left text-lead font-medium transition-[background-color,border-color,translate,box-shadow] duration-100",
+        "flex min-h-[60px] w-full items-center gap-4 rounded-tile border-2 px-4 py-[11px] text-left text-lead font-medium transition-[background-color,border-color,translate,box-shadow] duration-100 shorter:min-h-[52px] shorter:py-2",
         selected
           ? "border-selected-border bg-selected-bg text-selected-text shadow-edge-selected"
           : "border-border bg-surface text-body shadow-edge-border",
