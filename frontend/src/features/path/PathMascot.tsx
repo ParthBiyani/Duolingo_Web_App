@@ -21,7 +21,7 @@ const CANVAS_SIZE = 260;
 /** Half of a character's visible width plus a little air, so it never pokes out of a narrow column. */
 const EDGE_ALLOWANCE = 70;
 /** Width of the still drawing shown for locked units. */
-const LOCKED_WIDTH = 170;
+const LOCKED_WIDTH = 294;
 
 export function characterFor(order: number): string {
   return CHARACTERS[order % CHARACTERS.length];

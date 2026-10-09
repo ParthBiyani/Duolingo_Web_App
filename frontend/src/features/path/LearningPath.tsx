@@ -92,7 +92,7 @@ export function LearningPath({
             <h2 id={`unit-${unit.id}-heading`} className="sr-only">
               {pathStrings.unitHeading(unit.position, unit.title)}
             </h2>
-            {unitIdx > 0 ? <UnitDivider title={unit.title} /> : null}
+            {unitIdx > 0 ? <UnitDivider title={unit.description} /> : null}
             <ol className="flex flex-col items-center pt-12 pb-6">
               {unit.nodes.map((node, index) => {
                 const isActive = node.id === path.active_node_id;
