@@ -170,6 +170,8 @@
   --color-red: var(--red);
   --color-red-shade: var(--red-shade);
   --color-on-red: var(--on-red);
+  --color-super: #3c4dff;
+  --super-shade: #3f22ec;
   --color-gold: var(--gold);
   --color-gold-shade: var(--gold-shade);
   --color-orange: var(--orange);

@@ -54,7 +54,7 @@ function StatTrigger({
     <PopoverTrigger
       aria-label={label}
       className={cn(
-        "flex h-11 items-center gap-1 rounded-xl px-1 text-base font-bold transition-colors hover:bg-surface-hover data-[state=open]:bg-surface-hover min-[400px]:gap-2 min-[400px]:px-2",
+        "flex h-11 items-center gap-1 rounded-xl px-1 text-[15px] leading-5 font-bold transition-colors hover:bg-surface-hover data-[state=open]:bg-surface-hover min-[400px]:gap-2 min-[400px]:px-2",
         className,
       )}
     >
@@ -69,7 +69,8 @@ export function CoursePopover({ course }: { course: MeResponse["course"] }) {
   return (
     <Popover>
       <StatTrigger label={strings.stats.course.trigger(course.title)}>
-        <FlagES size={32} className="rounded-md" />
+        <FlagES size={31} />
+        <span className="text-[16px] leading-6 text-title">1</span>
       </StatTrigger>
       <PopoverContent className="w-72">
         <h2 className="text-caps text-muted uppercase">{strings.stats.course.heading}</h2>
@@ -147,7 +148,7 @@ export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
         label={strings.stats.streak.trigger(streak.current)}
         className={extended ? "text-orange" : "text-disabled"}
       >
-        <Flame size={28} muted={!extended} />
+        <Flame size={23} muted={!extended} />
         {formatNumber(streak.current)}
       </StatTrigger>
       <PopoverContent className="w-90 p-5">
@@ -186,7 +187,7 @@ export function XpPopover({ stats }: { stats: Stats }) {
   return (
     <Popover>
       <StatTrigger label={strings.stats.xp.trigger(stats.xp_total)} className="text-gold-shade">
-        <Bolt size={28} />
+        <Bolt size={22} />
         {formatNumber(stats.xp_total)}
       </StatTrigger>
       <PopoverContent className="w-80 p-5">
@@ -233,7 +234,7 @@ export function GemsPopover({ gems }: { gems: number }) {
   return (
     <Popover>
       <StatTrigger label={strings.stats.gems.trigger(gems)} className="text-blue">
-        <Gem size={28} />
+        <Gem size={22} />
         {formatNumber(gems)}
       </StatTrigger>
       <PopoverContent className="w-80 p-5">

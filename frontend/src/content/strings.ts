@@ -102,7 +102,7 @@ export const strings = {
     super: {
       badge: "Super",
       title: "Try Super for free",
-      body: "Unlimited hearts, no ads and personalised practice to learn faster.",
+      body: "No ads, personalized practice, and unlimited Legendary!",
       cta: "Try 1 week free",
     },
     league: {
