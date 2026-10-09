@@ -147,7 +147,6 @@ export const strings = {
     footer: {
       label: "Footer",
       links: ["About", "Blog", "Store", "Efficacy", "Careers", "Investors", "Terms", "Privacy"],
-      disclaimer: "Educational clone built for a hiring assignment; not affiliated with Duolingo.",
     },
   },
 
