@@ -56,6 +56,7 @@ function renderWith(response: LeaderboardResponse) {
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  localStorage.clear();
 });
 
 describe("LeaderboardScreen", () => {
@@ -88,6 +89,32 @@ describe("LeaderboardScreen", () => {
     const me = (await screen.findByText("Parth Biyani")).closest("li");
     expect(me).toHaveAttribute("aria-current", "true");
     expect(me).toHaveClass("bg-selected-bg");
+  });
+
+  it("shows last week's result even after another learner on this device saw theirs", async () => {
+    localStorage.setItem("leaderboard:result-seen-week:7", "2026-10-05");
+    renderWith(
+      board({
+        last_result: { tier_before: 0, tier_after: 1, outcome: "promoted", rank: 2, gems: 10 },
+      }),
+    );
+
+    expect(
+      await screen.findByRole("dialog", { name: "You've been promoted to the Silver League!" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("You earned 10 gems for a top 3 finish.")).toBeInTheDocument();
+  });
+
+  it("does not show a result the learner already dismissed this week", async () => {
+    localStorage.setItem("leaderboard:result-seen-week:12", "2026-10-05");
+    renderWith(
+      board({
+        last_result: { tier_before: 0, tier_after: 1, outcome: "promoted", rank: 2, gems: 10 },
+      }),
+    );
+
+    await screen.findByRole("list", { name: "Silver League" });
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("shows how many lessons unlock the leaderboard for new learners", async () => {
