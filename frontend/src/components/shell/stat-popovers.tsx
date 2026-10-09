@@ -24,7 +24,7 @@ import {
   toast,
 } from "@/components/ui";
 import { strings } from "@/content/strings";
-import { StreakModal } from "@/features/streak/StreakModal";
+import { STREAK_SOCIETY_DAYS, StreakModal } from "@/features/streak/StreakModal";
 import { isApiError, useRefillHearts, useShop, type MeResponse, type StreakDay } from "@/lib/api";
 import { formatCountdown, useServerNow } from "@/lib/time";
 
@@ -234,6 +234,7 @@ function ViewMoreButton({ onOpenModal }: { onOpenModal: () => void }) {
 export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
   const [modalOpen, setModalOpen] = useState(false);
   const extended = streak.extended_today;
+  const member = streak.current >= STREAK_SOCIETY_DAYS;
   const message = extended
     ? strings.stats.streak.extended
     : streak.current > 0
@@ -306,13 +307,17 @@ export function StreakPopover({ streak }: { streak: Stats["streak"] }) {
             </div>
             <div className="rounded-2xl border-2 border-border p-5">
               <div className="flex gap-6">
-                <DuoImage name="streak-society-locked" size={58} className="shrink-0 self-start" />
+                <DuoImage
+                  name={member ? "streak-calendar-flame" : "streak-society-locked"}
+                  size={58}
+                  className="shrink-0 self-start"
+                />
                 <div className="min-w-0">
                   <p className="leading-6 font-bold text-title">
                     {strings.stats.streak.societyTitle}
                   </p>
                   <p className="mt-2 leading-6 text-muted dark:text-body">
-                    {strings.stats.streak.societyBody}
+                    {member ? strings.stats.streak.societyMember : strings.stats.streak.societyBody}
                   </p>
                 </div>
               </div>
