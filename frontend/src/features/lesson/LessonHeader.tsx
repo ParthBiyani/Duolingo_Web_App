@@ -1,6 +1,8 @@
 "use client";
 
-import { Clock, Close, Crown, Heart, HeartEmpty } from "@/components/icons";
+import Image from "next/image";
+
+import { Clock, Crown, HeartEmpty } from "@/components/icons";
 import { ProgressBar } from "@/components/ui";
 import type { SessionKind } from "@/lib/api";
 
@@ -75,14 +77,15 @@ export function LessonHeader({
   const timed = kind === "timed" && timeLeftMs !== null;
 
   return (
-    <header className="mx-auto flex w-full max-w-[1080px] shrink-0 items-center gap-4 px-4 pt-6 md:gap-6 md:px-10 md:pt-[50px] short:pt-4 md:short:pt-6">
+    <header className="mx-auto flex w-full max-w-[1080px] shrink-0 items-center gap-4 px-4 pt-6 md:gap-6 md:px-8 md:pt-10 short:pt-4 md:short:pt-8 md:shorter:pt-6">
       <button
         type="button"
         onClick={onQuit}
         aria-label={lessonStrings.quitLabel}
-        className="-m-1 grid shrink-0 cursor-pointer place-items-center rounded-lg p-1 text-disabled transition-colors hover:text-muted"
+        className="-m-1 grid shrink-0 cursor-pointer place-items-center rounded-lg p-1 opacity-50 transition-opacity hover:opacity-70 dark:opacity-100 dark:hover:opacity-80"
       >
-        <Close size={32} />
+        {/* The grey X is drawn for the dark theme; at half opacity it matches the light grey. */}
+        <Image src="/duo/lesson/close.svg" alt="" width={18} height={18} />
       </button>
 
       {timed ? (
@@ -108,13 +111,17 @@ export function LessonHeader({
           <span className="sr-only">{lessonStrings.mistakesLabel(Math.max(0, mistakesLeft))}</span>
         </p>
       ) : (
-        <p className="flex shrink-0 items-center gap-2 text-lead font-bold text-red">
+        <p className="flex shrink-0 items-center gap-2 text-base font-bold text-red">
           <span
             key={heartLosses}
             className={cx("grid", heartLosses > 0 && "animate-heart-pulse")}
             aria-hidden="true"
           >
-            {hearts > 0 ? <Heart size={30} /> : <HeartEmpty size={30} />}
+            {hearts > 0 ? (
+              <Image src="/duo/lesson/heart.svg" alt="" width={32} height={32} className="size-8" />
+            ) : (
+              <HeartEmpty size={32} />
+            )}
           </span>
           <span aria-hidden="true" className={hearts > 0 ? undefined : "text-disabled"}>
             {hearts}

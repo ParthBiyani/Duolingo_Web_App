@@ -16,6 +16,11 @@ export function makeExercise(id: number, type: ExerciseType = "multiple_choice")
     prompt: "Select the correct meaning",
     source_text: "el gato",
     source_lang: "es",
+    source_tokens: [
+      { text: "el", hint: "the", is_new: false },
+      { text: " ", hint: null, is_new: false },
+      { text: "gato", hint: "cat", is_new: false },
+    ],
     tts_text: "el gato",
     is_new_word: false,
     options: [],
@@ -49,6 +54,7 @@ export function makeExercise(id: number, type: ExerciseType = "multiple_choice")
         ...base,
         prompt: "Select the matching pairs",
         source_text: null,
+        source_tokens: [],
         pairs: {
           left: [
             { id: 101, text: "hola" },

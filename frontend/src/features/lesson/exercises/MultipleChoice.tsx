@@ -2,11 +2,25 @@
 
 import { useNumberKeys } from "../keyboard";
 import { ChoiceRow } from "./ChoiceRow";
-import { SourceLine, SpeechBubble, audioText, characterFor, useAutoplay } from "./parts";
+import {
+  SourceLine,
+  SpeechBubble,
+  audioText,
+  characterFor,
+  choiceTone,
+  useAutoplay,
+} from "./parts";
 import type { ExerciseProps } from "./types";
 
 /** "Select the correct meaning": a character says a sentence; pick its translation. */
-export function MultipleChoice({ exercise, draft, onDraft, locked, autoplayAudio }: ExerciseProps) {
+export function MultipleChoice({
+  exercise,
+  draft,
+  onDraft,
+  locked,
+  result,
+  autoplayAudio,
+}: ExerciseProps) {
   const selected = draft !== null && "option_id" in draft ? draft.option_id : null;
   const { options } = exercise;
 
@@ -29,7 +43,7 @@ export function MultipleChoice({ exercise, draft, onDraft, locked, autoplayAudio
           <ChoiceRow
             key={option.id}
             index={index}
-            selected={selected === option.id}
+            tone={choiceTone(selected === option.id, result)}
             locked={locked}
             onSelect={() => onDraft({ option_id: option.id })}
           >

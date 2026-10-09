@@ -19,6 +19,7 @@
  *              rounded-panel  rounded-rail  rounded-banner  rounded-bubble
  *   depth      shadow-edge-{green,blue,red,gold,orange,purple,locked}  (0 4px 0)
  *              shadow-edge-border  shadow-edge-selected  (0 2px 0)
+ *              shadow-edge-correct  shadow-edge-wrong  (0 2px 0, graded choices)
  *   type       text-display  text-heading  text-lead  text-base  text-button  text-caps
  *   motion     animate-bob  animate-shake  animate-pop  animate-slide-up
  *              animate-fade-in  animate-heart-pulse
@@ -222,6 +223,8 @@
   --shadow-edge-locked: 0 4px 0 var(--locked-edge);
   --shadow-edge-border: 0 2px 0 var(--border);
   --shadow-edge-selected: 0 2px 0 var(--selected-border);
+  --shadow-edge-correct: 0 2px 0 var(--feedback-correct-text);
+  --shadow-edge-wrong: 0 2px 0 var(--feedback-wrong-text);
 }
 
 /* Static tokens: breakpoints, radii, type scale and motion. */

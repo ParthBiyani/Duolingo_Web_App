@@ -168,12 +168,23 @@ export interface Tile {
   text: string;
 }
 
+/** A slice of a Spanish source sentence; joined, the texts give `source_text` back. */
+export interface SourceToken {
+  text: string;
+  /** English meaning shown on hover / tap, or null (names, numbers, punctuation). */
+  hint: string | null;
+  /** The word this exercise introduces (shown in purple). */
+  is_new: boolean;
+}
+
 export interface Exercise {
   id: number;
   type: ExerciseType;
   prompt: string;
   source_text: string | null;
   source_lang: "es" | "en" | null;
+  /** Word hints for a Spanish source_text; empty otherwise. */
+  source_tokens: SourceToken[];
   tts_text: string | null;
   is_new_word: boolean;
   /** multiple_choice, image_choice, fill_blank */

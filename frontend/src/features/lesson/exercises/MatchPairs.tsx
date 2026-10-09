@@ -62,7 +62,7 @@ function MatchTile({ tile, index, state, locked, onPress }: MatchTileProps) {
       )}
     >
       <span className="absolute top-1/2 left-[9px] -translate-y-1/2">
-        <NumberBadge index={index} selected={state === "selected"} />
+        <NumberBadge index={index} tone={state === "selected" ? "selected" : "idle"} />
       </span>
       <span className="line-clamp-2 text-center break-words">{tile.text}</span>
     </button>

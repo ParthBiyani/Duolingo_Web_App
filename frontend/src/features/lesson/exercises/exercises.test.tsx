@@ -6,7 +6,7 @@ import type { Answer, Exercise } from "@/lib/api";
 
 import type { MatchState } from "../reducer";
 import { lessonStrings } from "../strings";
-import { makeExercise } from "../test-fixtures";
+import { makeExercise, makeResult } from "../test-fixtures";
 import { exerciseRegistry } from "./registry";
 import type { ExerciseProps } from "./types";
 
@@ -35,6 +35,13 @@ function setup(exercise: Exercise, overrides: Partial<ExerciseProps> = {}) {
   return { props, rerender };
 }
 
+/** The text a learner reads in `element`: closed hint tooltips left out. */
+function readText(element: Element | null): string {
+  const copy = element?.cloneNode(true) as Element | undefined;
+  copy?.querySelectorAll("[role='tooltip']").forEach((tooltip) => tooltip.remove());
+  return copy?.textContent ?? "";
+}
+
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
@@ -61,7 +68,8 @@ describe("choice exercises", () => {
   it("multiple choice: shows the bubble and picks by click or number key", async () => {
     const user = userEvent.setup();
     const { props } = setup(makeExercise(1, "multiple_choice"));
-    expect(screen.getByText("el gato")).toBeVisible();
+    const word = screen.getByRole("button", { name: "gato" });
+    expect(readText(word.closest("[lang='es']"))).toBe("el gato");
 
     await user.click(screen.getByRole("button", { name: /the dog/ }));
     expect(props.onDraft).toHaveBeenLastCalledWith({ option_id: 12 });
@@ -113,6 +121,85 @@ describe("choice exercises", () => {
     rerender({ draft: { option_id: 31 } });
     const sentence = screen.getByText(/Yo/);
     expect(sentence).toHaveTextContent("Yo bebo café.");
+  });
+
+  it("fill in the blank: hinted words around the gap", () => {
+    const exercise: Exercise = {
+      ...makeExercise(3, "fill_blank"),
+      source_text: "Yo ___ café.",
+      source_tokens: [
+        { text: "Yo", hint: "I", is_new: false },
+        { text: " ___ ", hint: null, is_new: false },
+        { text: "café", hint: "coffee", is_new: false },
+        { text: ".", hint: null, is_new: false },
+      ],
+    };
+    setup(exercise, { draft: { option_id: 31 } });
+    const sentence = screen.getByRole("button", { name: "Yo" }).closest("p");
+    expect(readText(sentence)).toBe("Yo the cat café.");
+  });
+
+  it("turns the chosen card green when correct and red when wrong", () => {
+    const exercise = makeExercise(1, "multiple_choice");
+    const graded = { ...makeResult(), outcome: "correct" as const, correct: true };
+    const { rerender } = setup(exercise, {
+      draft: { option_id: 11 },
+      locked: true,
+      result: graded,
+    });
+    const chosen = screen.getByRole("button", { name: /the cat/ });
+    expect(chosen).toHaveClass("border-feedback-correct-text");
+    expect(screen.getByRole("button", { name: /the dog/ })).toHaveClass("border-border");
+    rerender({ result: { ...graded, outcome: "incorrect", correct: false } });
+    expect(chosen).toHaveClass("border-feedback-wrong-text");
+  });
+});
+
+describe("word hints", () => {
+  const exercise = {
+    ...makeExercise(1, "multiple_choice"),
+    source_tokens: [
+      { text: "el", hint: "the", is_new: false },
+      { text: " ", hint: null, is_new: false },
+      { text: "gato", hint: "cat", is_new: true },
+    ],
+  };
+
+  it("shows a word's meaning on hover and keyboard focus, and Escape hides it", async () => {
+    const user = userEvent.setup();
+    setup(exercise);
+    const word = screen.getByRole("button", { name: "gato" });
+    expect(word).toHaveClass("text-purple"); // the new word
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+
+    await user.hover(word);
+    expect(screen.getByRole("tooltip")).toHaveTextContent("cat");
+    expect(word).toHaveAccessibleDescription("cat");
+    await user.unhover(word);
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+
+    await user.tab(); // the speaker button
+    await user.tab(); // "el"
+    expect(screen.getByRole("tooltip")).toHaveTextContent("the");
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+  });
+
+  it("a tap pins the meaning open until tapped again", async () => {
+    const user = userEvent.setup();
+    setup(exercise);
+    const word = screen.getByRole("button", { name: "el" });
+    fireEvent.click(word);
+    expect(screen.getByRole("tooltip")).toHaveTextContent("the");
+    await user.click(document.body);
+    fireEvent.click(word);
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+  });
+
+  it("falls back to plain text when the tokens do not spell the sentence", () => {
+    setup({ ...exercise, source_text: "el perro" });
+    expect(screen.getByText("el perro")).toBeVisible();
+    expect(screen.queryByRole("button", { name: "gato" })).not.toBeInTheDocument();
   });
 });
 
