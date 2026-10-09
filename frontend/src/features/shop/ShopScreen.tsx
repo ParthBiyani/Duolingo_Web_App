@@ -1,5 +1,7 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
+
 import { DuoImage, Gem, HeartRefill, HeartUnlimited, Snowflake } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { Button, Skeleton, toast } from "@/components/ui";
@@ -72,31 +74,7 @@ export function ShopScreen() {
     <div className="pt-6 pb-16">
       <h1 className="sr-only">{shopStrings.pageTitle}</h1>
 
-      <section
-        className="relative min-h-[197px] overflow-hidden rounded-rail bg-family-plan px-5 pt-11 pb-6 text-white"
-        style={{ backgroundImage: FAMILY_PLAN_GLOW }}
-      >
-        <DuoImage
-          name="family-plan"
-          size={494}
-          className="pointer-events-none absolute top-[3px] left-[392px] max-md:hidden"
-        />
-        <div className="relative max-w-[370px]">
-          <h2 className="text-[25px] leading-[34px] font-bold">{shopStrings.familyTitle}</h2>
-          <p className="leading-[25px] md:whitespace-nowrap">
-            {shopStrings.familyBodyBefore}
-            <strong>{shopStrings.familyBodyBrand}</strong>
-            {shopStrings.familyBodyAfter}
-          </p>
-          <button
-            type="button"
-            onClick={comingSoon}
-            className="mt-[22px] h-[50px] w-full rounded-button border-b-4 border-family-plan/25 bg-white text-button text-family-plan uppercase transition-[translate] duration-100 active:translate-y-0.5 active:border-b-2"
-          >
-            {shopStrings.familyCta}
-          </button>
-        </div>
-      </section>
+      <PromoBanner />
 
       <section aria-labelledby="shop-hearts" className="mt-10">
         <h2 id="shop-hearts" className="pb-4 text-heading text-title">
@@ -212,5 +190,81 @@ function ShopSkeleton() {
         </div>
       ))}
     </div>
+  );
+}
+
+/** One roll per page load decides which offer the top banner shows, like the original's rotation. */
+const promoRoll = Math.random();
+const noSubscription = () => () => {};
+
+/**
+ * The top banner: the family plan or the Super free trial. The server always renders the family
+ * plan so hydration matches; the client then shows its pick. Both offers are "Coming soon".
+ */
+function PromoBanner() {
+  const superTrial = useSyncExternalStore(
+    noSubscription,
+    () => promoRoll < 0.5,
+    () => false,
+  );
+  return superTrial ? <SuperTrialBanner /> : <FamilyPlanBanner />;
+}
+
+function FamilyPlanBanner() {
+  return (
+    <section
+      className="relative min-h-[197px] overflow-hidden rounded-rail bg-family-plan px-5 pt-11 pb-6 text-white"
+      style={{ backgroundImage: FAMILY_PLAN_GLOW }}
+    >
+      <DuoImage
+        name="family-plan"
+        size={494}
+        className="pointer-events-none absolute top-[3px] left-[392px] max-md:hidden"
+      />
+      <div className="relative max-w-[370px]">
+        <h2 className="text-[25px] leading-[34px] font-bold">{shopStrings.familyTitle}</h2>
+        <p className="leading-[25px] md:whitespace-nowrap">
+          {shopStrings.familyBodyBefore}
+          <strong>{shopStrings.familyBodyBrand}</strong>
+          {shopStrings.familyBodyAfter}
+        </p>
+        <button
+          type="button"
+          onClick={comingSoon}
+          className="mt-[22px] h-[50px] w-full rounded-button border-b-4 border-family-plan/25 bg-white text-button text-family-plan uppercase transition-[translate] duration-100 active:translate-y-0.5 active:border-b-2"
+        >
+          {shopStrings.familyCta}
+        </button>
+      </div>
+    </section>
+  );
+}
+
+/** The Super trial offer: the owl and SUPER badge appear once the banner is wide enough. */
+function SuperTrialBanner() {
+  return (
+    <section
+      className="@container relative overflow-hidden rounded-rail bg-family-plan p-5 text-white"
+      style={{ backgroundImage: FAMILY_PLAN_GLOW }}
+    >
+      <DuoImage
+        name="super-badge"
+        size={87}
+        className="absolute top-4 right-4 hidden @min-[40rem]:block"
+      />
+      <div className="flex items-center gap-[46px]">
+        <DuoImage name="super-trial-owl" size={93} className="hidden shrink-0 @min-[40rem]:block" />
+        <h2 className="mt-6 max-w-[369px] text-[25px] leading-[34px] font-bold @min-[40rem]:mt-0 @min-[40rem]:max-w-[440px]">
+          {shopStrings.superTrialTitle}
+        </h2>
+      </div>
+      <button
+        type="button"
+        onClick={comingSoon}
+        className="mt-6 h-[50px] w-full rounded-button border-b-4 border-white/50 bg-white text-button text-family-plan uppercase transition-[translate] duration-100 active:translate-y-0.5 active:border-b-2"
+      >
+        {shopStrings.superTrialCta}
+      </button>
+    </section>
   );
 }

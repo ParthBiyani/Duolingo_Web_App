@@ -57,6 +57,8 @@ export type DuoAsset =
   | "more-podcast"
   | "node-jump"
   | "family-plan"
+  | "super-trial-owl"
+  | "super-badge"
   | `league-${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`;
 
 interface DuoImageProps extends IconProps {
