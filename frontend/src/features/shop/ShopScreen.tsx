@@ -1,6 +1,6 @@
 "use client";
 
-import { Gem, HeartRefill, HeartUnlimited, Snowflake } from "@/components/icons";
+import { DuoImage, Gem, HeartRefill, HeartUnlimited, Snowflake } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { Button, Skeleton, toast } from "@/components/ui";
 import { strings } from "@/content/strings";
@@ -17,6 +17,10 @@ import { ShopItemRow } from "./ShopItemRow";
 import { shopStrings } from "./strings";
 
 const comingSoon = () => toast(strings.common.comingSoon, { id: "coming-soon" });
+
+/** The family-plan banner's soft green, blue and pink glow over its navy base. */
+const FAMILY_PLAN_GLOW =
+  "radial-gradient(216% 106% at 6% 3%, rgb(38 246 99 / 0.3) 0, rgb(38 138 255 / 0.3) 52%, rgb(252 85 255 / 0.3) 100%)";
 
 /** Explains a failed purchase; unexpected failures are already reported globally. */
 function reportPurchaseError(error: unknown) {
@@ -68,18 +72,30 @@ export function ShopScreen() {
     <div className="pt-6 pb-16">
       <h1 className="sr-only">{shopStrings.pageTitle}</h1>
 
-      <section className="flex items-center justify-between gap-4 overflow-hidden rounded-rail bg-linear-to-r from-purple to-blue p-6 text-white">
-        <div className="min-w-0">
-          <span className="rounded-lg bg-white/25 px-2 py-1 text-caps uppercase">
-            {shopStrings.superBadge}
-          </span>
-          <h2 className="mt-3 text-heading">{shopStrings.superTitle}</h2>
-          <p className="mt-2 max-w-sm">{shopStrings.superBody}</p>
-          <Button variant="outline" className="mt-5" onClick={comingSoon}>
-            {shopStrings.superCta}
-          </Button>
+      <section
+        className="relative min-h-[197px] overflow-hidden rounded-rail bg-family-plan px-5 pt-11 pb-6 text-white"
+        style={{ backgroundImage: FAMILY_PLAN_GLOW }}
+      >
+        <DuoImage
+          name="family-plan"
+          size={494}
+          className="pointer-events-none absolute top-[3px] left-[392px] max-md:hidden"
+        />
+        <div className="relative max-w-[370px]">
+          <h2 className="text-[25px] leading-[34px] font-bold">{shopStrings.familyTitle}</h2>
+          <p className="leading-[25px] md:whitespace-nowrap">
+            {shopStrings.familyBodyBefore}
+            <strong>{shopStrings.familyBodyBrand}</strong>
+            {shopStrings.familyBodyAfter}
+          </p>
+          <button
+            type="button"
+            onClick={comingSoon}
+            className="mt-[22px] h-[50px] w-full rounded-button border-b-4 border-family-plan/25 bg-white text-button text-family-plan uppercase transition-[translate] duration-100 active:translate-y-0.5 active:border-b-2"
+          >
+            {shopStrings.familyCta}
+          </button>
         </div>
-        <Mascot pose="celebrate" size={120} className="shrink-0 max-md:hidden" />
       </section>
 
       <section aria-labelledby="shop-hearts" className="mt-10">
