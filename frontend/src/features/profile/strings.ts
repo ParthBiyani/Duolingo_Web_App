@@ -1,7 +1,7 @@
 /** Every string shown on the Profile page. Visual casing (caps) is applied with CSS. */
 export const profileStrings = {
   editProfile: "Edit profile",
-  username: (username: string) => `@${username}`,
+  username: (username: string) => username,
   joined: (monthYear: string) => `Joined ${monthYear}`,
   following: (count: number) => `${count} Following`,
   followers: (count: number) => `${count} Followers`,

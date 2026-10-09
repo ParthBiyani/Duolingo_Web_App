@@ -126,6 +126,14 @@ export const strings = {
       progress: (progress: number, target: number) => `${progress} / ${target}`,
       empty: "New quests arrive tomorrow.",
     },
+    friends: {
+      following: "Following",
+      followers: "Followers",
+      body: "Learning is more fun and effective when you connect with others.",
+      addTitle: "Add friends",
+      find: "Find friends",
+      invite: "Invite friends",
+    },
     footer: {
       label: "Footer",
       links: ["About", "Blog", "Store", "Efficacy", "Careers", "Investors", "Terms", "Privacy"],

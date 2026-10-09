@@ -46,6 +46,7 @@ export type DuoAsset =
   | "streak-day-check"
   | "friend-streaks"
   | "streak-society-locked"
+  | "avatar-empty"
   | `league-${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`;
 
 interface DuoImageProps extends IconProps {

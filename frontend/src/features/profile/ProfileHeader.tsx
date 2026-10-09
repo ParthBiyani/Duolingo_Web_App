@@ -1,4 +1,4 @@
-import { FlagES } from "@/components/icons";
+import { DuoImage, FlagES } from "@/components/icons";
 import { toast } from "@/components/ui";
 import { strings } from "@/content/strings";
 import type { ProfileResponse } from "@/lib/api/types";
@@ -30,14 +30,14 @@ export function initials(name: string): string {
 export function ProfileHeader({ user, course }: Pick<ProfileResponse, "user" | "course">) {
   return (
     <header className="border-b-2 border-border pb-6">
-      <div className="relative grid h-52 place-items-center rounded-rail bg-selected-bg">
-        <span
-          aria-hidden="true"
-          className="grid size-32 place-items-center rounded-full border-4 border-surface text-5xl font-extrabold text-white"
-          style={{ backgroundColor: user.avatar_color }}
-        >
-          {initials(user.display_name)}
-        </span>
+      <div className="relative h-56 overflow-hidden rounded-[15px] bg-selected-bg dark:bg-raised">
+        {/* No photo yet: the dashed "add an avatar" silhouette, as for any new learner. */}
+        <DuoImage
+          name="avatar-empty"
+          size={166}
+          title={initials(user.display_name)}
+          className="absolute top-[39px] left-1/2 -translate-x-1/2"
+        />
         <button
           type="button"
           onClick={comingSoon}
@@ -48,33 +48,37 @@ export function ProfileHeader({ user, course }: Pick<ProfileResponse, "user" | "
         </button>
       </div>
 
-      <div className="mt-6 flex items-start justify-between gap-4">
+      <div className="mt-7 flex items-end justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="truncate text-[26px] leading-8 font-bold text-title">
+          <h1 className="truncate text-[28px] leading-[34px] font-bold text-title">
             {user.display_name}
           </h1>
-          <p className="mt-1 text-muted">{profileStrings.username(user.username)}</p>
-          <p className="mt-3 text-muted">
+          <p className="leading-5 text-muted">{profileStrings.username(user.username)}</p>
+          <p className="mt-1.5 leading-5 text-muted dark:text-body">
             {profileStrings.joined(joinedLabel(user.joined_at, user.timezone))}
           </p>
-          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+          <div className="mt-3.5 flex flex-wrap gap-x-[22px] gap-y-1">
             <button
               type="button"
               onClick={comingSoon}
-              className="font-bold text-blue hover:underline"
+              className="text-[16px] leading-[19px] font-bold text-blue hover:underline"
             >
               {profileStrings.following(0)}
             </button>
             <button
               type="button"
               onClick={comingSoon}
-              className="font-bold text-blue hover:underline"
+              className="text-[16px] leading-[19px] font-bold text-blue hover:underline"
             >
               {profileStrings.followers(0)}
             </button>
           </div>
         </div>
-        <FlagES size={44} title={profileStrings.learning(course.title)} className="shrink-0" />
+        <FlagES
+          size={31}
+          title={profileStrings.learning(course.title)}
+          className="mb-0.5 shrink-0"
+        />
       </div>
     </header>
   );

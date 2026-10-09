@@ -45,10 +45,10 @@ export function ProfileScreen() {
       <ProfileHeader user={user} course={course} />
 
       <section aria-labelledby="statistics-heading" className="mt-8">
-        <h2 id="statistics-heading" className="text-heading text-title">
+        <h2 id="statistics-heading" className="text-[24px] leading-[26px] font-bold text-title">
           {profileStrings.statistics}
         </h2>
-        <ul className="mt-4 grid grid-cols-2 gap-3 md:gap-4">
+        <ul className="mt-3 grid grid-cols-2 gap-3">
           <StatTile
             icon={<StatStreak size={21} />}
             value={formatCount(stats.streak)}
@@ -73,7 +73,7 @@ export function ProfileScreen() {
       </section>
 
       <section aria-labelledby="achievements-heading" className="mt-8">
-        <h2 id="achievements-heading" className="text-heading text-title">
+        <h2 id="achievements-heading" className="text-[24px] leading-[26px] font-bold text-title">
           {profileStrings.achievements}
         </h2>
         <ul className="mt-4 divide-y-2 divide-border rounded-rail border-2 border-border">
@@ -89,11 +89,11 @@ export function ProfileScreen() {
 /** Bordered statistic card: icon, value and label. */
 function StatTile({ icon, value, label }: { icon: ReactNode; value: string; label: string }) {
   return (
-    <li className="flex items-start gap-2.5 rounded-rail border-2 border-border px-3 py-3 md:gap-3 md:px-4">
-      <span className="mt-0.5 shrink-0">{icon}</span>
+    <li className="flex min-h-[77px] items-start gap-3.5 rounded-rail border-2 border-border px-4 py-3.5 md:px-6">
+      <span className="grid w-6 shrink-0 justify-center">{icon}</span>
       <span className="min-w-0">
-        <span className="block truncate text-lead font-bold text-title">{value}</span>
-        <span className="block text-[15px] leading-5 text-muted">{label}</span>
+        <span className="block truncate text-[20px] leading-5 font-bold text-title">{value}</span>
+        <span className="mt-1 block text-[16px] leading-5 text-muted">{label}</span>
       </span>
     </li>
   );

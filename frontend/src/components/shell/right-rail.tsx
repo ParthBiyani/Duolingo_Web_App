@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { usePathname } from "next/navigation";
+import { useState, type ReactNode } from "react";
 
 import {
   Bolt,
@@ -185,7 +186,73 @@ function DailyQuestsCard() {
   );
 }
 
-// Footer -------------------------------------------------------------------------
+// Friends (profile page) -------------------------------------------------------------
+
+function FriendsCard() {
+  const [tab, setTab] = useState<"following" | "followers">("following");
+  return (
+    <section className="overflow-hidden rounded-rail border-2 border-border">
+      <div role="tablist" className="grid grid-cols-2 border-b-2 border-border">
+        {(["following", "followers"] as const).map((key) => (
+          <button
+            key={key}
+            type="button"
+            role="tab"
+            aria-selected={tab === key}
+            onClick={() => setTab(key)}
+            className={cn(
+              "-mb-0.5 h-12 border-b-2 text-button uppercase transition-colors",
+              tab === key
+                ? "border-blue text-blue"
+                : "border-transparent text-muted hover:text-title dark:text-body",
+            )}
+          >
+            {strings.rail.friends[key]}
+          </button>
+        ))}
+      </div>
+      <div className="flex flex-col items-center px-4 pt-9 pb-6 text-center">
+        <DuoImage name="friends" size={305} />
+        <p className="mt-5 px-6 leading-[25px] text-muted dark:text-body">
+          {strings.rail.friends.body}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function AddFriendsCard() {
+  const rows = [
+    { key: "find", image: "find-friends", label: strings.rail.friends.find },
+    { key: "invite", image: "invite-friends", label: strings.rail.friends.invite },
+  ] as const;
+  return (
+    <RailCard className="px-3">
+      <h2 className="px-2 text-lead leading-7 font-bold text-title">
+        {strings.rail.friends.addTitle}
+      </h2>
+      <ul className="mt-4 flex flex-col gap-1">
+        {rows.map((row) => (
+          <li key={row.key}>
+            <button
+              type="button"
+              onClick={showComingSoon}
+              className="flex w-full items-center gap-6 rounded-xl px-2 py-2 text-left transition-colors hover:bg-surface-hover"
+            >
+              <DuoImage name={row.image} size={52} className="shrink-0" />
+              <span className="flex-1 font-bold text-title">{row.label}</span>
+              <span aria-hidden="true" className="text-[28px] leading-none font-bold text-title">
+                ›
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </RailCard>
+  );
+}
+
+// Footer -----------------------------------------------------------------------------
 
 function RailFooter() {
   return (
@@ -215,15 +282,26 @@ function RailFooter() {
  * not a scroll container of its own, so the document is the only scroller.
  */
 export function RightRail() {
+  // Like the original, the profile page swaps the promos for friend features.
+  const onProfile = usePathname().startsWith("/profile");
   return (
     <aside
       aria-label={strings.rail.label}
       className="sticky top-0 hidden w-92 shrink-0 flex-col gap-4 self-start py-6 xl:flex"
     >
       <StatsBar className="mb-2 justify-between px-2" />
-      <SuperCard />
-      <LeagueCard />
-      <DailyQuestsCard />
+      {onProfile ? (
+        <>
+          <FriendsCard />
+          <AddFriendsCard />
+        </>
+      ) : (
+        <>
+          <SuperCard />
+          <LeagueCard />
+          <DailyQuestsCard />
+        </>
+      )}
       <RailFooter />
     </aside>
   );
